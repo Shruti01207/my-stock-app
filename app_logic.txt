@@ -1,0 +1,18 @@
+1. data
+when data is all negative 
+data:-5%-> -2%
+ref:  0%
+
+reference line will be above
+
+2. when data is all positive
+data: +1%->+4%
+ref : 0%
+
+reference line will be below
+
+3. when data is negative to positive
+data: -2%->+3%
+
+reference line is inside
+
