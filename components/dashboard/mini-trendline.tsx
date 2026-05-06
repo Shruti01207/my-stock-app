@@ -1,6 +1,6 @@
 import { getTrendData } from '@/lib/api/stocks';
 import { useEffect, useState } from 'react';
-import { Line, LineChart, ReferenceLine, ResponsiveContainer, YAxis } from 'recharts';
+import { Area, Line, LineChart, ReferenceLine, ResponsiveContainer, YAxis } from 'recharts';
 
 
 
@@ -17,15 +17,13 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
     useEffect(() => {
 
         const getData = async () => {
-            console.log(`%c API CALL TRIGGERED FOR: ${symbol}`, "color: yellow; background: red;");
             setLoading(true);
             let data = await getTrendData(symbol);
-            console.log(`data for ${symbol}`, data)
             setLoading(false);
             parseData(data);
         }
 
-        console.log("prev close", prevClose);
+
         if (prevClose > 0) {
             getData();
         }
@@ -49,7 +47,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
         getRefLinePos(trendData)
 
 
-        console.log(`data for ${symbol}`, trendData);
+
 
 
 
@@ -82,21 +80,23 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
         let newRange;
         if (maxi < 0 && mini < 0) {
             // if all numbers are negative then, ref line above.
-            newRange = [mini, maxi + (range * 0.2)];
+            console.log("all negative");
+            newRange = [mini - (range * 0.5), maxi + (range * 0.5)];
             setRefPos("above");
 
         }
         else if (maxi > 0 && mini > 0) {
             // if all numbers are positive then, ref line below.
-            newRange = [mini - (range * 0.2), maxi];
+            console.log("all positive");
+            newRange = [mini - (range * 0.5), maxi + (range * 0.5)];
             setRefPos("below");
         }
         else {
             newRange = [mini, maxi];
+            console.log("mixed values");
             setRefPos("inside");
         }
 
-        console.log("range", newRange)
         setRange(newRange)
         // return newRange;
 
@@ -117,18 +117,20 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
             >
                 <YAxis
                     domain={range}
-                    // domain={[
-                    //     (dataMin: number) => Math.min(dataMin, 0),
-                    //     (dataMax: number) => Math.max(dataMax, 0),
-                    // ]}
                     hide
-
                 />
 
                 <ReferenceLine
-                    y={refPos == "inside" ? 0 : refPos == "above" ? (range[1] + ((range[1] - range[0]) * 0.5)) : (range[0] - ((range[1] - range[0]) * 0.5))}
-                    stroke="green" // Subtle grey/white
+                    y={refPos == "inside" ? 0 : refPos == "above" ? range[1] : range[0]}
+                    stroke="white" // Subtle grey/white
                     strokeDasharray="2 2"
+                />
+
+                <Area
+                    type="monotone"
+                    dataKey="close"
+                    stroke={false}
+                    fill="url(#miniChartGradient)"
                 />
 
                 <Line
