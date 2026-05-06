@@ -1,6 +1,6 @@
 import { getTrendData } from '@/lib/api/stocks';
 import { useEffect, useState } from 'react';
-import { Line, LineChart, ReferenceLine, ResponsiveContainer, YAxis } from 'recharts';
+import { Area, ComposedChart, Line, LineChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 
 
@@ -110,20 +110,53 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
     }
 
     return <>
-        <ResponsiveContainer width="100%" height={50}>
-            <LineChart
+        <ResponsiveContainer width="100%" height={60}>
+            <ComposedChart
                 data={data}
                 margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
             >
+
+                <defs>
+                    <linearGradient
+                        id="miniChartGradient"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                    >
+                        <stop
+                            offset="0%"
+                            stopColor="#f43f5e"
+                            stopOpacity={0.35}
+                        />
+                        <stop
+                            offset="100%"
+                            stopColor="#f43f5e"
+                            stopOpacity={0}
+                        />
+                    </linearGradient>
+                </defs>
+
                 <YAxis
                     domain={range}
                     hide
                 />
+                <XAxis hide dataKey="datetime" />
+
 
                 <ReferenceLine
                     y={refPos == "inside" ? 0 : refPos == "above" ? range[1] : range[0]}
                     stroke="white" // Subtle grey/white
                     strokeDasharray="2 2"
+                />
+
+                <Area
+                    type="monotone"
+                    dataKey="close"
+                    stroke="none"
+                    fill="url(#miniChartGradient)"
+                    fillOpacity={1}
+                    isAnimationActive={false}
                 />
 
                 <Line
@@ -138,8 +171,10 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
                 //     stroke: 'green',
                 // }}
                 />
-            </LineChart>
-        </ResponsiveContainer>
+
+
+            </ComposedChart>
+        </ResponsiveContainer >
 
     </>
 
