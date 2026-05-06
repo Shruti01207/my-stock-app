@@ -1,6 +1,6 @@
 import { getTrendData } from '@/lib/api/stocks';
 import { useEffect, useState } from 'react';
-import { Area, Line, LineChart, ReferenceLine, ResponsiveContainer, YAxis } from 'recharts';
+import { Line, LineChart, ReferenceLine, ResponsiveContainer, YAxis } from 'recharts';
 
 
 
@@ -124,13 +124,6 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
                     y={refPos == "inside" ? 0 : refPos == "above" ? range[1] : range[0]}
                     stroke="white" // Subtle grey/white
                     strokeDasharray="2 2"
-                />
-
-                <Area
-                    type="monotone"
-                    dataKey="close"
-                    stroke={false}
-                    fill="url(#miniChartGradient)"
                 />
 
                 <Line
