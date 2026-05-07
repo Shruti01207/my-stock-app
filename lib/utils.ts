@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import { DateTime } from "luxon"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -46,4 +47,45 @@ export const getLastDateExcludingWeekends = () => {
     return [openTime, closeTime]
 
   }
+}
+
+
+
+export const getMarketSession = () => {
+
+  const ny = DateTime.now().setZone("America/New_York");
+
+
+}
+
+
+export const isMarketOpen = () => {
+  const now = DateTime.now().setZone("America/New_York");
+  const dayOfWeek = now.weekday;
+
+  if (dayOfWeek > 5) {
+    return false
+  }
+
+  const marketOpen = now.set({
+    hour: 9,
+    minute: 30,
+    second: 0
+  }).toMillis();
+
+  const marketClose = now.set({
+    hour: 16,
+    minute: 0,
+    second: 0
+  }).toMillis();
+
+  if (now.toMillis() >= marketOpen && now.toMillis() <= marketClose) {
+    return true;
+  }
+  else {
+    return false;
+  }
+
+
+
 }

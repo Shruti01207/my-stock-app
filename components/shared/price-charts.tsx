@@ -1,9 +1,9 @@
 'use client'
 
 import { getGraphData, getTrendData } from "@/lib/api/stocks";
-import { getUSStockTime } from "@/lib/utils";
+import { getUSStockTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
-
+import { DateTime } from 'luxon'
 import { useEffect, useState } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
@@ -22,29 +22,20 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
     useEffect(() => {
-        console.log("suscribe symbol called")
-        //  console.log("prices", prices)
         subcribe(finHubSymbol);
-
     }, [subcribe, finHubSymbol])
 
     useEffect(() => {
         const currTime = getMarketTime();
-        console.log("currTime=", currTime);
-
-
-        console.log("curr=", { close: prices[finHubSymbol], time: currTime })
-        setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
-
-
-        console.log("prices", prices)
+        if (isMarketOpen()) {
+            setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
+        }
     }, [prices[finHubSymbol]])
 
     const getMarketTime = () => {
         const now = new Date();
         // Convert current time to a string in New York time, then back to a Date object
         const etString = now.toLocaleString("en-US", { timeZone: "America/New_York" });
-        console.log(etString)
         return new Date(etString).getTime();
     };
 
@@ -54,7 +45,6 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
         if (e && e.activeLabel) {
             setActiveX(e.activeLabel);
-            console.log("e.activeLabel", e.activeLabel)
         }
     }
 
@@ -71,16 +61,13 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
     const parseData = (data: any) => {
         const d = data.values;
-
         const trendData = d.map((val: any) => ({
             time: new Date(val.datetime).getTime(),
             close: Number(val.close),
             low: Number(val.low),
             high: Number(val.high)
-
         })).reverse();
         setData(trendData);
-        // console.log("trendData", trendData);
     }
 
 
@@ -229,6 +216,10 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     return <>
 
         <div className="border border-red-400 p-7">
+            <div className="market-status">
+                {isMarketOpen() ? <span className="text-green-400">OPEN</span> : <span className="text-danger-400">CLOSED</span>}
+            </div>
+
             <ResponsiveContainer width="100%" height={300}>
                 <LineChart
                     data={data}

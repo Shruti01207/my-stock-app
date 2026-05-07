@@ -23,6 +23,7 @@
     "ingest": "^1.0.0",
     "inngest": "^3.51.0",
     "lucide-react": "^0.555.0",
+    "luxon": "^3.7.2",
     "mongodb": "^7.1.0",
     "mongoose": "^9.1.6",
     "next": "15.5.2",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/luxon": "^3.7.1",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.10",
     "@types/react": "^19",
