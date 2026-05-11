@@ -18,7 +18,8 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const prices = useLiveStore((state) => state.prices);
     const [interval, setInterval] = useState<string>('1min');
     const [outputSize, setOutputSize] = useState<string>('390')
-    const [mainGraphFilter, setMainGraphFilter] = useState<string>("1D")
+    const [mainGraphFilter, setMainGraphFilter] = useState<string>("1D");
+    const [loading, setLoading] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -51,8 +52,10 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
     useEffect(() => {
         const getData = async () => {
+            setLoading(true);
             let data = await getGraphData(symbol, interval, outputSize);
             parseData(data);
+            setLoading(false);
         }
         getData();
 
@@ -110,8 +113,6 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
         }
 
     };
-
-
 
     const formatXAxis = (tickItem: number) => {
 
@@ -207,10 +208,13 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
     const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D") => {
+        setLoading(true);
         setInterval(interval);
         setOutputSize(block);
         setMainGraphFilter(filter);
     }
+
+    const loadingData = [{ time: "9:30", close: 702 }, { time: "10:00", close: 704 }, { time: "10:30", close: 703 }, { time: "11:00", close: 706 }, { time: "11:30", close: 705 }, { time: "12:00", close: 707 },];
 
 
     return <>
@@ -219,53 +223,69 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
             <div className="market-status">
                 {isMarketOpen() ? <span className="text-green-400">OPEN</span> : <span className="text-danger-400">CLOSED</span>}
             </div>
+            {loading ?
+                <>
+                    <div className="animate-pulse">
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart>
+                                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} /> <XAxis dataKey="time" /> <YAxis /> <Line type="monotone" dataKey="close" stroke="#9ca3af" strokeWidth={2} dot={false} isAnimationActive={false} />
+                            </LineChart>
+                        </ResponsiveContainer>
 
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart
-                    data={data}
-                    margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-                    onClick={handleClick}
-                >
-                    <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3}
-                    />
-                    <XAxis
+                    </div>
+                </> :
+                <>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart
+                            data={data}
+                            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                            onClick={handleClick}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3}
+                            />
+                            <XAxis
 
-                        type={mainGraphFilter == '1D' ? 'number' : 'category'}
-                        scale={mainGraphFilter == '1D' ? 'time' : undefined}
-                        dataKey="time"
-                        domain={mainGraphFilter == '1D' ? getUSMarketBounds(mainGraphFilter) : ['dataMin', 'dataMax']}
-                        tickFormatter={formatXAxis}
-                        ticks={generateTradingTicks()}
-                        padding={{ right: 40, left: 40 }}
+                                type={mainGraphFilter == '1D' ? 'number' : 'category'}
+                                scale={mainGraphFilter == '1D' ? 'time' : undefined}
+                                dataKey="time"
+                                domain={mainGraphFilter == '1D' ? getUSMarketBounds(mainGraphFilter) : ['dataMin', 'dataMax']}
+                                tickFormatter={formatXAxis}
+                                ticks={generateTradingTicks()}
+                                padding={{ right: 40, left: 40 }}
 
-                    />
-                    <Tooltip
-                        labelFormatter={(value) => getToolTipFormatter(value)}
-                        contentStyle={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
-                    />
+                            />
+                            <Tooltip
+                                labelFormatter={(value) => getToolTipFormatter(value)}
+                                contentStyle={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
+                            />
 
-                    <YAxis
-                        type="number"
-                        domain={getYAxisRange(data)}
-                        padding={{ top: 40, bottom: 40 }}
-                    />
+                            <YAxis
+                                type="number"
+                                domain={getYAxisRange(data)}
+                                padding={{ top: 40, bottom: 40 }}
+                            />
 
-                    <Line
-                        type="monotone"
-                        dataKey="close"
-                        stroke="#f43f5e"
-                        strokeWidth={1}
-                        dot={false}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        isAnimationActive={false}
-                        activeDot={{
-                            stroke: 'green',
-                        }}
-                    />
+                            <Line
+                                type="monotone"
+                                dataKey="close"
+                                stroke="#f43f5e"
+                                strokeWidth={1}
+                                dot={false}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                isAnimationActive={false}
+                                activeDot={{
+                                    stroke: 'green',
+                                }}
+                            />
 
-                </LineChart>
-            </ResponsiveContainer>
+                        </LineChart>
+                    </ResponsiveContainer>
+                </>
+
+            }
+
+
             <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none" onClick={() => setIntervalAndBlocks('1min', '390', "1D")}>1D</button>
             <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none" onClick={() => setIntervalAndBlocks('5min', '390', "5D")}  >5D</button>
         </div>
