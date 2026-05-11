@@ -43,6 +43,8 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
             close: ((Number(val.close) - prevClose) / prevClose) * 100
         })).reverse();
 
+
+
         setData(trendData);
         getRefLinePos(trendData)
 
@@ -54,8 +56,6 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
     }
 
     const getRefLinePos = (data: any) => {
-
-
         // how do we found max?
         // 1,5,3,2,7
         // 5,
@@ -80,23 +80,19 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
         let newRange;
         if (maxi < 0 && mini < 0) {
             // if all numbers are negative then, ref line above.
-            console.log("all negative");
             newRange = [mini - (range * 0.5), maxi + (range * 0.5)];
             setRefPos("above");
 
         }
         else if (maxi > 0 && mini > 0) {
             // if all numbers are positive then, ref line below.
-            console.log("all positive");
             newRange = [mini - (range * 0.5), maxi + (range * 0.5)];
             setRefPos("below");
         }
         else {
             newRange = [mini, maxi];
-            console.log("mixed values");
             setRefPos("inside");
         }
-
         setRange(newRange)
         // return newRange;
 

@@ -10,19 +10,72 @@ export const MarketNewsWidget = () => {
     useEffect(() => {
         const getLatestNews = async () => {
             const res = await getLatestNew();
-            setLatestNews(res);
-            console.log("res=", res);
+            let topStories = res.filter((res: any) => res.category == 'top news')
+            topStories.sort((a: any, b: any) => (b.datetime - a.datetime));
+            topStories = topStories.splice(0, 10);
+            const updatedStories = parseData(topStories)
+            setLatestNews(updatedStories);
+            console.log("res=", updatedStories);
         }
         getLatestNews();
     }, [])
 
+    const parseData = (stories: any) => {
+
+        const updatedStories = stories.map((story: any) => {
+            let currTime = Date.now();
+            let diff = currTime - (story.datetime * 1000);
+            let seconds = Math.ceil(diff / 1000);
+            let mins = Math.ceil(seconds / 60);
+            let hrs = Math.ceil(mins / 60);
+            let days = Math.ceil(hrs / 24);
+            let timeAgo = ""
+            if (seconds < 60) {
+                timeAgo = `${seconds} sec ago`
+            }
+            else if (mins < 60) {
+                timeAgo = `${mins} min ago`
+            }
+            else if (hrs < 24) {
+                timeAgo = `${hrs} hr ago`
+            }
+            else {
+                timeAgo = `${days} day ago`
+            }
+
+            return {
+                ...story,
+                timeAgo
+
+            }
+
+        })
+
+        return updatedStories;
+
+    }
+
+
     return <>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
+        <h1 className="text-2xl font-medium">Top News Stories</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {latestNews.map((news) => (
+                <div className="news-card" key={news.id}>
 
-                <div key={news.id} className="">{news.headline}</div>
-
+                    <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded-full bg-blue-500">
+                            <img className="w-full h-full" src={news.image} alt={news.id} />
+                        </div>
+                        <span>{news.source}</span>
+                        {news.timeAgo}
+                    </div>
+                    <div className="border border-danger">
+                        <a href={news.url}>{news.headline}</a>
+                    </div>
+                </div>
             ))}
+
+
         </div>
     </>
 }
