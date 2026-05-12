@@ -38,9 +38,9 @@ export const searchStock = async (symbol: string): Promise<any> => {
   return response.json();
 }
 
-export const getTrendData = async (symbol: string): Promise<any> => {
+export const getTrendData = async (symbol: string, startDate: string, endDate: string): Promise<any> => {
   const apiKey = process.env.NEXT_PUBLIC_ALPHA_VENTAGE_API_KEY;
-  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=300&apikey=${apiKey}`;
+  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=300&start_date=${startDate}&end_date=${endDate}&apikey=${apiKey}`;
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -49,9 +49,9 @@ export const getTrendData = async (symbol: string): Promise<any> => {
 
   return response.json();
 }
-export const getGraphData = async (symbol: String, interval: String, outputSize: String): Promise<any> => {
+export const getGraphData = async (symbol: String, interval: String, outputSize: String, startDate: String, endDate: String): Promise<any> => {
   const apiKey = process.env.NEXT_PUBLIC_ALPHA_VENTAGE_API_KEY;
-  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=${interval}&outputsize=${outputSize}&apikey=${apiKey}`;
+  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&outputsize=${outputSize}&interval=${interval}&start_date=${startDate}&end_date=${endDate}&prepost=false&apikey=${apiKey}`;
   const response = await fetch(url)
 
   if (!response.ok) {

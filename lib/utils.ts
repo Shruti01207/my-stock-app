@@ -49,14 +49,16 @@ export const getLastDateExcludingWeekends = () => {
   }
 }
 
-
-
-export const getMarketSession = () => {
-
-  const ny = DateTime.now().setZone("America/New_York");
-
+//  Return date in format YYYY-MM-DD
+export const getISOFormattedDate = (d: Date) => {
+  const formattedDate = d.toISOString().split('T')[0];
+  return formattedDate;
+  // console.log("formattedDate", formattedDate);
 
 }
+
+
+
 
 
 export const isMarketOpen = () => {

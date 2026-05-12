@@ -1,16 +1,34 @@
 'use client'
 
 import { getGraphData, getTrendData } from "@/lib/api/stocks";
-import { getUSStockTime, isMarketOpen } from "@/lib/utils";
+import { getISOFormattedDate, getUSStockTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
+import { Mountain } from "lucide-react";
 import { DateTime } from 'luxon'
 import { useEffect, useState } from "react";
-import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 
 
 
 export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSymbol: string }) => {
+
+    const getInitialMarketDates = () => {
+        if (!isMarketOpen()) {
+            return {
+                startDate: '',
+                endDate: ''
+            };
+        }
+
+        const ISODate = getISOFormattedDate(new Date());
+
+        return {
+            startDate: `${ISODate} 09:30:00`,
+            endDate: `${ISODate} 16:00:00`
+        };
+    };
+
 
     const [data, setData] = useState<any>([]);
     const [activeX, setActiveX] = useState(null)
@@ -18,19 +36,25 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const prices = useLiveStore((state) => state.prices);
     const [interval, setInterval] = useState<string>('1min');
     const [outputSize, setOutputSize] = useState<string>('390')
+    const initialDates = getInitialMarketDates();
+    const [startDate, setStartDate] = useState<string>(initialDates.startDate);
+    const [endDate, setEndDate] = useState<string>(initialDates.endDate);
     const [mainGraphFilter, setMainGraphFilter] = useState<string>("1D");
     const [loading, setLoading] = useState<boolean>(false);
+
 
 
     useEffect(() => {
         subcribe(finHubSymbol);
     }, [subcribe, finHubSymbol])
 
+
     useEffect(() => {
         const currTime = getMarketTime();
         if (isMarketOpen()) {
             setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
         }
+
     }, [prices[finHubSymbol]])
 
     const getMarketTime = () => {
@@ -40,6 +64,10 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
         return new Date(etString).getTime();
     };
 
+
+    // useEffect(() => {
+
+    // }, []);
 
 
     const handleClick = (e: any) => {
@@ -53,13 +81,14 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
-            let data = await getGraphData(symbol, interval, outputSize);
+            let data = await getGraphData(symbol, interval, outputSize, startDate, endDate);
+            console.log(`graph data called for${symbol}`);
             parseData(data);
             setLoading(false);
         }
         getData();
 
-    }, [interval, outputSize])
+    }, [interval, startDate, endDate, outputSize])
 
 
     const parseData = (data: any) => {
@@ -210,16 +239,41 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D") => {
         setLoading(true);
         setInterval(interval);
+        if (filter == '1D') {
+            const date = new Date();
+            const ISODate = getISOFormattedDate(date);
+            if (isMarketOpen()) {
+                setStartDate(`${ISODate} 09:30:00`);
+                setEndDate(`${ISODate} 16:00:00`)
+            }
+            else {
+                setStartDate('');
+                setEndDate('')
+            }
+
+
+        }
+        else {
+            console.log("mainGraphFilter", mainGraphFilter)
+            setStartDate('');
+            setEndDate('')
+        }
+
         setOutputSize(block);
         setMainGraphFilter(filter);
     }
 
-    const loadingData = [{ time: "9:30", close: 702 }, { time: "10:00", close: 704 }, { time: "10:30", close: 703 }, { time: "11:00", close: 706 }, { time: "11:30", close: 705 }, { time: "12:00", close: 707 },];
+    // const getFormttedDate
 
 
     return <>
 
         <div className="border border-red-400 p-7">
+
+            <div className="flex gap-2">
+                <span><Mountain size={18} /></span>
+                <span> INVESCO QQQ Trust, Series 1</span>
+            </div>
             <div className="market-status">
                 {isMarketOpen() ? <span className="text-green-400">OPEN</span> : <span className="text-danger-400">CLOSED</span>}
             </div>

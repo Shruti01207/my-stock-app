@@ -1,4 +1,5 @@
 import { getTrendData } from '@/lib/api/stocks';
+import { getISOFormattedDate, isMarketOpen } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { Area, ComposedChart, Line, LineChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
@@ -18,7 +19,15 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
 
         const getData = async () => {
             setLoading(true);
-            let data = await getTrendData(symbol);
+            const date = new Date();
+            const ISODate = getISOFormattedDate(date);
+            let startDate = '';
+            let endDate = '';
+            if (isMarketOpen()) {
+                startDate = `${ISODate} 09:30:00`;
+                endDate = `${ISODate} 16:00:00`;
+            }
+            let data = await getTrendData(symbol, startDate, endDate);
             setLoading(false);
             parseData(data);
         }
