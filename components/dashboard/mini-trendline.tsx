@@ -8,12 +8,13 @@ import { Area, ComposedChart, Line, LineChart, ReferenceLine, ResponsiveContaine
 
 
 
-export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prevClose: number }) => {
+export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: string, prevClose: number, chartColor: string }) => {
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [range, setRange] = useState<any[]>([]);
     const [refPos, setRefPos] = useState<"inside" | "above" | "below">("inside");
+    // const [color, setColor] = useState<string>(chartColor);
 
     useEffect(() => {
 
@@ -52,6 +53,12 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
             close: ((Number(val.close) - prevClose) / prevClose) * 100
         })).reverse();
 
+        // console.log(`trendData for ${symbol}`, trendData);
+        // const isPositive = trendData[trendData.length - 1].close >= trendData[0].close;
+        // const color = isPositive ? 'green' : 'red';
+        // setColor(color);
+
+
 
 
         setData(trendData);
@@ -89,13 +96,13 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
         let newRange;
         if (maxi < 0 && mini < 0) {
             // if all numbers are negative then, ref line above.
-            newRange = [mini - (range * 0.5), maxi + (range * 0.5)];
+            newRange = [mini - (range * 0.2), maxi + (range * 0.2)];
             setRefPos("above");
 
         }
         else if (maxi > 0 && mini > 0) {
             // if all numbers are positive then, ref line below.
-            newRange = [mini - (range * 0.5), maxi + (range * 0.5)];
+            newRange = [mini - (range * 0.2), maxi + (range * 0.2)];
             setRefPos("below");
         }
         else {
@@ -137,7 +144,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
 
                 <defs>
                     <linearGradient
-                        id="miniChartGradient"
+                        id={`miniChartGradient-${symbol}`}
                         x1="0"
                         y1="0"
                         x2="0"
@@ -145,12 +152,12 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
                     >
                         <stop
                             offset="0%"
-                            stopColor="#f43f5e"
+                            stopColor={chartColor}
                             stopOpacity={0.35}
                         />
                         <stop
                             offset="100%"
-                            stopColor="#f43f5e"
+                            stopColor={chartColor}
                             stopOpacity={0}
                         />
                     </linearGradient>
@@ -172,14 +179,14 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
                 <ReferenceLine
                     y={refPos == "inside" ? 0 : refPos == "above" ? range[1] : range[0]}
                     stroke="white" // Subtle grey/white
-                    strokeDasharray="2 2"
+                    strokeDasharray="1 4"
                 />
 
                 <Area
                     type="monotone"
                     dataKey="close"
                     stroke="none"
-                    fill="url(#miniChartGradient)"
+                    fill={`url(#miniChartGradient-${symbol})`}
                     fillOpacity={1}
                     isAnimationActive={false}
                 />
@@ -187,7 +194,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
                 <Line
                     type="monotone"
                     dataKey="close"
-                    stroke="#f43f5e"
+                    stroke={chartColor}
                     strokeWidth={1}
                     dot={false}
                     strokeLinecap="round"

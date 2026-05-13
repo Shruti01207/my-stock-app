@@ -54,7 +54,7 @@ export default function Home() {
             <MarketOverviewWidget symbol='SPY' finHubSymbol="SPY" />
             <MarketOverviewWidget symbol='QQQ' finHubSymbol="QQQ" />
             <MarketOverviewWidget symbol='DIA' finHubSymbol="DIA" />
-            <MarketOverviewWidget symbol="BTC/USD" finHubSymbol="BINANCE:BTCUSDT" />
+            <MarketOverviewWidget symbol="IWM" finHubSymbol="IWM" />
           </div>
         </section>
         <section className="main-chart">

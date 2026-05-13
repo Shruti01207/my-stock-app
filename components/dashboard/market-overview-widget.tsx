@@ -52,6 +52,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
     const percentageChange = livePrice ? (absoluteChange / stockPrice.pc) * 100 : stockPrice.dp;
     const sign = (absoluteChange > 0) ? '+' : (absoluteChange < 0) ? '-' : '';
     const color = (absoluteChange > 0) ? 'text-green-400' : (absoluteChange < 0) ? 'text-red-400' : 'text-gray-400';
+    const chartColor = (absoluteChange > 0) ? 'green' : (absoluteChange < 0) ? 'red' : 'gray';
 
     return (
         <>
@@ -81,7 +82,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
                 </div>
 
                 <div className="line-chart py-2">
-                    <MiniTrendLineChart symbol={symbol} prevClose={Number(stockPrice.pc)} ></MiniTrendLineChart>
+                    <MiniTrendLineChart symbol={symbol} prevClose={Number(stockPrice.pc)} chartColor={chartColor}></MiniTrendLineChart>
 
                 </div>
 
