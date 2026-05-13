@@ -40,7 +40,7 @@ export const searchStock = async (symbol: string): Promise<any> => {
 
 export const getTrendData = async (symbol: string, startDate: string, endDate: string): Promise<any> => {
   const apiKey = process.env.NEXT_PUBLIC_ALPHA_VENTAGE_API_KEY;
-  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=300&start_date=${startDate}&end_date=${endDate}&apikey=${apiKey}`;
+  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=390&start_date=${startDate}&end_date=${endDate}&apikey=${apiKey}`;
   const response = await fetch(url)
 
   if (!response.ok) {

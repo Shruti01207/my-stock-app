@@ -10,7 +10,7 @@ import { Area, ComposedChart, Line, LineChart, ReferenceLine, ResponsiveContaine
 
 export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prevClose: number }) => {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [range, setRange] = useState<any[]>([]);
     const [refPos, setRefPos] = useState<"inside" | "above" | "below">("inside");
@@ -48,7 +48,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
 
         const d = data.values;
         const trendData = d.map((val: any) => ({
-            datetime: val.datetime,
+            datetime: new Date(val.datetime).getTime(),
             close: ((Number(val.close) - prevClose) / prevClose) * 100
         })).reverse();
 
@@ -107,6 +107,20 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
 
     }
 
+    const getUSMarketBounds = (): [number, number] => {
+        // We use a fixed date or the current date, but force the hours
+        if (data.length === 0) return [0, 0];
+        // Use the date from the actual data instead of "new Date()"
+        // This ensures the X-axis matches the day of the stock prices
+
+        const referenceDate = new Date(data[0].datetime)
+        const open = new Date(referenceDate);
+        open.setHours(9, 30, 0, 0); // 9:30 AM
+        const close = new Date(referenceDate);
+        close.setHours(16, 0, 0, 0); // 4:00 PM
+        return [open.getTime(), close.getTime()];
+
+    };
 
 
 
@@ -146,9 +160,15 @@ export const MiniTrendLineChart = ({ symbol, prevClose }: { symbol: string, prev
                     domain={range}
                     hide
                 />
-                <XAxis hide dataKey="datetime" />
+                {/* <XAxis hide dataKey="datetime"  /> */}
 
-
+                <XAxis
+                    hide
+                    type={'number'}
+                    scale={'time'}
+                    dataKey="datetime"
+                    domain={getUSMarketBounds}
+                />
                 <ReferenceLine
                     y={refPos == "inside" ? 0 : refPos == "above" ? range[1] : range[0]}
                     stroke="white" // Subtle grey/white
