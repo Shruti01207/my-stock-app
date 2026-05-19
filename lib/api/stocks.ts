@@ -14,15 +14,17 @@ export interface FinhubQuote {
 
 export const fetchStockPrice = async (symbol: string): Promise<FinhubQuote> => {
 
-  const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY
-  const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`;
+  const apiKey = process.env.FINNHUB_API_KEY
+  const url = `/api/market/quotes?symbols=${symbol}`;
   const response = await fetch(url)
 
   if (!response.ok) {
     throw new Error("Failed to fetch stock data");
   }
 
-  return response.json();
+  const data = await response.json();
+
+  return data[symbol];
 
 }
 
@@ -39,34 +41,33 @@ export const searchStock = async (symbol: string): Promise<any> => {
 }
 
 export const getTrendData = async (symbol: string, startDate: string, endDate: string): Promise<any> => {
-  const apiKey = process.env.NEXT_PUBLIC_ALPHA_VENTAGE_API_KEY;
-  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=390&start_date=${startDate}&end_date=${endDate}&apikey=${apiKey}`;
+  const apiKey = process.env.TWELVEDATA_API_KEY;
+  const url = `/api/market/timeseries?symbols=${symbol}&interval=1min&outputSize=390&startDate=${startDate}&endDate=${endDate}&ttlMs=300000`;
   const response = await fetch(url)
-
   if (!response.ok) {
     throw new Error("Failed to fetch stock data");
   }
 
-  return response.json();
+  const data = await response.json();
+  return data[symbol];
 }
-export const getGraphData = async (symbol: String, interval: String, outputSize: String, startDate: String, endDate: String): Promise<any> => {
-  const apiKey = process.env.NEXT_PUBLIC_ALPHA_VENTAGE_API_KEY;
-  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&outputsize=${outputSize}&interval=${interval}&start_date=${startDate}&end_date=${endDate}&prepost=false&apikey=${apiKey}`;
-  const response = await fetch(url)
 
+export const getGraphData = async (symbol: string, interval: string | null, outputSize: String | null, startDate: String | null, endDate: String | null): Promise<any> => {
+  const apiKey = process.env.TWELVEDATA_API_KEY;
+  const url = `/api/market/timeseries?symbols=${symbol}&outputSize=${outputSize}&interval=${interval}&startDate=${startDate}&endDate=${endDate}&ttlMs=120000`;
+  const response = await fetch(url)
   if (!response.ok) {
     throw new Error("Failed to fetch stock data");
   }
 
-  return response.json();
+  const data = await response.json();
+  return data[symbol];
 }
 
 // arrow function-> ()=>{ }
 export const getLatestNew = async () => {
-  console.log("get latest news called");
-  const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
-  const url = `https://finnhub.io/api/v1/news?category=general&token=${apiKey}`;
-
+  // const url = `https://finnhub.io/api/v1/news?category=general&token=${apiKey}`;
+  const url = `/api/market/news?category=general`;
   // why await?
   // await is required because fetch-> makes an api call->it creates http request->communicate with network
   // fetch is asynchronous function and returns promise

@@ -51,6 +51,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
     useEffect(() => {
         const currTime = getMarketTime();
+        console.log("prices[finHubSymbol]=", prices[finHubSymbol])
         if (isMarketOpen()) {
             setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
         }

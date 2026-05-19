@@ -29,6 +29,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
                 endDate = `${ISODate} 16:00:00`;
             }
             let data = await getTrendData(symbol, startDate, endDate);
+            console.log("new data", data)
             setLoading(false);
             parseData(data);
         }

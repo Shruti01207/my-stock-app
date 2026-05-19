@@ -112,10 +112,10 @@ declare global {
         onWatchlistChange?: (symbol: string, isAdded: boolean) => void;
     };
 
-    type QuoteData = {
-        c?: number;
-        dp?: number;
-    };
+    // type QuoteData = {
+    //     c?: number;
+    //     dp?: number;
+    // };
 
     type ProfileData = {
         name?: string;
@@ -244,6 +244,28 @@ declare global {
         high: string,
         low: string,
         open: string,
+        volume: string
+    }
+
+    type QuoteData = {
+        average_volume: string;
+        change: string;
+        close: string;
+        currency: string;
+        datetime: string;
+        exchange: string;
+        fifty_two_week: any
+        high: string;
+        is_market_open: boolean;
+        last_quote_at: number;
+        low: string;
+        mic_code: string;
+        name: string;
+        open: string;
+        percent_change: string;
+        previous_close: string;
+        symbol: string;
+        timestamp: number;
         volume: string
     }
 }
