@@ -22,32 +22,27 @@ export const getUSStockTime = (date: Date = new Date()) => {
 
 }
 
+export const getMarketTime = () => {
+  const now = new Date();
+  // Convert current time to a string in New York time, then back to a Date object
+  const etString = now.toLocaleString("en-US", { timeZone: "America/New_York" });
+  return new Date(etString).getTime();
+};
 
-export const getLastDateExcludingWeekends = () => {
-  const date = new Date();
-  console.log("date", date)
-  const today = date.getDay();
-
-  console.log("today=", today)
-  if (today == 6) {
-    const lastFriday = date.getDate() - 1;
-    console.log("lastFriday=", lastFriday)
-  }
-  else if (today == 0) {
-    const lastFriday = date.getDate() - 2;
-    let end = new Date();
-    end.setDate(lastFriday);
-    end.setHours(16, 0, 0);
-    let closeTime = new Date(getUSStockTime(end)).getTime();
-    let start = new Date();
-    start.setDate(lastFriday - 4);
-    start.setHours(9, 30, 0);
-    console.log("start", start)
-    let openTime = new Date(getUSStockTime(start)).getTime();
-    return [openTime, closeTime]
-
-  }
+export const getFormatedDate = (date: Date) => {
+  const formattedDate = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date);
+  return formattedDate
 }
+
+
 
 //  Return date in format YYYY-MM-DD
 export const getISOFormattedDate = (d: Date) => {

@@ -17,7 +17,6 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
     // const [color, setColor] = useState<string>(chartColor);
 
     useEffect(() => {
-
         const getData = async () => {
             setLoading(true);
             const date = new Date();

@@ -5,38 +5,38 @@ import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react"
 import { MiniTrendLineChart } from "./mini-trendline";
+import { useMarketQuote } from "@/hooks/useMarketQuote";
 
 
 
 export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string, finHubSymbol: string }) => {
 
-    const [stockPrice, setStockPrice] = useState<FinhubQuote>({
-        c: 0,
-        h: 0,
-        l: 0,
-        o: 0,
-        pc: 0,
-        t: 0,
-        d: 0,
-        dp: 0
-    });
+
+    const { data: stockPrice, isLoading, isError } = useMarketQuote(finHubSymbol);
+    // const [stockPrice, setStockPrice] = useState<FinhubQuote>({
+    //     c: 0,
+    //     h: 0,
+    //     l: 0,
+    //     o: 0,
+    //     pc: 0,
+    //     t: 0,
+    //     d: 0,
+    //     dp: 0
+    // });
     const subscribe = useLiveStore((state) => state.subscribe);
     const unsubcribe = useLiveStore((state) => state.unsubcribe);
     const livePrice = useLiveStore((state) => state.prices[symbol])
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const getStockPrice = async () => {
-            const data = await fetchStockPrice(finHubSymbol);
-            console.log("price=", data)
-            setStockPrice(data)
-        }
-
-
-        getStockPrice();
-
-    }, [finHubSymbol]);
+    //     const getStockPrice = async () => {
+    //         const data = await fetchStockPrice(finHubSymbol);
+    //         console.log("price=", data)
+    //         // setStockPrice(data)
+    //     }
+    //     getStockPrice();
+    // }, [finHubSymbol]);
 
     useEffect(() => {
         subscribe(finHubSymbol);
@@ -46,28 +46,31 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
 
     }, [finHubSymbol]);
 
+    if (isLoading) return <div>Loading...</div>;
+    if (isError || !stockPrice) return <div>Error loading data</div>;
 
-    const displayPrice = livePrice || stockPrice.c
-    const absoluteChange = livePrice ? (livePrice - stockPrice.pc) : stockPrice.d;
-    const percentageChange = livePrice ? (absoluteChange / stockPrice.pc) * 100 : stockPrice.dp;
+    const displayPrice = livePrice || stockPrice?.c
+    const absoluteChange = livePrice ? (livePrice - stockPrice.pc) : stockPrice?.d;
+    const percentageChange = livePrice ? (absoluteChange / stockPrice?.pc) * 100 : stockPrice?.dp;
     const sign = (absoluteChange > 0) ? '+' : (absoluteChange < 0) ? '-' : '';
     const color = (absoluteChange > 0) ? 'text-green-400' : (absoluteChange < 0) ? 'text-red-400' : 'text-gray-400';
     const chartColor = (absoluteChange > 0) ? 'green' : (absoluteChange < 0) ? 'red' : 'gray';
+
+
 
     return (
         <>
             <div className="m-0 bg-[#2e2e2e8f] w-[200px] rounded-md">
                 <div className="card-content p-3">
-                    <h1 className="font-bold">{symbol}</h1>
-                    <div className="text-sm text-white/80"> {displayPrice}</div>
-
-                    <div className="leading-none text-sm text-white/80">
+                    <h1 className="font-semibold">{symbol}</h1>
+                    <div className="text-sm text-white/80 font-semibold">{displayPrice}</div>
+                    <div className="leading-none text-sm text-white/80 font-semibold">
                         <span>(</span>
                         <span >{sign}</span>
                         <span> {Math.abs(absoluteChange).toFixed(2)}</span>
                         <span>)</span>
                     </div>
-                    <div className={`mt-1 flex items-center text-md font-bold ${color}`}>
+                    <div className={`mt-1 flex items-center text-md font-semibold ${color}`}>
                         <span >{sign}</span>
                         <span >{Math.abs(percentageChange).toFixed(2)}%</span>
                         <span>
@@ -78,7 +81,6 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
                             }
                         </span>
                     </div>
-
                 </div>
 
                 <div className="line-chart py-2">

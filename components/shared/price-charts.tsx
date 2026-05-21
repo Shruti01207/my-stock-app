@@ -1,10 +1,11 @@
 'use client'
 
+import { useMarketQuote } from "@/hooks/useMarketQuote";
+import { useMarketStatus } from "@/hooks/useMarketStatus";
 import { getGraphData, getTrendData } from "@/lib/api/stocks";
-import { getISOFormattedDate, getUSStockTime, isMarketOpen } from "@/lib/utils";
+import { getFormatedDate, getISOFormattedDate, getMarketTime, getUSStockTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
-import { Mountain } from "lucide-react";
-import { DateTime } from 'luxon'
+import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
@@ -41,7 +42,11 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const [endDate, setEndDate] = useState<string>(initialDates.endDate);
     const [mainGraphFilter, setMainGraphFilter] = useState<string>("1D");
     const [loading, setLoading] = useState<boolean>(false);
+    const { data: quoteData, isLoading, isError } = useMarketQuote(finHubSymbol);
+    // const { data: marketStatus, isLoading: marketDataLoading } = useMarketStatus('US')
+    let livePrice = prices[finHubSymbol];
 
+    // console.log("marketStatus=", marketStatus);
 
 
     useEffect(() => {
@@ -52,18 +57,12 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     useEffect(() => {
         const currTime = getMarketTime();
         console.log("prices[finHubSymbol]=", prices[finHubSymbol])
+        livePrice = prices[finHubSymbol];
         if (isMarketOpen()) {
             setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
         }
 
     }, [prices[finHubSymbol]])
-
-    const getMarketTime = () => {
-        const now = new Date();
-        // Convert current time to a string in New York time, then back to a Date object
-        const etString = now.toLocaleString("en-US", { timeZone: "America/New_York" });
-        return new Date(etString).getTime();
-    };
 
 
     // useEffect(() => {
@@ -264,19 +263,58 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
         setMainGraphFilter(filter);
     }
 
+
+
+    const displayPrice = livePrice || quoteData?.c
+    const absoluteChange = livePrice ? (livePrice - (quoteData?.pc ?? 0)) : quoteData?.d ?? 0;
+    const percentageChange = livePrice ? ((absoluteChange / (quoteData?.pc ?? 1)) * 100) : quoteData?.dp ?? 0;
+    const sign = (absoluteChange > 0) ? '+' : (absoluteChange < 0) ? '-' : '';
+    const color = (absoluteChange > 0) ? 'text-green-400' : (absoluteChange < 0) ? 'text-red-400' : 'text-gray-400';
+    const chartColor = (absoluteChange > 0) ? 'green' : (absoluteChange < 0) ? 'red' : 'gray';
+
+
+
+
     // const getFormttedDate
 
 
     return <>
 
-        <div className="border border-red-400 p-7">
+        <div className="border p-7">
 
             <div className="flex gap-2">
-                <span><Mountain size={18} /></span>
-                <span> INVESCO QQQ Trust, Series 1</span>
+                <span><Mountain size={25} /></span>
+                <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
             </div>
-            <div className="market-status">
-                {isMarketOpen() ? <span className="text-green-400">OPEN</span> : <span className="text-danger-400">CLOSED</span>}
+
+            <div className="flex gap-2">
+                <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>
+                <div className={`text-xl mt-1 flex items-center text-md font-semibold ${color}`}>
+                    <span>
+                        {absoluteChange > 0 && <ArrowUp size={20} className={`${color}`} />
+                        }
+                        {absoluteChange < 0 &&
+                            <ArrowDown size={20} className={`${color}`}></ArrowDown>
+                        }
+
+                    </span>
+                    <span >{Math.abs(percentageChange).toFixed(2)}%</span>
+                </div>
+                <div className="text-xl mt-1 flex items-center text-md font-semibold ${color}">
+                    <span>
+                        <span>(</span>
+                        <span >{sign}</span>
+                        <span> {Math.abs(absoluteChange).toFixed(2)}</span>
+                        <span>)</span>
+                    </span>
+                </div>
+            </div>
+
+
+
+            <div className="market-status flex gap-2">
+                {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-danger-400">CLOSED</div>}
+                <div>{(data.length > 0) ? getFormatedDate(new Date(data[data.length - 1].time)) : ""}</div>
             </div>
             {loading ?
                 <>

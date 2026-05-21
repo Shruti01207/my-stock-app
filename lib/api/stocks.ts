@@ -90,3 +90,12 @@ export const getLatestNew = async () => {
   return response.json();
 
 }
+
+
+export async function getMarketStatus(exchange: string) {
+  const apiKey = process.env.FINNHUB_API_KEY;
+  const url = `/api/market/market-status?exchange=${exchange}`;
+  const response = await fetch(url);
+
+  return response.json();
+}

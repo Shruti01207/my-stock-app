@@ -1,5 +1,3 @@
-import { symbol } from "better-auth";
-import { log } from "console";
 
 export interface FinhubQuote {
     c: number,
@@ -37,6 +35,8 @@ export const searchStock = async (symbol: string): Promise<any> => {
 
     return response.json();
 }
+
+
 
 export const getTrendData = async (symbol: string, startDate: string, endDate: string): Promise<any> => {
     const apiKey = process.env.TWELVEDATA_API_KEY;
@@ -88,5 +88,23 @@ export const getLatestNew = async (category: string) => {
     }
 
     return response.json();
+
+}
+
+
+export async function getMarketStatus(exchange: string) {
+    const API_KEY = process.env.ALPACAN_API_KEY!
+    const SECRET_KEY = process.env.ALPACAN_SECRET_KEY!
+    const url = `https://paper-api.alpaca.markets/v2/clock`;
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'APCA-API-KEY-ID': API_KEY,
+            'APCA-API-SECRET-KEY': SECRET_KEY
+        }
+    });
+
+    return response.json();
+
 
 }
