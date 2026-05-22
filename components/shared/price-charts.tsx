@@ -1,9 +1,8 @@
 'use client'
-
 import { useMarketQuote } from "@/hooks/useMarketQuote";
-import { useMarketStatus } from "@/hooks/useMarketStatus";
-import { getGraphData, getTrendData } from "@/lib/api/stocks";
-import { getFormatedDate, getISOFormattedDate, getMarketTime, getUSStockTime, isMarketOpen } from "@/lib/utils";
+import { getGraphData } from "@/lib/api/stocks";
+import { FILTER_KEY, PRICE_CHART_FILTER_CONFIG } from "@/lib/config/chartFilter";
+import { getFormatedDate, getISOFormattedDate, getMarketTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -31,7 +30,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     };
 
 
-    const [data, setData] = useState<any>([]);
+    const [data, setData] = useState<PriceChartData[]>([]);
     const [activeX, setActiveX] = useState(null)
     const subcribe = useLiveStore((state) => state.subscribe);
     const prices = useLiveStore((state) => state.prices);
@@ -40,13 +39,10 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const initialDates = getInitialMarketDates();
     const [startDate, setStartDate] = useState<string>(initialDates.startDate);
     const [endDate, setEndDate] = useState<string>(initialDates.endDate);
-    const [mainGraphFilter, setMainGraphFilter] = useState<string>("1D");
+    const [mainGraphFilter, setMainGraphFilter] = useState<FILTER_KEY>("1D");
     const [loading, setLoading] = useState<boolean>(false);
     const { data: quoteData, isLoading, isError } = useMarketQuote(finHubSymbol);
-    // const { data: marketStatus, isLoading: marketDataLoading } = useMarketStatus('US')
     let livePrice = prices[finHubSymbol];
-
-    // console.log("marketStatus=", marketStatus);
 
 
     useEffect(() => {
@@ -56,7 +52,6 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
     useEffect(() => {
         const currTime = getMarketTime();
-        console.log("prices[finHubSymbol]=", prices[finHubSymbol])
         livePrice = prices[finHubSymbol];
         if (isMarketOpen()) {
             setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
@@ -65,13 +60,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     }, [prices[finHubSymbol]])
 
 
-    // useEffect(() => {
-
-    // }, []);
-
-
     const handleClick = (e: any) => {
-
         if (e && e.activeLabel) {
             setActiveX(e.activeLabel);
         }
@@ -93,147 +82,17 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
     const parseData = (data: any) => {
         const d = data.values;
+
         const trendData = d.map((val: any) => ({
             time: new Date(val.datetime).getTime(),
             close: Number(val.close),
             low: Number(val.low),
             high: Number(val.high)
         })).reverse();
+
         setData(trendData);
     }
 
-
-    const getYAxisRange = (data: CandleData[]): [number, number] => {
-
-        if (data.length == 0) {
-            return [0, 0]
-        }
-        let maxi = -Infinity;
-        let mini = Infinity;
-
-        //  console.log("data", data)
-
-        for (let i = 0; i < data.length; i++) {
-            maxi = Math.max(Number(data[i].high), maxi);
-            mini = Math.min(Number(data[i].low), mini)
-        }
-
-        //console.log("max,min", [Math.ceil(mini), Math.ceil(maxi)]);
-        return [Math.floor(mini), Math.ceil(maxi)]
-
-    }
-
-    const getUSMarketBounds = (filter: string) => {
-
-        console.log("filter", filter);
-        switch (filter) {
-
-            case "1D":
-                // We use a fixed date or the current date, but force the hours
-                if (data.length === 0) return [0, 0];
-                // Use the date from the actual data instead of "new Date()"
-                // This ensures the X-axis matches the day of the stock prices
-                const referenceDate = new Date(data[0].time)
-                const open = new Date(referenceDate);
-                open.setHours(9, 30, 0, 0); // 9:30 AM
-                const close = new Date(referenceDate);
-                close.setHours(16, 0, 0, 0); // 4:00 PM
-                return [open.getTime(), close.getTime()];
-        }
-
-    };
-
-    const formatXAxis = (tickItem: number) => {
-
-        switch (mainGraphFilter) {
-            case "1D":
-                const date = new Date(tickItem);
-                return date.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                });
-            case "5D":
-                const date2 = new Date(tickItem);
-                return date2.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                });
-            default:
-                const date3 = new Date(tickItem);
-                return date3.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                });
-
-        }
-
-
-
-    };
-
-    const generateTradingTicks = () => {
-
-        switch (mainGraphFilter) {
-            case "1D":
-                let ticks = [];
-                if (data.length == 0) return []
-                const referenceDate = new Date(data?.[0].time)
-                const startTime = new Date(referenceDate);
-                startTime.setHours(9, 30, 0, 0); // Market Open
-                const endTime = new Date(referenceDate);
-                endTime.setHours(16, 0, 0, 0); // Market Close
-                let current = new Date(startTime);
-                while (current <= endTime) {
-                    ticks.push(current.getTime()); // Push timestamps
-                    current.setMinutes(current.getMinutes() + 30); // 30-minute intervals
-                }
-                return ticks;
-            case "5D":
-                const uniqueDays: any[] = [];
-                const seenDays = new Set();
-                data.forEach((candle: any) => {
-                    const dateStr = new Date(candle.time).toLocaleDateString();
-                    if (!seenDays.has(dateStr)) {
-                        uniqueDays.push(candle.time);
-                        seenDays.add(dateStr);
-                    }
-                });
-                return uniqueDays;
-            default:
-                return [];
-        }
-
-    };
-
-
-    const getToolTipFormatter = (value: any) => {
-
-        switch (mainGraphFilter) {
-
-            case "1D":
-                const date = new Date(value);
-                return date.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true // Set to false if you want 24-hour HH:mm
-                });
-
-            case "5D":
-                const date2 = new Date(value);
-                return date2.toLocaleTimeString([], {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true // Set to false if you want 24-hour HH:mm
-                });
-
-
-        }
-
-    }
 
 
     const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D") => {
@@ -250,8 +109,6 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                 setStartDate('');
                 setEndDate('')
             }
-
-
         }
         else {
             console.log("mainGraphFilter", mainGraphFilter)
@@ -275,13 +132,8 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
 
-    // const getFormttedDate
-
-
     return <>
-
         <div className="border p-7">
-
             <div className="flex gap-2">
                 <span><Mountain size={25} /></span>
                 <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
@@ -309,13 +161,11 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                     </span>
                 </div>
             </div>
-
-
-
             <div className="market-status flex gap-2">
                 {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-danger-400">CLOSED</div>}
                 <div>{(data.length > 0) ? getFormatedDate(new Date(data[data.length - 1].time)) : ""}</div>
             </div>
+
             {loading ?
                 <>
                     <div className="animate-pulse">
@@ -338,23 +188,23 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                             />
                             <XAxis
 
-                                type={mainGraphFilter == '1D' ? 'number' : 'category'}
-                                scale={mainGraphFilter == '1D' ? 'time' : undefined}
+                                type={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].type}
+                                scale={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].scale}
                                 dataKey="time"
-                                domain={mainGraphFilter == '1D' ? getUSMarketBounds(mainGraphFilter) : ['dataMin', 'dataMax']}
-                                tickFormatter={formatXAxis}
-                                ticks={generateTradingTicks()}
+                                domain={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getXAxisDomain(data)}
+                                tickFormatter={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].formatXAxis}
+                                ticks={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].generateTradingTicks(data)}
                                 padding={{ right: 40, left: 40 }}
 
                             />
                             <Tooltip
-                                labelFormatter={(value) => getToolTipFormatter(value)}
+                                labelFormatter={(value) => PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getToolTipFormatter(value)}
                                 contentStyle={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
                             />
 
                             <YAxis
                                 type="number"
-                                domain={getYAxisRange(data)}
+                                domain={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getYAxisRange(data)}
                                 padding={{ top: 40, bottom: 40 }}
                             />
 

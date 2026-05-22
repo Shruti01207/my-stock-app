@@ -1,9 +1,7 @@
 'use client'
-
-import { fetchStockPrice, FinhubQuote } from "@/lib/api/stocks"
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { MiniTrendLineChart } from "./mini-trendline";
 import { useMarketQuote } from "@/hooks/useMarketQuote";
 import { CHART_COLOR_MAP, COLOR_MAP } from "@/lib/constants";

@@ -249,6 +249,13 @@ declare global {
         volume: string
     }
 
+    type PriceChartData = {
+        time: number,
+        close: number,
+        low: number,
+        high: number
+    }
+
     type QuoteData = {
         average_volume: string;
         change: string;
