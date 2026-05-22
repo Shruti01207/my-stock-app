@@ -324,3 +324,15 @@ export const WATCHLIST_TABLE_HEADER = [
     'Alert',
     'Action',
 ];
+
+export const COLOR_MAP: Record<Trend, string> = {
+    up: 'text-green-400',
+    down: 'text-red-400',
+    flat: 'text-gray-400',
+};
+
+export const CHART_COLOR_MAP: Record<Trend, string> = {
+    up: 'green',
+    down: 'red',
+    flat: 'gray'
+}

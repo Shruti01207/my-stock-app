@@ -238,6 +238,8 @@ declare global {
     //   |->union type
     type StockSearchMode = "watchlist" | "navigate"
 
+    type Trend = "up" | "down" | "flat"
+
     type CandleData = {
         close: string,
         datetime: string,

@@ -18,7 +18,7 @@ interface LivePricesState {
     connect: () => void;
     disconnect: () => void;
     subscribe: (symbol: string) => void;
-    unsubcribe: (symbol: string) => void;
+    unsubscribe: (symbol: string) => void;
 
 }
 
@@ -120,7 +120,7 @@ export const useLiveStore = create<LivePricesState>((set, get) => ({
             console.log("symbols suscribed");
         }
     },
-    unsubcribe: (symbol: string) => {
+    unsubscribe: (symbol: string) => {
 
         const { socket, isConnected, subscribedSymbols } = get();
         const newSymbols = new Set(subscribedSymbols);
