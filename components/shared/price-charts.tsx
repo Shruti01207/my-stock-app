@@ -95,7 +95,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
 
-    const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D") => {
+    const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D" | "1M" | "6M") => {
         setLoading(true);
         setInterval(interval);
         if (filter == '1D') {
@@ -209,13 +209,13 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                             />
 
                             <Line
-                                type="monotone"
+                                type={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].lineType}
                                 dataKey="close"
                                 stroke="#f43f5e"
-                                strokeWidth={1}
+                                strokeWidth={2}
                                 dot={false}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                                strokeLinecap={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinecap}
+                                strokeLinejoin={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinejoin}
                                 isAnimationActive={false}
                                 activeDot={{
                                     stroke: 'green',
@@ -229,8 +229,10 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
             }
 
 
-            <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none" onClick={() => setIntervalAndBlocks('1min', '390', "1D")}>1D</button>
-            <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none" onClick={() => setIntervalAndBlocks('5min', '390', "5D")}  >5D</button>
+            <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-1 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none" onClick={() => setIntervalAndBlocks('1min', '390', "1D")}>1D</button>
+            <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-1 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none" onClick={() => setIntervalAndBlocks('5min', '390', "5D")}  >5D</button>
+            <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-1 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none" onClick={() => setIntervalAndBlocks('1day', '23', "1M")}  >1M</button>
+            <button type="button" className="text-white bg-dark box-border border border-transparent hover:bg-dark-strong focus:ring-1 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none" onClick={() => setIntervalAndBlocks('1day', '138', "6M")}  >6M</button>
         </div>
 
 

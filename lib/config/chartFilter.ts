@@ -1,6 +1,11 @@
+import { MONTH_NUMBER_MAP } from "../constants";
+
 export interface FILTER_CONFIG {
     type: "number" | "category",
     scale: "time" | undefined,
+    strokeLinecap: 'round' | 'butt',
+    strokeLinejoin: 'round' | 'miter',
+    lineType: "monotone" | "linear",
     getXAxisDomain: (data: PriceChartData[]) => number[] | string[],
     formatXAxis: (tickItem: number) => string,
     generateTradingTicks: (data: PriceChartData[]) => number[],
@@ -10,14 +15,17 @@ export interface FILTER_CONFIG {
 }
 
 
-export type FILTER_KEY = "1D" | "5D"
-
+export type FILTER_KEY = "1D" | "5D" | "1M" | "6M"
+// | "1M"
 
 export const PRICE_CHART_FILTER_CONFIG: Record<FILTER_KEY, FILTER_CONFIG> = {
 
     "1D": {
         type: "number",
         scale: 'time',
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        lineType: "monotone",
         getXAxisDomain: (data: PriceChartData[]) => {
             if (data.length === 0) return [0, 0];
             // Use the date from the actual data instead of "new Date()"
@@ -76,6 +84,9 @@ export const PRICE_CHART_FILTER_CONFIG: Record<FILTER_KEY, FILTER_CONFIG> = {
     "5D": {
         type: "category",
         scale: undefined,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        lineType: "monotone",
         getXAxisDomain: () => {
             return ['dataMin', 'dataMax'];
         },
@@ -120,6 +131,116 @@ export const PRICE_CHART_FILTER_CONFIG: Record<FILTER_KEY, FILTER_CONFIG> = {
             }
             return [Math.floor(mini), Math.ceil(maxi)]
         }
+
+    },
+    "1M": {
+        type: "category",
+        scale: undefined,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        lineType: "linear",
+        getXAxisDomain: () => {
+            return ['dataMin', 'dataMax'];
+        },
+        formatXAxis: (tickItem: number) => {
+            const date2 = new Date(tickItem);
+            return date2.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+            });
+        },
+        generateTradingTicks: (data: PriceChartData[]) => {
+            const uniqueDays: any[] = [];
+            const seenDays = new Set();
+            data.forEach((candle: any, i) => {
+                const dateStr = new Date(candle.time).toLocaleDateString();
+                if (((i + 1) % 5 == 1) && !seenDays.has(dateStr)) {
+                    uniqueDays.push(candle.time);
+                    seenDays.add(dateStr);
+                }
+            });
+            return uniqueDays;
+        },
+        getToolTipFormatter: (value: any) => {
+            const date2 = new Date(value);
+            return date2.toLocaleTimeString([], {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true // Set to false if you want 24-hour HH:mm
+            });
+        },
+        getYAxisRange: (data: PriceChartData[]): [number, number] => {
+            if (data.length == 0) {
+                return [0, 0]
+            }
+            let maxi = -Infinity;
+            let mini = Infinity;
+            for (let i = 0; i < data.length; i++) {
+                maxi = Math.max(Number(data[i].high), maxi);
+                mini = Math.min(Number(data[i].low), mini)
+            }
+            return [Math.floor(mini), Math.ceil(maxi)]
+        }
+
+
+    },
+    "6M": {
+        type: "category",
+        scale: undefined,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        lineType: "monotone",
+        getXAxisDomain: () => {
+            return ['dataMin', 'dataMax'];
+        },
+        formatXAxis: (tickItem: number) => {
+            const date2 = new Date(tickItem);
+            return date2.toLocaleDateString('en-US', {
+                month: 'short',
+                year: 'numeric',
+            });
+        },
+        generateTradingTicks: (data: PriceChartData[]) => {
+            const uniqueDays: any[] = [];
+            const seenMonthYear = new Set();
+            data.forEach((candle: any, i) => {
+                const date = new Date(candle.time);
+                const month = MONTH_NUMBER_MAP[date.getMonth()]
+                const year = date.getFullYear();
+                const monthYear = month + " " + year;
+                if (!seenMonthYear.has(monthYear)) {
+                    uniqueDays.push(candle.time);
+                    seenMonthYear.add(monthYear);
+                }
+            });
+            console.log("uniqueMonthYears=", uniqueDays);
+            return uniqueDays;
+        },
+        getToolTipFormatter: (value: any) => {
+            const date2 = new Date(value);
+            return date2.toLocaleTimeString([], {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true // Set to false if you want 24-hour HH:mm
+            });
+        },
+        getYAxisRange: (data: PriceChartData[]): [number, number] => {
+            if (data.length == 0) {
+                return [0, 0]
+            }
+            let maxi = -Infinity;
+            let mini = Infinity;
+            for (let i = 0; i < data.length; i++) {
+                maxi = Math.max(Number(data[i].high), maxi);
+                mini = Math.min(Number(data[i].low), mini)
+            }
+            return [Math.floor(mini), Math.ceil(maxi)]
+        }
+
 
     }
 
