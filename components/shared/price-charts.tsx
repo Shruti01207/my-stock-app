@@ -6,7 +6,7 @@ import { getFormatedDate, getISOFormattedDate, getMarketTime, isMarketOpen } fro
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 
 
@@ -133,38 +133,40 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
     return <>
-        <div className="border p-7">
-            <div className="flex gap-2">
-                <span><Mountain size={25} /></span>
-                <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
+        <div className="my-2 bg-[#17181f] p-3 rounded-md">
+            <div className="chart-header p-2 ms-[2.5%] my-2">
+                <div className="flex gap-2">
+                    <span><Mountain size={25} /></span>
+                    <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
+                </div>
+                <div className="flex gap-2">
+                    <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>
+                    <div className={`text-xl mt-1 flex items-center text-md font-semibold ${color}`}>
+                        <span>
+                            {absoluteChange > 0 && <ArrowUp size={20} className={`${color}`} />
+                            }
+                            {absoluteChange < 0 &&
+                                <ArrowDown size={20} className={`${color}`}></ArrowDown>
+                            }
+
+                        </span>
+                        <span >{Math.abs(percentageChange).toFixed(2)}%</span>
+                    </div>
+                    <div className="text-xl mt-1 flex items-center text-md font-semibold ${color}">
+                        <span>
+                            <span>(</span>
+                            <span >{sign}</span>
+                            <span> {Math.abs(absoluteChange).toFixed(2)}</span>
+                            <span>)</span>
+                        </span>
+                    </div>
+                </div>
+                <div className="market-status flex gap-2">
+                    {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-danger-400">CLOSED</div>}
+                    <div>{(data.length > 0) ? getFormatedDate(new Date(data[data.length - 1].time)) : ""}</div>
+                </div>
             </div>
 
-            <div className="flex gap-2">
-                <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>
-                <div className={`text-xl mt-1 flex items-center text-md font-semibold ${color}`}>
-                    <span>
-                        {absoluteChange > 0 && <ArrowUp size={20} className={`${color}`} />
-                        }
-                        {absoluteChange < 0 &&
-                            <ArrowDown size={20} className={`${color}`}></ArrowDown>
-                        }
-
-                    </span>
-                    <span >{Math.abs(percentageChange).toFixed(2)}%</span>
-                </div>
-                <div className="text-xl mt-1 flex items-center text-md font-semibold ${color}">
-                    <span>
-                        <span>(</span>
-                        <span >{sign}</span>
-                        <span> {Math.abs(absoluteChange).toFixed(2)}</span>
-                        <span>)</span>
-                    </span>
-                </div>
-            </div>
-            <div className="market-status flex gap-2">
-                {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-danger-400">CLOSED</div>}
-                <div>{(data.length > 0) ? getFormatedDate(new Date(data[data.length - 1].time)) : ""}</div>
-            </div>
 
             {loading ?
                 <>
@@ -179,7 +181,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                 </> :
                 <>
                     <ResponsiveContainer width="100%" height={300}>
-                        <LineChart
+                        <ComposedChart
                             data={data}
                             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
                             onClick={handleClick}
@@ -195,23 +197,55 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                                 tickFormatter={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].formatXAxis}
                                 ticks={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].generateTradingTicks(data)}
                                 padding={{ right: 40, left: 40 }}
-
+                                tick={{ fill: "#ffff" }}
                             />
                             <Tooltip
                                 labelFormatter={(value) => PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getToolTipFormatter(value)}
                                 contentStyle={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
                             />
 
+                            <defs>
+                                <linearGradient
+                                    id={`miniChartGradient-${symbol}`}
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                >
+                                    <stop
+                                        offset="0%"
+                                        stopColor={chartColor}
+                                        stopOpacity={0.5}
+                                    />
+                                    <stop
+                                        offset="100%"
+                                        stopColor={chartColor}
+                                        stopOpacity={0.1}
+                                    />
+                                </linearGradient>
+                            </defs>
+
                             <YAxis
                                 type="number"
                                 domain={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getYAxisRange(data)}
                                 padding={{ top: 40, bottom: 40 }}
+                                tick={{ fill: "#ffff" }}
+                            />
+
+                            <Area
+                                type="monotone"
+                                dataKey="close"
+                                stroke="none"
+                                fill={`url(#miniChartGradient-${symbol})`}
+                                fillOpacity={1}
+                                baseValue="dataMin"
+                                isAnimationActive={false}
                             />
 
                             <Line
                                 type={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].lineType}
                                 dataKey="close"
-                                stroke="#f43f5e"
+                                stroke={chartColor}
                                 strokeWidth={2}
                                 dot={false}
                                 strokeLinecap={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinecap}
@@ -222,7 +256,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                                 }}
                             />
 
-                        </LineChart>
+                        </ComposedChart>
                     </ResponsiveContainer>
                 </>
 

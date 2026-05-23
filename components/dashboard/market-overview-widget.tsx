@@ -2,9 +2,23 @@
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useEffect } from "react"
-import { MiniTrendLineChart } from "./mini-trendline";
+// import { MiniTrendLineChart } from "./mini-trendline";
 import { useMarketQuote } from "@/hooks/useMarketQuote";
 import { CHART_COLOR_MAP, COLOR_MAP } from "@/lib/constants";
+import { Skeleton } from "../ui/skeleton";
+import dynamic from "next/dynamic"
+
+const MiniTrendLineChart = dynamic(
+    () => import("./mini-trendline").then(
+        (mod) => mod.MiniTrendLineChart
+    ),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="h-[60px] animate-pulse rounded bg-muted" />
+        )
+    }
+)
 
 
 
@@ -23,7 +37,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
         }
     }, [finHubSymbol, subscribe, unsubscribe]);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <Skeleton className="h-[150px] w-full rounded-xl" />;
     if (isError || !stockPrice) return <div>Error loading data</div>;
 
     const currentPrice = (stockPrice?.c ?? 0);
@@ -40,8 +54,8 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
 
     return (
         <>
-            <div className="m-0 bg-[#91919129] w-[200px] rounded-md">
-                <div className="card-content p-3">
+            <div className="m-0 bg-[#17181f] w-[200px] rounded-md">
+                <div className="card-content p-3 pb-1">
                     <h1 className="font-semibold">{symbol}</h1>
                     <div className="text-sm text-white/80 font-semibold">{displayPrice}</div>
                     <div className="leading-none text-sm text-white/80 font-semibold">
@@ -60,7 +74,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
                     </div>
                 </div>
 
-                <div className="line-chart py-2">
+                <div className="line-chart">
                     <MiniTrendLineChart symbol={symbol} prevClose={Number(stockPrice.pc)} chartColor={chartColor}></MiniTrendLineChart>
                 </div>
 

@@ -1,7 +1,7 @@
-import { getTrendData } from '@/lib/api/stocks';
+import { useMiniTrend } from '@/hooks/useMiniTrend';;
 import { getISOFormattedDate, isMarketOpen } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-import { Area, ComposedChart, Line, LineChart, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { useMemo } from 'react';
+import { Area, ComposedChart, Line, ReferenceLine, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 
 
@@ -10,71 +10,73 @@ import { Area, ComposedChart, Line, LineChart, ReferenceLine, ResponsiveContaine
 
 export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: string, prevClose: number, chartColor: string }) => {
 
-    const [data, setData] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [range, setRange] = useState<any[]>([]);
-    const [refPos, setRefPos] = useState<"inside" | "above" | "below">("inside");
-    // const [color, setColor] = useState<string>(chartColor);
-
-    useEffect(() => {
-        const getData = async () => {
-            setLoading(true);
-            const date = new Date();
-            const ISODate = getISOFormattedDate(date);
-            let startDate = '';
-            let endDate = '';
-            if (isMarketOpen()) {
-                startDate = `${ISODate} 09:30:00`;
-                endDate = `${ISODate} 16:00:00`;
-            }
-            let data = await getTrendData(symbol, startDate, endDate);
-            console.log("new data", data)
-            setLoading(false);
-            parseData(data);
-        }
-
-
-        if (prevClose > 0) {
-            getData();
-        }
-
-    }, [prevClose, symbol])
-
-
-    const parseData = (data: any) => {
-
-        if (!prevClose || prevClose === 0) {
-            return;
-        }
-
-        const d = data.values;
-        const trendData = d.map((val: any) => ({
-            datetime: new Date(val.datetime).getTime(),
-            close: ((Number(val.close) - prevClose) / prevClose) * 100
-        })).reverse();
-
-        // console.log(`trendData for ${symbol}`, trendData);
-        // const isPositive = trendData[trendData.length - 1].close >= trendData[0].close;
-        // const color = isPositive ? 'green' : 'red';
-        // setColor(color);
-
-
-
-
-        setData(trendData);
-        getRefLinePos(trendData)
-
-
-
-
-
-
+    const date = new Date();
+    const ISODate = getISOFormattedDate(date);
+    let startDate = '';
+    let endDate = '';
+    if (isMarketOpen()) {
+        startDate = `${ISODate} 09:30:00`;
+        endDate = `${ISODate} 16:00:00`;
     }
+    const { data, isLoading, isError, isFetching } = useMiniTrend(symbol, startDate, endDate, prevClose)
 
-    const getRefLinePos = (data: any) => {
-        // how do we found max?
-        // 1,5,3,2,7
-        // 5,
+
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         setLoading(true);
+
+    //         let data = await getTrendData(symbol, startDate, endDate);
+    //         setLoading(false);
+    //         parseData(data);
+    //     }
+
+
+    //     if (prevClose > 0) {
+    //         getData();
+    //     }
+
+    // }, [prevClose, symbol])
+
+
+    // const parseData = (data: any) => {
+
+    //     if (!prevClose || prevClose === 0) {
+    //         return;
+    //     }
+
+    //     const d = data.values;
+    //     const trendData = data.values.map((val: any) => ({
+    //         datetime: new Date(val.datetime).getTime(),
+    //         close: ((Number(val.close) - prevClose) / prevClose) * 100
+    //     })).reverse();
+
+    //     // console.log(`trendData for ${symbol}`, trendData);
+    //     // const isPositive = trendData[trendData.length - 1].close >= trendData[0].close;
+    //     // const color = isPositive ? 'green' : 'red';
+    //     // setColor(color);
+
+
+
+
+    //     setData(trendData);
+    //     getRefLinePos(trendData)
+
+
+
+
+
+
+    // }
+
+    const { range, refPos } = useMemo(() => {
+
+        if (!data || data.length == 0) {
+            return {
+                range: [0, 0],
+                refPos: "inside"
+            }
+        }
+
         let maxi = data?.[0].close;
         let mini = data?.[0].close;
 
@@ -84,35 +86,40 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
             mini = Math.min(mini, d.close);
         })
 
-        // -5 ->-2=>-2-(-5)=3
-        // 2->5=>5-3=2
-        //-10->5=>5-(-10)=>15
-
-        //-5->-2=>-2-(-5)=3
-        // [-5, -2+(3*0.2)]
-        //[-5, -2+0.6=]
         let range = maxi - mini;
 
         let newRange;
         if (maxi < 0 && mini < 0) {
             // if all numbers are negative then, ref line above.
             newRange = [mini - (range * 0.2), maxi + (range * 0.2)];
-            setRefPos("above");
-
+            return {
+                range: newRange,
+                refPos: "above"
+            }
         }
         else if (maxi > 0 && mini > 0) {
             // if all numbers are positive then, ref line below.
             newRange = [mini - (range * 0.2), maxi + (range * 0.2)];
-            setRefPos("below");
+            //setRefPos("below");
+            return {
+                range: newRange,
+                refPos: "below"
+            }
+
         }
         else {
             newRange = [mini, maxi];
-            setRefPos("inside");
-        }
-        setRange(newRange)
-        // return newRange;
+            return {
+                range: newRange,
+                refPos: "inside"
+            }
 
-    }
+        }
+
+    }, [data])
+
+
+
 
     const getUSMarketBounds = (): [number, number] => {
         // We use a fixed date or the current date, but force the hours
@@ -131,15 +138,17 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
 
 
 
-    if (loading || data.length === 0 || prevClose == 0) {
-        return <div style={{ height: 50, width: '100%', background: '#1a1a1a' }} />;
+    if (isLoading || !data || data.length === 0 || prevClose == 0) {
+        return <div className="h-[60px] animate-pulse rounded bg-muted" />;
     }
 
     return <>
+
         <ResponsiveContainer width="100%" height={60}>
             <ComposedChart
                 data={data}
                 margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                accessibilityLayer={false}
             >
 
                 <defs>
@@ -179,7 +188,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
                 <ReferenceLine
                     y={refPos == "inside" ? 0 : refPos == "above" ? range[1] : range[0]}
                     stroke="white" // Subtle grey/white
-                    strokeDasharray="1 4"
+                    strokeDasharray="1 6"
                 />
 
                 <Area
@@ -196,6 +205,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
                     dataKey="close"
                     stroke={chartColor}
                     strokeWidth={1}
+                    isAnimationActive={false}
                     dot={false}
                     strokeLinecap="round"
                     strokeLinejoin="round"
