@@ -14,7 +14,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
     });
 
     return (
-        <main>
+        <main >
             <div className="text-gray-400">
 
                 <Header intialUser={session?.user} />

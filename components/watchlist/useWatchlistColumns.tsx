@@ -1,6 +1,6 @@
 import { useWatchlistStore } from "@/stores/useWatchlistStore"
-import { ColumnDef, SortingState } from "@tanstack/react-table"
-import { ArrowDown, ArrowUpDown, ArrowUpRight, Trash2 } from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table"
+import { ArrowDown, ArrowUpDown, ArrowUpRight } from "lucide-react"
 import React from "react"
 import { useMemo } from "react"
 import { Button } from "../ui/button"
@@ -16,6 +16,7 @@ export const useWatchlistColumns = () => {
                 header: ({ column }) => {
                     return (<Button
                         variant="ghost"
+                        className="p-0"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Symbol
@@ -24,7 +25,7 @@ export const useWatchlistColumns = () => {
                 },
                 cell: ({ row }) => {
 
-                    return <div className="font-bold">{row.getValue("symbol")}</div>
+                    return <div className="font-bold px-2">{row.getValue("symbol")}</div>
                 }
             },
             {
@@ -58,19 +59,19 @@ export const useWatchlistColumns = () => {
                     )
                 }
             },
-            {
-                accessorKey: "actions",
-                header: "Actions",
-                cell: ({ row }) => {
+            // {
+            //     accessorKey: "actions",
+            //     header: "Actions",
+            //     cell: ({ row }) => {
 
-                    return (
-                        <button onClick={() => { removeStock(row.original.symbol) }}>
-                            <Trash2 className="h-5 w-5" />
-                        </button>
-                    )
-                }
+            //         return (
+            //             <button onClick={() => { removeStock(row.original.symbol) }}>
+            //                 <Trash2 className="h-5 w-5" />
+            //             </button>
+            //         )
+            //     }
 
-            }
+            // }
 
         ]
         , [removeStock])

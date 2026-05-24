@@ -82,14 +82,15 @@ export const WatchList = () => {
 
 
     return (
-        <>   <div className="header flex justify-between p-4">
-            <h1 className='text-xl font-medium' >Watchlist</h1>
-            <div className="action-btn">
-                <button onClick={() => onOpen("watchlist")} className='inline-flex items-center justify-center rounded-full bg-blue-600 p-2 text-white hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"'>
-                    <Plus />
-                </button>
+        <>
+            <div className="flex justify-between items-center p-2">
+                <h1 className='text-xl font-medium' >Watchlist</h1>
+                <div className="action-btn">
+                    <button onClick={() => onOpen("watchlist")} className='inline-flex items-center justify-center rounded-full p-2 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"'>
+                        <Plus />
+                    </button>
+                </div>
             </div>
-        </div>
 
             <WatchlistTable data={data} />
 

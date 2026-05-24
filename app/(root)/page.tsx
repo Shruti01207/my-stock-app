@@ -47,24 +47,24 @@ export default function Home() {
     //   </section>
     // </div>
 
-    <div className="max-w-6xl mx-auto mx-3 flex">
-      <div className="left w-full md:w-[70%]">
-        <section className="widget-section ">
+    <div className="max-w-6xl mx-auto mx-3">
+      <div className="left md:w-[70%]">
+        <div className="widget-section">
           <div className="widget-container overflow-x-scroll md:overflow-x-hidden flex gap-5">
             <MarketOverviewWidget symbol='SPY' finHubSymbol="SPY" />
             <MarketOverviewWidget symbol='QQQ' finHubSymbol="QQQ" />
             <MarketOverviewWidget symbol='DIA' finHubSymbol="DIA" />
             <MarketOverviewWidget symbol="IWM" finHubSymbol="IWM" />
           </div>
-        </section>
-        <section className="main-chart">
+        </div>
+        <div className="main-chart">
           <PriceCharts symbol="QQQ" finHubSymbol="QQQ"></PriceCharts>
-        </section>
-        <section>
+        </div>
+        <div>
           <MarketNewsWidget></MarketNewsWidget>
-        </section>
+        </div>
       </div>
-      <div className="right w-full md:w-[30%]">
+      <div className="hidden md:block md:w-[30%] right w-full">
         <WatchList />
       </div>
 

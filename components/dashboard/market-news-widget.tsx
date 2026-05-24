@@ -57,19 +57,23 @@ export const MarketNewsWidget = () => {
 
 
     return <>
-        <h1 className="text-2xl font-medium">Top News Stories</h1>
+        <div className="my-3">
+            <h1 className="text-2xl font-semibold">Top News Stories</h1>
+            <span className="font-thin text-gray-500">From sources across the web</span>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {latestNews.map((news) => (
                 <div className="news-card" key={news.id}>
 
                     <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full bg-blue-500">
+                        {/* <div className="w-6 h-6 rounded-full bg-blue-500">
                             <img className="w-full h-full" src={news.image} alt={news.id} />
-                        </div>
-                        <span>{news.source}</span>
-                        {news.timeAgo}
+                        </div> */}
+                        <span className="font-semibold">{news.source}</span>
+                        <span className="font-extralight text-gray-500"><span className="me-1 font-extralight text-gray-500">&bull;</span>{news.timeAgo} </span>
                     </div>
-                    <div className="border border-danger">
+                    <div className="font-semibold">
                         <a href={news.url}>{news.headline}</a>
                     </div>
                 </div>

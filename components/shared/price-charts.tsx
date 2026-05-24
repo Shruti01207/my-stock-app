@@ -7,6 +7,7 @@ import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { PriceChartContent } from "./price-chart-content";
 
 
 
@@ -31,7 +32,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
     const [data, setData] = useState<PriceChartData[]>([]);
-    const [activeX, setActiveX] = useState(null)
+
     const subcribe = useLiveStore((state) => state.subscribe);
     const prices = useLiveStore((state) => state.prices);
     const [interval, setInterval] = useState<string>('1min');
@@ -60,11 +61,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     }, [prices[finHubSymbol]])
 
 
-    const handleClick = (e: any) => {
-        if (e && e.activeLabel) {
-            setActiveX(e.activeLabel);
-        }
-    }
+
 
 
     useEffect(() => {
@@ -133,7 +130,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
 
     return <>
-        <div className="my-2 bg-[#17181f] p-3 rounded-md">
+        <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
             <div className="chart-header p-2 ms-[2.5%] my-2">
                 <div className="flex gap-2">
                     <span><Mountain size={25} /></span>
@@ -180,84 +177,16 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                     </div>
                 </> :
                 <>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <ComposedChart
-                            data={data}
-                            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-                            onClick={handleClick}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3}
-                            />
-                            <XAxis
-
-                                type={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].type}
-                                scale={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].scale}
-                                dataKey="time"
-                                domain={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getXAxisDomain(data)}
-                                tickFormatter={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].formatXAxis}
-                                ticks={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].generateTradingTicks(data)}
-                                padding={{ right: 40, left: 40 }}
-                                tick={{ fill: "#ffff" }}
-                            />
-                            <Tooltip
-                                labelFormatter={(value) => PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getToolTipFormatter(value)}
-                                contentStyle={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
-                            />
-
-                            <defs>
-                                <linearGradient
-                                    id={`miniChartGradient-${symbol}`}
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                >
-                                    <stop
-                                        offset="0%"
-                                        stopColor={chartColor}
-                                        stopOpacity={0.5}
-                                    />
-                                    <stop
-                                        offset="100%"
-                                        stopColor={chartColor}
-                                        stopOpacity={0.1}
-                                    />
-                                </linearGradient>
-                            </defs>
-
-                            <YAxis
-                                type="number"
-                                domain={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getYAxisRange(data)}
-                                padding={{ top: 40, bottom: 40 }}
-                                tick={{ fill: "#ffff" }}
-                            />
-
-                            <Area
-                                type="monotone"
-                                dataKey="close"
-                                stroke="none"
-                                fill={`url(#miniChartGradient-${symbol})`}
-                                fillOpacity={1}
-                                baseValue="dataMin"
-                                isAnimationActive={false}
-                            />
-
-                            <Line
-                                type={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].lineType}
-                                dataKey="close"
-                                stroke={chartColor}
-                                strokeWidth={2}
-                                dot={false}
-                                strokeLinecap={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinecap}
-                                strokeLinejoin={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinejoin}
-                                isAnimationActive={false}
-                                activeDot={{
-                                    stroke: 'green',
-                                }}
-                            />
-
-                        </ComposedChart>
-                    </ResponsiveContainer>
+                    <div className="lg:hidden sm:block w-full min-w-full">
+                        <ResponsiveContainer width="100%" aspect={20 / 9}>
+                            <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="hidden lg:block w-full min-w-full">
+                        <ResponsiveContainer width="100%" aspect={25 / 9}>
+                            <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
+                        </ResponsiveContainer>
+                    </div>
                 </>
 
             }
