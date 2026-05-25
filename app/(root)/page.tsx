@@ -47,7 +47,7 @@ export default function Home() {
     //   </section>
     // </div>
 
-    <div className="max-w-6xl mx-auto mx-3">
+    <div className="max-w-6xl mx-auto mx-3 flex">
       <div className="left md:w-[70%]">
         <div className="widget-section">
           <div className="widget-container overflow-x-scroll md:overflow-x-hidden flex gap-5">
