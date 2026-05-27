@@ -135,8 +135,6 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                 <div className="flex gap-2">
                     <span><Mountain size={25} /></span>
                     <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
-                    <span>hello</span>
-                    <span> {loading}</span>
                 </div>
                 <div className="flex gap-2">
                     <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>
