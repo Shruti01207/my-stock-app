@@ -41,7 +41,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const [startDate, setStartDate] = useState<string>(initialDates.startDate);
     const [endDate, setEndDate] = useState<string>(initialDates.endDate);
     const [mainGraphFilter, setMainGraphFilter] = useState<FILTER_KEY>("1D");
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const { data: quoteData, isLoading, isError } = useMarketQuote(finHubSymbol);
     let livePrice = prices[finHubSymbol];
 
@@ -135,6 +135,8 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                 <div className="flex gap-2">
                     <span><Mountain size={25} /></span>
                     <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
+                    <span>hello</span>
+                    <span> {loading}</span>
                 </div>
                 <div className="flex gap-2">
                     <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>
@@ -164,16 +166,21 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                 </div>
             </div>
 
-
             {loading ?
                 <>
-                    <div className="animate-pulse">
-                        <ResponsiveContainer width="100%" height={300}>
+                    <div className="lg:hidden sm:block w-full min-w-full animate-pulse">
+                        <ResponsiveContainer width="100%" aspect={20 / 9}>
                             <LineChart>
                                 <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} /> <XAxis dataKey="time" /> <YAxis /> <Line type="monotone" dataKey="close" stroke="#9ca3af" strokeWidth={2} dot={false} isAnimationActive={false} />
                             </LineChart>
                         </ResponsiveContainer>
-
+                    </div>
+                    <div className="hidden lg:block w-full min-w-full animate-pulse">
+                        <ResponsiveContainer width="100%" aspect={25 / 9}>
+                            <LineChart>
+                                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} /> <XAxis dataKey="time" /> <YAxis /> <Line type="monotone" dataKey="close" stroke="#9ca3af" strokeWidth={2} dot={false} isAnimationActive={false} />
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
                 </> :
                 <>
