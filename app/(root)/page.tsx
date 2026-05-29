@@ -2,14 +2,13 @@ import { MarketNewsWidget } from "@/components/dashboard/market-news-widget";
 import { MarketOverviewWidget } from "@/components/dashboard/market-overview-widget";
 import { PriceCharts } from "@/components/shared/price-charts";
 import { WatchList } from "@/components/watchlist/Watchlist";
+import { useCompanyProfile } from "@/hooks/useCompanyProfile";
 import Link from "next/link";
 
 
 
 
 export default function Home() {
-
-
 
 
 
@@ -59,7 +58,7 @@ export default function Home() {
           </div>
         </div>
         <div className="main-chart my-3">
-          <PriceCharts symbol="QQQ" finHubSymbol="QQQ"></PriceCharts>
+          {<PriceCharts symbol="QQQ" finHubSymbol="QQQ" ></PriceCharts>}
         </div>
 
         <div className="md:hidden list-buttons">
@@ -67,8 +66,6 @@ export default function Home() {
             Watchlist
           </Link>
         </div>
-
-
         <div className="">
           <MarketNewsWidget></MarketNewsWidget>
         </div>

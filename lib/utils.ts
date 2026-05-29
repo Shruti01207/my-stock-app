@@ -48,7 +48,24 @@ export const getFormatedDate = (date: Date) => {
 export const getISOFormattedDate = (d: Date) => {
   const formattedDate = d.toISOString().split('T')[0];
   return formattedDate;
-  // console.log("formattedDate", formattedDate);
+
+}
+
+
+export const formatMarketCap = (numInMillions: number) => {
+  const value = numInMillions * 1000000;
+  if (!value)
+    return "$0";
+
+  // 10 kharab
+  if (value >= 1_000_000_000_000) {
+    return `$${(value / 1_000_000_000_000).toFixed(2)}T`
+  }
+  else if (value >= 1_000_000_000) {
+    return `$${(value / 1_000_000_000).toFixed(2)}T`
+  }
+
+  return `$${value.toLocaleString()}`
 
 }
 

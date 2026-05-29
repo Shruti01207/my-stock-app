@@ -62,25 +62,11 @@ export const getGraphData = async (symbol: String | null, interval: string | nul
     return response.json();
 }
 
-// arrow function-> ()=>{ }
+
 export const getLatestNew = async (category: string) => {
     console.log("get latest news called");
     const apiKey = process.env.FINNHUB_API_KEY;
     const url = `https://finnhub.io/api/v1/news?category=${category}&token=${apiKey}`;
-
-    // why await?
-    // await is required because fetch-> makes an api call->it creates http request->communicate with network
-    // fetch is asynchronous function and returns promise
-    // by await wait for the promise to resolve and give us actual response data
-    // without await response will contain promise object
-    // instead of resolved promise data
-
-    // promise-> a future value
-    // **VERY IMPORTANT**
-    //  await doesn't block the entire javascript thread means
-    // browser remain responsive
-    // event loop continues
-    // other code can execute
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -107,4 +93,27 @@ export async function getMarketStatus(exchange: string) {
     return response.json();
 
 
+}
+
+
+export async function getCompanyProfile(symbol: string) {
+    const apiKey = process.env.FINNHUB_API_KEY
+    const url = `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${apiKey}`;
+    const res = await fetch(url);
+    return res.json();
+}
+
+export async function getStockMetric(symbol: string) {
+    const apiKey = process.env.FINNHUB_API_KEY
+    const url = `https://finnhub.io/api/v1/stock/metric?symbol=${symbol}&metric=all&token=${apiKey}`;
+    const res = await fetch(url);
+    return res.json();
+}
+
+
+export async function getNewsSentiments(symbol: string) {
+    const apiKey = process.env.ALPHA_VANTAGE_KEY
+    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${apiKey}`;
+    const res = await fetch(url);
+    return res.json();
 }

@@ -1,6 +1,9 @@
 import { useWatchlistStore } from "@/stores/useWatchlistStore";
+import { symbol } from "better-auth";
 import { CommandItem } from "cmdk"
 import { Plus, Trash } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const StockRow = ({ result, mode }: { result: Stock, mode: StockSearchMode }) => {
 
@@ -8,21 +11,23 @@ export const StockRow = ({ result, mode }: { result: Stock, mode: StockSearchMod
     const isInWatchList = useWatchlistStore((state) => state.isInWatchList);
     const removeFromWatchlist = useWatchlistStore((state) => state.removeStock);
     const watchlist = useWatchlistStore((store) => store.watchlist)
-    const inWatchList = isInWatchList(result.symbol)
+    const inWatchList = isInWatchList(result.symbol);
+
+    const route = useRouter()
 
 
 
     return (
         <CommandItem key={result.symbol} className="flex justify-between" >
 
-            <div className="label flex justify-">
+            <Link className="label flex" href={`/overview/${result.symbol}`}>
                 <div>
                     {result.displaySymbol}
                 </div>
                 <div className="ms-2">
                     {result.description}
                 </div>
-            </div>
+            </Link>
 
             {mode == "watchlist" && <button onClick={() => { inWatchList ? removeFromWatchlist(result.symbol) : addToWatchlist(result.symbol) }}>
                 {inWatchList ? <Trash strokeWidth={4}></Trash> : <Plus strokeWidth={4}></Plus>}

@@ -8,6 +8,7 @@ import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { PriceChartContent } from "./price-chart-content";
+import { useCompanyProfile } from "@/hooks/useCompanyProfile";
 
 
 
@@ -43,6 +44,8 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const [mainGraphFilter, setMainGraphFilter] = useState<FILTER_KEY>("1D");
     const [loading, setLoading] = useState<boolean>(true);
     const { data: quoteData, isLoading, isError } = useMarketQuote(finHubSymbol);
+    const { data: companyProfile, isLoading: companyProfileLoading, isLoadingError } = useCompanyProfile(finHubSymbol)
+
     let livePrice = prices[finHubSymbol];
 
 
@@ -133,8 +136,8 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
         <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
             <div className="chart-header p-2 ms-[2.5%] my-2">
                 <div className="flex gap-2">
-                    <span><Mountain size={25} /></span>
-                    <span className="font-semibold text-xl"> INVESCO QQQ Trust, Series 1</span>
+                    {/* <span><Mountain size={25} /></span>
+                    <span className="font-semibold text-xl"> {companyProfile.name}</span> */}
                 </div>
                 <div className="flex gap-2">
                     <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>

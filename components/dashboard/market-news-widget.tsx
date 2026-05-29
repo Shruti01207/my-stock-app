@@ -1,11 +1,15 @@
 'use client'
 
+import { useNewsSentiments } from "@/hooks/useNewsSentiments";
 import { getLatestNew } from "@/lib/api/stocks";
 import { useEffect, useState } from "react";
 
 export const MarketNewsWidget = () => {
 
     const [latestNews, setLatestNews] = useState<any[]>([]);
+    const { data: newsSentiments } = useNewsSentiments('QQQ');
+
+    console.log("newsSentiments", newsSentiments);
 
     useEffect(() => {
         const getLatestNews = async () => {
@@ -54,6 +58,8 @@ export const MarketNewsWidget = () => {
         return updatedStories;
 
     }
+
+
 
 
     return <>
