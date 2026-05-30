@@ -1,5 +1,6 @@
 'use client'
 
+import { NewsList } from "@/components/shared/news-list";
 import { PriceCharts } from "@/components/shared/price-charts";
 import { StatsGrid } from "@/components/stock-overview/stats-grid";
 import { useCompanyProfile } from "@/hooks/useCompanyProfile";
@@ -77,6 +78,10 @@ export default function StockSymbolOverview({ params }: PageProps) {
 
                 <div className="stats-grid">
                     <StatsGrid finhubSymbol={finhubSymbol}></StatsGrid>
+                </div>
+
+                <div>
+                    <NewsList symbol={finhubSymbol}></NewsList>
                 </div>
 
 

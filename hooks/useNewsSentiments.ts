@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query"
 
 export const useNewsSentiments = (symbol: string) => {
 
-    return useQuery({
+    return useQuery<NewsSentimentApiResponse>({
         queryKey: ["news-sentiment", symbol],
         queryFn: () => getNewsSentiments(symbol),
         staleTime: (10 * 60 * 1000)

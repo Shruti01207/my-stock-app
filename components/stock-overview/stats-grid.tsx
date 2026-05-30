@@ -15,7 +15,7 @@ export const StatsGrid = ({ finhubSymbol }: { finhubSymbol: string }) => {
 
     return <>
 
-        <h1 className="font-bold text-l my-2">Overview</h1>
+        <h1 className="font-bold text-xl my-2">Overview</h1>
         <div className="grid grid-cols-4">
             <span className="border-t-1 border-zinc-500 text-zinc-500 p-1 flex items-center">
                 Open

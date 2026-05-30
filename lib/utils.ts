@@ -103,3 +103,8 @@ export const isMarketOpen = () => {
 
 
 }
+
+export const normalizeText = (text: string) => {
+  // Converts "Somewhat-Bullish" or "Somewhat_Bullish" to "somewhatbullish"
+  return text.toLowerCase().replace(/[-_\s]/g, '');
+};

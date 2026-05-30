@@ -118,7 +118,7 @@ export async function getStockMetric(symbol: string) {
 
 
 
-export async function getNewsSentiments(symbol: string) {
+export async function getNewsSentiments(symbol: string): Promise<NewsSentimentApiResponse> {
   const url = `/api/market/news-sentiment?symbol=${symbol}`;
   const res = await fetch(url);
   return res.json();

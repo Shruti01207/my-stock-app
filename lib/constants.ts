@@ -337,6 +337,31 @@ export const CHART_COLOR_MAP: Record<Trend, string> = {
     flat: 'gray'
 }
 
+
+// lib/constants.ts
+export const SENTIMENTS_BADGE_CONFIG: Record<string, { label: string; classes: string }> = {
+    bearish: {
+        label: "Bearish",
+        classes: "bg-rose-950/40 text-rose-400 border-rose-800/50",
+    },
+    somewhatbearish: {
+        label: "Somewhat Bearish",
+        classes: "bg-orange-950/40 text-orange-400 border-orange-800/50",
+    },
+    neutral: {
+        label: "Neutral",
+        classes: "bg-zinc-800 text-zinc-400 border-zinc-700",
+    },
+    somewhatbullish: {
+        label: "Somewhat Bullish",
+        classes: "bg-teal-950/40 text-teal-400 border-teal-800/50",
+    },
+    bullish: {
+        label: "Bullish",
+        classes: "bg-emerald-950/40 text-emerald-400 border-emerald-800/50",
+    },
+};
+
 export type MonthName = "Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun" | "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec"
 export const MONTH_NUMBER_MAP: Record<number, MonthName> = {
     0: "Jan",
