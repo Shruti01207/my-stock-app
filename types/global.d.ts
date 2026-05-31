@@ -309,6 +309,7 @@ declare global {
         overall_sentiment_score: number;
         overall_sentiment_label: string;
         ticker_sentiment: any[];
+        timeAgo: string
     }
 
 

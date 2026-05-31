@@ -159,6 +159,7 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                             <span> {Math.abs(absoluteChange).toFixed(2)}</span>
                             <span>)</span>
                         </span>
+
                     </div>
                 </div>
                 <div className="market-status flex gap-2">
@@ -169,32 +170,25 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
 
             {loading ?
                 <>
-                    <div className="lg:hidden sm:block w-full min-w-full animate-pulse">
-                        <ResponsiveContainer width="100%" aspect={20 / 9}>
-                            <LineChart>
-                                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} /> <XAxis dataKey="time" /> <YAxis /> <Line type="monotone" dataKey="close" stroke="#9ca3af" strokeWidth={2} dot={false} isAnimationActive={false} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="hidden lg:block w-full min-w-full animate-pulse">
-                        <ResponsiveContainer width="100%" aspect={25 / 9}>
-                            <LineChart>
-                                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} /> <XAxis dataKey="time" /> <YAxis /> <Line type="monotone" dataKey="close" stroke="#9ca3af" strokeWidth={2} dot={false} isAnimationActive={false} />
-                            </LineChart>
-                        </ResponsiveContainer>
+                    <div className="w-full min-w-full">
+                        <div className="h-[182px] md:h-[250px] lg:h-[300px] w-full">
+                        </div>
                     </div>
                 </> :
                 <>
-                    <div className="lg:hidden sm:block w-full min-w-full">
-                        <ResponsiveContainer width="100%" aspect={20 / 9}>
-                            <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
-                        </ResponsiveContainer>
+                    <div className="h-[182px] md:h-[250px] lg:h-[300px] w-full">
+                        <div className="lg:hidden sm:block h-[100%] w-full min-w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="hidden lg:block h-[100%] w-full min-w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
-                    <div className="hidden lg:block w-full min-w-full">
-                        <ResponsiveContainer width="100%" aspect={25 / 9}>
-                            <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
-                        </ResponsiveContainer>
-                    </div>
+
                 </>
 
             }

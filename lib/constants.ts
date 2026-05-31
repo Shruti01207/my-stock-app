@@ -342,23 +342,23 @@ export const CHART_COLOR_MAP: Record<Trend, string> = {
 export const SENTIMENTS_BADGE_CONFIG: Record<string, { label: string; classes: string }> = {
     bearish: {
         label: "Bearish",
-        classes: "bg-rose-950/40 text-rose-400 border-rose-800/50",
+        classes: "bg-red-950/30 text-red-400 border-red-800/40",
     },
     somewhatbearish: {
         label: "Somewhat Bearish",
-        classes: "bg-orange-950/40 text-orange-400 border-orange-800/50",
+        classes: "bg-amber-950/30 text-amber-400 border-amber-800/40",
     },
     neutral: {
         label: "Neutral",
-        classes: "bg-zinc-800 text-zinc-400 border-zinc-700",
+        classes: "bg-zinc-900 text-zinc-400 border-zinc-700",
     },
     somewhatbullish: {
         label: "Somewhat Bullish",
-        classes: "bg-teal-950/40 text-teal-400 border-teal-800/50",
+        classes: "bg-cyan-950/30 text-cyan-400 border-cyan-800/40",
     },
     bullish: {
         label: "Bullish",
-        classes: "bg-emerald-950/40 text-emerald-400 border-emerald-800/50",
+        classes: "bg-emerald-950/30 text-emerald-400 border-emerald-800/40",
     },
 };
 
