@@ -3,6 +3,7 @@ import { MarketOverviewWidget } from "@/components/dashboard/market-overview-wid
 import { PriceCharts } from "@/components/shared/price-charts";
 import { WatchList } from "@/components/watchlist/Watchlist";
 import { useCompanyProfile } from "@/hooks/useCompanyProfile";
+import { symbol } from "better-auth";
 import Link from "next/link";
 
 
@@ -10,6 +11,10 @@ import Link from "next/link";
 
 export default function Home() {
 
+  const symbolDetails: SymbolDetails = {
+    symbol: 'QQQ',
+    type: "ETP"
+  }
 
 
 
@@ -58,7 +63,7 @@ export default function Home() {
           </div>
         </div>
         <div className="main-chart my-3">
-          {<PriceCharts symbol="QQQ" finHubSymbol="QQQ" ></PriceCharts>}
+          {<PriceCharts symbol="NVDA" symbolDetails={symbolDetails} ></PriceCharts>}
         </div>
 
         <div className="md:hidden list-buttons">

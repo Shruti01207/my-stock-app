@@ -16,3 +16,6 @@ data: -2%->+3%
 
 reference line is inside
 
+Bugs price charts
+
+https://chatgpt.com/share/6a1ea503-3e90-8322-9136-c47f5b3ebd03

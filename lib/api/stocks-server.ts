@@ -117,3 +117,10 @@ export async function getNewsSentiments(symbol: string) {
     const res = await fetch(url);
     return res.json();
 }
+
+export async function getSymbolsInfo(symbol: string) {
+    const apiKey = process.env.FINNHUB_API_KEY
+    const url = `https://finnhub.io/api/v1/stock/symbol?exchange=US&token=${apiKey}`;
+    const res = await fetch(url);
+    return res.json();
+}

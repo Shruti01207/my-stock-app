@@ -5,15 +5,18 @@ import { FILTER_KEY, PRICE_CHART_FILTER_CONFIG } from "@/lib/config/chartFilter"
 import { getFormatedDate, getISOFormattedDate, getMarketTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { PriceChartContent } from "./price-chart-content";
 import { useCompanyProfile } from "@/hooks/useCompanyProfile";
+import { CHART_COLOR_MAP, COLOR_MAP } from "@/lib/constants";
+import { useSymbolInfo } from "@/hooks/useSymbolInfo";
+import { useMainChartData } from "@/hooks/useMainChartData";
 
 
 
 
-export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSymbol: string }) => {
+export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolDetails: SymbolDetails }) => {
 
     const getInitialMarketDates = () => {
         if (!isMarketOpen()) {
@@ -31,10 +34,8 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
         };
     };
 
-
-    const [data, setData] = useState<PriceChartData[]>([]);
-
     const subcribe = useLiveStore((state) => state.subscribe);
+    const unsubscribe = useLiveStore((state) => state.unsubscribe);
     const prices = useLiveStore((state) => state.prices);
     const [interval, setInterval] = useState<string>('1min');
     const [outputSize, setOutputSize] = useState<string>('390')
@@ -42,61 +43,42 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
     const [startDate, setStartDate] = useState<string>(initialDates.startDate);
     const [endDate, setEndDate] = useState<string>(initialDates.endDate);
     const [mainGraphFilter, setMainGraphFilter] = useState<FILTER_KEY>("1D");
-    const [loading, setLoading] = useState<boolean>(true);
-    const { data: quoteData, isLoading, isError } = useMarketQuote(finHubSymbol);
-    const { data: companyProfile, isLoading: companyProfileLoading, isLoadingError } = useCompanyProfile(finHubSymbol)
-
-    let livePrice = prices[finHubSymbol];
+    const { data: quoteData, isLoading, isError } = useMarketQuote(symbolDetails.symbol);
+    const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
+    const symbolsData = useSymbolInfo(symbolDetails.symbol);
+    const { data, isLoading: chartDataLoading } = useMainChartData(symbolDetails.symbol, interval, startDate, endDate, outputSize);
+    const profile = (symbolDetails.type == 'Stock') ? companyProfileQuery.data : symbolsData.data
+    const [livePrices, setLivePrices] = useState<PriceChartData[]>([]);
 
 
     useEffect(() => {
-        subcribe(finHubSymbol);
-    }, [subcribe, finHubSymbol])
+        subcribe(symbolDetails.symbol);
+        return () => {
+            unsubscribe(symbolDetails.symbol);
+        }
+
+    }, [subcribe, unsubscribe, symbolDetails.symbol])
 
 
     useEffect(() => {
         const currTime = getMarketTime();
-        livePrice = prices[finHubSymbol];
-        if (isMarketOpen()) {
-            setData((prev: any) => [...prev, { close: prices[finHubSymbol], high: prices[finHubSymbol], low: prices[finHubSymbol], time: currTime }])
+        if (isMarketOpen() && prices[symbolDetails.symbol]) {
+            setLivePrices((prev: PriceChartData[]) => [...prev, { close: prices[symbolDetails.symbol], high: prices[symbolDetails.symbol], low: prices[symbolDetails.symbol], time: currTime }])
         }
 
-    }, [prices[finHubSymbol]])
-
-
-
-
+    }, [prices[symbolDetails.symbol]])
 
     useEffect(() => {
-        const getData = async () => {
-            setLoading(true);
-            let data = await getGraphData(symbol, interval, outputSize, startDate, endDate);
-            console.log(`graph data called for${symbol}`);
-            parseData(data);
-            setLoading(false);
-        }
-        getData();
-
-    }, [interval, startDate, endDate, outputSize])
+        setLivePrices([]);
+    }, [symbolDetails.symbol, interval, startDate, endDate, outputSize])
 
 
-    const parseData = (data: any) => {
-        const d = data.values;
-
-        const trendData = d.map((val: any) => ({
-            time: new Date(val.datetime).getTime(),
-            close: Number(val.close),
-            low: Number(val.low),
-            high: Number(val.high)
-        })).reverse();
-
-        setData(trendData);
-    }
-
+    const chartData = useMemo(() => {
+        return [...(data ?? []), ...livePrices]
+    }, [livePrices, data])
 
 
     const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D" | "1M" | "6M") => {
-        setLoading(true);
         setInterval(interval);
         if (filter == '1D') {
             const date = new Date();
@@ -120,24 +102,24 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
         setMainGraphFilter(filter);
     }
 
-
-
-    const displayPrice = livePrice || quoteData?.c
-    const absoluteChange = livePrice ? (livePrice - (quoteData?.pc ?? 0)) : quoteData?.d ?? 0;
-    const percentageChange = livePrice ? ((absoluteChange / (quoteData?.pc ?? 1)) * 100) : quoteData?.dp ?? 0;
-    const sign = (absoluteChange > 0) ? '+' : (absoluteChange < 0) ? '-' : '';
-    const color = (absoluteChange > 0) ? 'text-green-400' : (absoluteChange < 0) ? 'text-red-400' : 'text-gray-400';
-    const chartColor = (absoluteChange > 0) ? 'green' : (absoluteChange < 0) ? 'red' : 'gray';
-
-
-
+    const currentPrice = (quoteData?.c ?? 0);
+    const prevClose = (quoteData?.pc ?? 0);
+    const livePrice = prices[symbolDetails.symbol];
+    const displayPrice = livePrice ?? currentPrice;
+    const absoluteChange = (displayPrice - prevClose);
+    const percentageChange = (prevClose > 0) ? (absoluteChange / prevClose) * 100 : (quoteData?.dp ?? 0);
+    const trend: Trend = (absoluteChange > 0) ? 'up' : (absoluteChange < 0) ? 'down' : 'flat'
+    const sign = (trend == 'up') ? '+' : (trend == 'down') ? '-' : '';
+    const color = COLOR_MAP[trend]
+    const chartColor = CHART_COLOR_MAP[trend]
 
     return <>
         <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
             <div className="chart-header p-2 ms-[2.5%] my-2">
                 <div className="flex gap-2">
-                    {/* <span><Mountain size={25} /></span>
-                    <span className="font-semibold text-xl"> {companyProfile.name}</span> */}
+                    <span><Mountain size={25} /></span>
+                    {profile && <span className="font-semibold text-xl"> {profile.description}</span>}
+
                 </div>
                 <div className="flex gap-2">
                     <div className="text-2xl font-semibold text-white/80"> ${displayPrice}</div>
@@ -164,11 +146,11 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                 </div>
                 <div className="market-status flex gap-2">
                     {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-danger-400">CLOSED</div>}
-                    <div>{(data.length > 0) ? getFormatedDate(new Date(data[data.length - 1].time)) : ""}</div>
+                    <div>{(data && data.length > 0) ? getFormatedDate(new Date(data[data.length - 1].time)) : ""}</div>
                 </div>
             </div>
 
-            {loading ?
+            {chartDataLoading ?
                 <>
                     <div className="w-full min-w-full">
                         <div className="h-[182px] md:h-[250px] lg:h-[300px] w-full">
@@ -179,12 +161,12 @@ export const PriceCharts = ({ symbol, finHubSymbol }: { symbol: string, finHubSy
                     <div className="h-[182px] md:h-[250px] lg:h-[300px] w-full">
                         <div className="lg:hidden sm:block h-[100%] w-full min-w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
+                                {chartData && <PriceChartContent data={chartData} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>}
                             </ResponsiveContainer>
                         </div>
                         <div className="hidden lg:block h-[100%] w-full min-w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <PriceChartContent data={data} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>
+                                {chartData && <PriceChartContent data={chartData} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={chartColor}></PriceChartContent>}
                             </ResponsiveContainer>
                         </div>
                     </div>

@@ -319,6 +319,13 @@ declare global {
         relevance_score_definition: string;
         sentiment_score_definition: string;
     }
+
+
+    type SymbolDetails = {
+        symbol: string;
+        type: "ETP" | "Stock"
+    }
+
 }
 
 

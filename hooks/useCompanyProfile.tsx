@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query"
 export const useCompanyProfile = (finhubSymbol: string) => {
 
 
-
     return useQuery({
         queryKey: ["company-profile", finhubSymbol],
         queryFn: () => getCompanyProfile(finhubSymbol),
