@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
 import { StockSearchModal } from "@/components/shared/stock-search-dialog";
 import { WebSocketProvider } from "@/components/providers/web-socket-provider";
+import Providers from "@/components/providers/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StockSearchModal />
-        <WebSocketProvider> {children}</WebSocketProvider>
-        <Toaster />
+        <Providers>
+          <StockSearchModal />
+          <WebSocketProvider> {children}</WebSocketProvider>
+          <Toaster />
+        </Providers>
+
       </body>
 
 

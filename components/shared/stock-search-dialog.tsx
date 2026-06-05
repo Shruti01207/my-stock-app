@@ -18,15 +18,13 @@ import { StockRow } from "./stock-row"
 import { searchStock } from "@/lib/api/stocks"
 import { useDebounce } from "@/hooks/useDebounce"
 import { POPULAR_STOCKS } from "@/lib/mockdata"
+import { useStockSearch } from "@/hooks/useStockSearch"
 
 export function StockSearchModal() {
     const { isOpen, onClose, onOpen, mode } = useSearchStore()
-
-    const [searchResults, setsearchResults] = React.useState<Stock[]>(POPULAR_STOCKS);
-    const [inputValue, setInputValue] = React.useState<string>();
-    const debouncedQuery = useDebounce(inputValue, 400);
-    const [isSearching, setIsSearching] = React.useState(false);
-
+    // const [searchResults, setsearchResults] = React.useState<Stock[]>(POPULAR_STOCKS);
+    const [inputValue, setInputValue] = React.useState<string>('');
+    const { data: searchData } = useStockSearch(inputValue);
 
     // Standard shortcut to open search (Cmd+K or Ctrl+K)
     React.useEffect(() => {
@@ -41,28 +39,28 @@ export function StockSearchModal() {
         return () => document.removeEventListener("keydown", down)
     }, [])
 
-
-    React.useEffect(() => {
-        const fetchStock = async () => {
-            if (!debouncedQuery) {
-                setsearchResults(POPULAR_STOCKS);
-                return;
-            }
-            try {
-                setIsSearching(true);
-                const data = await searchStock(debouncedQuery);
-                console.log("data", data);
-                setsearchResults(data.result);
-            }
-            catch (error) {
-                console.log("error", error)
-            }
-            finally {
-                setIsSearching(false)
-            }
-        }
-        fetchStock();
-    }, [debouncedQuery])
+    let searchResults = inputValue.trim().length < 2 ? POPULAR_STOCKS : searchData
+    // React.useEffect(() => {
+    //     const fetchStock = async () => {
+    //         if (!debouncedQuery) {
+    //             setsearchResults(POPULAR_STOCKS);
+    //             return;
+    //         }
+    //         try {
+    //             setIsSearching(true);
+    //             const data = await searchStock(debouncedQuery);
+    //             console.log("data", data);
+    //             setsearchResults(data.result);
+    //         }
+    //         catch (error) {
+    //             console.log("error", error)
+    //         }
+    //         finally {
+    //             setIsSearching(false)
+    //         }
+    //     }
+    //     fetchStock();
+    // }, [debouncedQuery])
 
     // const handleSearch = async (value: string) => {
     //     const query = value.trim().toLowerCase();
@@ -91,7 +89,7 @@ export function StockSearchModal() {
                     <CommandEmpty>No results found.</CommandEmpty>
                     <CommandGroup>
                         {
-                            searchResults.length > 0 && searchResults.map((result) =>
+                            searchResults && searchResults.length > 0 && searchResults?.map((result: any) =>
                                 <StockRow result={result} mode={mode} key={result.symbol}></StockRow>
                             )
                         }

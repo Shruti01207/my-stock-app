@@ -63,7 +63,7 @@ export default function Home() {
           </div>
         </div>
         <div className="main-chart my-3">
-          {<PriceCharts symbol="NVDA" symbolDetails={symbolDetails} ></PriceCharts>}
+          {<PriceCharts symbol="QQQ" symbolDetails={symbolDetails} ></PriceCharts>}
         </div>
 
         <div className="md:hidden list-buttons">
