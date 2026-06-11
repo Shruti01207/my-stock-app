@@ -124,3 +124,28 @@ export async function getSymbolsInfo(symbol: string) {
     const res = await fetch(url);
     return res.json();
 }
+
+export async function createAlert(alertRequest: AlertRequest): Promise<any> {
+    try {
+        const url = `/api/alerts`;
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(alertRequest)
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to create alert");
+        }
+
+        const data = await res.json();
+        return data;
+
+    }
+    catch (error) {
+        console.error("error", error)
+    }
+
+}

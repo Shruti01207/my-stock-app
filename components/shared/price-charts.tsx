@@ -4,7 +4,7 @@ import { getGraphData } from "@/lib/api/stocks";
 import { FILTER_KEY, PRICE_CHART_FILTER_CONFIG } from "@/lib/config/chartFilter";
 import { getFormatedDate, getISOFormattedDate, getMarketTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
-import { ArrowDown, ArrowUp, Mountain } from "lucide-react";
+import { ArrowDown, ArrowUp, Bell, Mountain } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Area, CartesianGrid, ComposedChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { PriceChartContent } from "./price-chart-content";
@@ -12,6 +12,8 @@ import { useCompanyProfile } from "@/hooks/useCompanyProfile";
 import { CHART_COLOR_MAP, COLOR_MAP } from "@/lib/constants";
 import { useSymbolInfo } from "@/hooks/useSymbolInfo";
 import { useMainChartData } from "@/hooks/useMainChartData";
+import { Button } from "../ui/button";
+import { useAlertStore } from "@/stores/useAlertStore";
 
 
 
@@ -37,6 +39,8 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
     const subcribe = useLiveStore((state) => state.subscribe);
     const unsubscribe = useLiveStore((state) => state.unsubscribe);
     const prices = useLiveStore((state) => state.prices);
+    // const open= useAlertStore((state)=>state.open);
+    const setOpen = useAlertStore((state) => state.setOpen);
     const [interval, setInterval] = useState<string>('1min');
     const [outputSize, setOutputSize] = useState<string>('390')
     const initialDates = getInitialMarketDates();
@@ -47,9 +51,8 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
     const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
     const symbolsData = useSymbolInfo(symbolDetails.symbol);
     const { data, isLoading: chartDataLoading } = useMainChartData(symbolDetails.symbol, interval, startDate, endDate, outputSize);
-    const profile = (symbolDetails.type == 'Stock') ? companyProfileQuery.data : symbolsData.data
+    const profile = (symbolDetails.type == 'Common Stock') ? companyProfileQuery.data : symbolsData.data
     const [livePrices, setLivePrices] = useState<PriceChartData[]>([]);
-
 
     useEffect(() => {
         subcribe(symbolDetails.symbol);
@@ -133,7 +136,11 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
 
                         </span>
                         <span >{Math.abs(percentageChange).toFixed(2)}%</span>
+
                     </div>
+
+
+
                     <div className="text-xl mt-1 flex items-center text-md font-semibold ${color}">
                         <span>
                             <span>(</span>
@@ -143,6 +150,17 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
                         </span>
 
                     </div>
+
+                    <Button variant="outline" size="sm" className="gap-1" onClick={() => setOpen(true, symbolDetails)}>
+                        <Bell
+                            size={16}
+                            className="text-[#D4AF37]"
+                            strokeWidth={3}
+                        /> Set Alert
+                    </Button>
+
+
+
                 </div>
                 <div className="market-status flex gap-2">
                     {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-danger-400">CLOSED</div>}

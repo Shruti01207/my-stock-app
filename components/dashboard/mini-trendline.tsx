@@ -1,3 +1,4 @@
+import { useMarketData } from '@/hooks/useMarketData';
 import { useMiniTrend } from '@/hooks/useMiniTrend';;
 import { getISOFormattedDate, isMarketOpen } from '@/lib/utils';
 import { useMemo } from 'react';
@@ -8,7 +9,7 @@ import { Area, ComposedChart, Line, ReferenceLine, ResponsiveContainer, XAxis, Y
 
 
 
-export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: string, prevClose: number, chartColor: string }) => {
+export const MiniTrendLineChart = ({ symbol }: { symbol: string }) => {
 
     const date = new Date();
     const ISODate = getISOFormattedDate(date);
@@ -18,7 +19,8 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
         startDate = `${ISODate} 09:30:00`;
         endDate = `${ISODate} 16:00:00`;
     }
-    const { data, isLoading, isError, isFetching } = useMiniTrend(symbol, startDate, endDate, prevClose)
+    const marketData = useMarketData(symbol);
+    const { data, isLoading, isError, isFetching } = useMiniTrend(symbol, startDate, endDate, marketData.prevClose);
 
 
     // useEffect(() => {
@@ -138,7 +140,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
 
 
 
-    if (isLoading || !data || data.length === 0 || prevClose == 0) {
+    if (isLoading || !data || data.length === 0 || marketData.prevClose == 0) {
         return <div className="h-[60px] animate-pulse rounded bg-muted" />;
     }
 
@@ -161,12 +163,12 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
                     >
                         <stop
                             offset="0%"
-                            stopColor={chartColor}
+                            stopColor={marketData.chartColor}
                             stopOpacity={0.35}
                         />
                         <stop
                             offset="100%"
-                            stopColor={chartColor}
+                            stopColor={marketData.chartColor}
                             stopOpacity={0}
                         />
                     </linearGradient>
@@ -203,7 +205,7 @@ export const MiniTrendLineChart = ({ symbol, prevClose, chartColor }: { symbol: 
                 <Line
                     type="monotone"
                     dataKey="close"
-                    stroke={chartColor}
+                    stroke={marketData.chartColor}
                     strokeWidth={1}
                     isAnimationActive={false}
                     dot={false}

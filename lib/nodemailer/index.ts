@@ -25,23 +25,26 @@ export const sendWelcomeEmail = async ({ email, name, intro }: WelcomeEmailData)
 
     await transporter.sendMail(mailOptions);
 }
-export const sendStockAlertEmail = async ({ symbol, targetPrice, condition, currPrice, email }: any) => {
+export const sendStockAlertEmail = async ({ symbol, company, targetPrice, condition, currPrice, email }: any) => {
 
     let htmlTemplate;
     if (condition == 'below') {
         htmlTemplate = STOCK_ALERT_LOWER_EMAIL_TEMPLATE.
-            replace('{{symbol}}', symbol)
-            .replace('{{targetPrice}}', targetPrice).
-            replace('{{currentPrice}}', currPrice)
-            ;
-
+            replaceAll('{{symbol}}', symbol).
+            replaceAll('{{targetPrice}}', targetPrice).
+            replaceAll('{{currentPrice}}', currPrice).
+            replaceAll('{{timestamp}}', new Date().toLocaleTimeString()).
+            replaceAll('{{company}}', company);
     }
     else {
+
         htmlTemplate = STOCK_ALERT_UPPER_EMAIL_TEMPLATE.
-            replace('{{symbol}}', symbol)
-            .replace('{{targetPrice}}', targetPrice).
-            replace('{{currentPrice}}', currPrice)
-            ;
+            replaceAll('{{symbol}}', symbol).
+            replaceAll('{{targetPrice}}', targetPrice).
+            replaceAll('{{currentPrice}}', currPrice).
+            replaceAll('{{timestamp}}', new Date().toLocaleTimeString()).
+            replaceAll('{{company}}', company);
+        ;
     }
 
     const mailOptions = {

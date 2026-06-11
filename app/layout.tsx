@@ -5,6 +5,7 @@ import "./globals.css";
 import { StockSearchModal } from "@/components/shared/stock-search-dialog";
 import { WebSocketProvider } from "@/components/providers/web-socket-provider";
 import Providers from "@/components/providers/providers";
+import { AlertModal } from "@/components/alerts/AlertModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <Providers>
           <StockSearchModal />
+          <AlertModal />
           <WebSocketProvider> {children}</WebSocketProvider>
           <Toaster />
         </Providers>

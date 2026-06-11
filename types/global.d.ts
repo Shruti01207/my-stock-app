@@ -323,9 +323,18 @@ declare global {
 
     type SymbolDetails = {
         symbol: string;
-        type: "ETP" | "Stock"
+        type: "ETP" | "Common Stock"
     }
 
+
+    type AlertRequest = {
+        symbol: string;
+        targetPrice: number;
+        condition: string;
+
+    }
+
+    type Condition = "above" | "below"
 }
 
 
