@@ -29,7 +29,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
     const { data: stockPrice, isLoading, isError } = useMarketQuote(finHubSymbol);
     const subscribe = useLiveStore((state) => state.subscribe);
     const unsubscribe = useLiveStore((state) => state.unsubscribe);
-    const livePrice = useLiveStore((state) => state.prices[finHubSymbol])
+    // const livePrice = useLiveStore((state) => state.prices[finHubSymbol])
     const marketData = useMarketData(finHubSymbol);
 
     useEffect(() => {
@@ -39,27 +39,15 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
         }
     }, [finHubSymbol, subscribe, unsubscribe]);
 
-    if (isLoading) return <Skeleton className="h-[150px] w-full rounded-xl" />;
+    if (isLoading) return <Skeleton className="h-[150px] w-[200px] opacity-30  rounded-xl" />;
     if (isError || !stockPrice) return <div>Error loading data</div>;
-
-    // const currentPrice = (stockPrice?.c ?? 0);
-    // const prevClose = (stockPrice?.pc ?? 0);
-    // const displayPrice = livePrice ?? currentPrice;
-    // const absoluteChange = (displayPrice - prevClose);
-    // const percentageChange = (prevClose > 0) ? (absoluteChange / prevClose) * 100 : (stockPrice?.dp ?? 0);
-    // const trend: Trend = (absoluteChange > 0) ? 'up' : (absoluteChange < 0) ? 'down' : 'flat'
-    // const sign = (trend == 'up') ? '+' : (trend == 'down') ? '-' : '';
-    // const color = COLOR_MAP[trend]
-    // const chartColor = CHART_COLOR_MAP[trend]
-
-
 
 
 
     return (
         <>
             <div className="m-0 bg-[#17181f] w-[200px] rounded-md">
-                <div className="card-content p-3 pb-1">
+                <div className="card-content w-full p-3 pb-1">
                     <h1 className="font-semibold">{symbol}</h1>
                     <div className="text-sm text-white/80 font-semibold">{marketData.displayPrice}</div>
                     <div className="leading-none text-sm text-white/80 font-semibold">
