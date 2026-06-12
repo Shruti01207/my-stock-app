@@ -146,11 +146,12 @@ export const MiniTrendLineChart = ({ symbol }: { symbol: string }) => {
 
     return <>
 
-        <ResponsiveContainer width="100%" height={60}>
+        <ResponsiveContainer width="100%" height={60} className="focus:outline-none" style={{ outline: 'none' }}>
             <ComposedChart
                 data={data}
                 margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
                 accessibilityLayer={false}
+                style={{ pointerEvents: 'none' }}
             >
 
                 <defs>
@@ -160,6 +161,7 @@ export const MiniTrendLineChart = ({ symbol }: { symbol: string }) => {
                         y1="0"
                         x2="0"
                         y2="1"
+                        style={{ outline: 'none' }}
                     >
                         <stop
                             offset="0%"
@@ -209,6 +211,7 @@ export const MiniTrendLineChart = ({ symbol }: { symbol: string }) => {
                     strokeWidth={1}
                     isAnimationActive={false}
                     dot={false}
+                    activeDot={false}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 // activeDot={{
