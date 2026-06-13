@@ -75,6 +75,7 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                 fillOpacity={1}
                 baseValue="dataMin"
                 isAnimationActive={false}
+                tooltipType="none"
             />
 
             <Line
