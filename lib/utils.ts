@@ -46,8 +46,13 @@ export const getFormatedDate = (date: Date) => {
 
 //  Return date in format YYYY-MM-DD
 export const getISOFormattedDate = (d: Date) => {
-  const formattedDate = d.toISOString().split('T')[0];
-  return formattedDate;
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return formatter.format(d);
 
 }
 

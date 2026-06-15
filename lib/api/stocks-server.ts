@@ -54,6 +54,7 @@ export const getGraphData = async (symbol: String | null, interval: string | nul
     const apiKey = process.env.TWELVEDATA_API_KEY;
     const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&outputsize=${outputSize}&interval=${interval}&start_date=${startDate}&end_date=${endDate}&prepost=false&apikey=${apiKey}`;
     const response = await fetch(url)
+    console.log("response", response);
 
     if (!response.ok) {
         throw new Error("Failed to fetch stock data");

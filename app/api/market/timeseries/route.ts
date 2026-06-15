@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
     const results = await Promise.all(
         cacheMissSym.map((sym) => {
             return getGraphData(sym, interval, outputSize, startDate, endDate);
+
         })
     );
 

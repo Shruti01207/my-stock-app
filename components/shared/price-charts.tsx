@@ -1,5 +1,5 @@
 'use client'
-import { FILTER_KEY } from "@/lib/config/chartFilter";
+import { FILTER_KEY, TIMEFRAME_CONFIGS } from "@/lib/config/chartFilter";
 import { getFormatedDate, getISOFormattedDate, getMarketTime, isMarketOpen } from "@/lib/utils";
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp, Bell, Mountain } from "lucide-react";
@@ -18,36 +18,32 @@ import { useMarketData } from "@/hooks/useMarketData";
 
 export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolDetails: SymbolDetails }) => {
 
-    const getInitialMarketDates = () => {
-        if (!isMarketOpen()) {
-            return {
-                startDate: '',
-                endDate: ''
-            };
-        }
-
-        const ISODate = getISOFormattedDate(new Date());
-
-        return {
-            startDate: `${ISODate} 09:30:00`,
-            endDate: `${ISODate} 16:00:00`
-        };
-    };
-
     const subcribe = useLiveStore((state) => state.subscribe);
     const unsubscribe = useLiveStore((state) => state.unsubscribe);
     const prices = useLiveStore((state) => state.prices);
     const setOpen = useAlertStore((state) => state.setOpen);
-    const [interval, setInterval] = useState<string>('1min');
-    const [outputSize, setOutputSize] = useState<string>('390')
-    const initialDates = getInitialMarketDates();
-    const [startDate, setStartDate] = useState<string>(initialDates.startDate);
-    const [endDate, setEndDate] = useState<string>(initialDates.endDate);
     const [mainGraphFilter, setMainGraphFilter] = useState<FILTER_KEY>("1D");
+    const { interval, outputSize } = TIMEFRAME_CONFIGS[mainGraphFilter];
+    const { startDate, endDate } = useMemo(() => {
+        if (mainGraphFilter !== '1D' || !isMarketOpen()) {
+            return {
+                startDate: '',
+                endDate: ''
+            }
+        }
+        const ISODate = getISOFormattedDate(new Date());
+        return {
+            startDate: `${ISODate} 09:30:00`,
+            endDate: `${ISODate} 16:00:00`,
+        };
+
+    }, [mainGraphFilter])
+    const { data, isLoading: chartDataLoading } = useMainChartData(symbolDetails.symbol, interval, startDate, endDate, outputSize);
+
     const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
     const symbolsData = useSymbolInfo(symbolDetails.symbol);
-    const { data, isLoading: chartDataLoading } = useMainChartData(symbolDetails.symbol, interval, startDate, endDate, outputSize);
     const profile = (symbolDetails.type == 'Common Stock') ? companyProfileQuery.data : symbolsData.data
+
     const [livePrices, setLivePrices] = useState<PriceChartData[]>([]);
     const marketData = useMarketData(symbolDetails.symbol);
 
@@ -78,31 +74,11 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
     }, [livePrices, data])
 
 
-    const setIntervalAndBlocks = (interval: string, block: string, filter: "1D" | "5D" | "1M" | "6M") => {
-        setInterval(interval);
-        if (filter == '1D') {
-            const date = new Date();
-            const ISODate = getISOFormattedDate(date);
-            if (isMarketOpen()) {
-                setStartDate(`${ISODate} 09:30:00`);
-                setEndDate(`${ISODate} 16:00:00`)
-            }
-            else {
-                setStartDate('');
-                setEndDate('')
-            }
-        }
-        else {
-            console.log("mainGraphFilter", mainGraphFilter)
-            setStartDate('');
-            setEndDate('')
-        }
-
-        setOutputSize(block);
+    const handleFilterChange = (filter: "1D" | "5D" | "1M" | "6M") => {
         setMainGraphFilter(filter);
     }
 
-    console.log("marketData", marketData);
+
 
     return <>
         <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
@@ -194,10 +170,10 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
 
 
             <div className="action-btns mt-4">
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => setIntervalAndBlocks('1min', '390', "1D")}>1D</button>
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => setIntervalAndBlocks('5min', '390', "5D")}  >5D</button>
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => setIntervalAndBlocks('1day', '23', "1M")}  >1M</button>
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => setIntervalAndBlocks('1day', '138', "6M")}  >6M</button>
+                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("1D")}>1D</button>
+                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("5D")}  >5D</button>
+                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("1M")}  >1M</button>
+                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("6M")}  >6M</button>
             </div>
 
         </div>

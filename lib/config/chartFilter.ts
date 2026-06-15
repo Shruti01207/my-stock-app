@@ -249,3 +249,10 @@ export const PRICE_CHART_FILTER_CONFIG: Record<FILTER_KEY, FILTER_CONFIG> = {
 
 
 }
+
+export const TIMEFRAME_CONFIGS: Record<FILTER_KEY, { interval: string, outputSize: string }> = {
+    "1D": { interval: '1min', outputSize: '390' },
+    "5D": { interval: '5min', outputSize: '390' },
+    "1M": { interval: '1day', outputSize: '23' },
+    "6M": { interval: '1day', outputSize: '138' }
+}
