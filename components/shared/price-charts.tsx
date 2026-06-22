@@ -59,7 +59,45 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
     useEffect(() => {
         const currTime = getMarketTime();
         if (isMarketOpen() && prices[symbolDetails.symbol]) {
-            setLivePrices((prev: PriceChartData[]) => [...prev, { close: prices[symbolDetails.symbol], high: prices[symbolDetails.symbol], low: prices[symbolDetails.symbol], time: currTime }])
+            const date = new Date(currTime);
+            setLivePrices((prev) => {
+                if (prev.length == 0) {
+                    return [
+                        {
+                            close: prices[symbolDetails.symbol],
+                            high: prices[symbolDetails.symbol],
+                            low: prices[symbolDetails.symbol],
+                            time: currTime
+                        }
+                    ]
+                }
+
+                const lastCandleDateTime = new Date(prev[prev.length - 1]?.time);
+
+                const isSameMinute = date.getDate() == lastCandleDateTime.getDate() && date.getHours() == lastCandleDateTime.getHours()
+                    && date.getMinutes() == lastCandleDateTime.getMinutes();
+                if (isSameMinute) {
+                    const updatedCandle: PriceChartData = {
+                        close: prices[symbolDetails.symbol],
+                        high: Math.max(prices[symbolDetails.symbol], prev[prev.length - 1].high),
+                        low: Math.min(prices[symbolDetails.symbol], prev[prev.length - 1].low),
+                        time: currTime
+                    }
+
+                    return [...prev.slice(0, -1), updatedCandle]
+
+                }
+                else {
+                    const newCandle: PriceChartData = {
+                        close: prices[symbolDetails.symbol],
+                        high: prices[symbolDetails.symbol],
+                        low: prices[symbolDetails.symbol],
+                        time: currTime
+                    }
+                    return [...prev, newCandle]
+                }
+            })
+
         }
 
     }, [prices[symbolDetails.symbol]])

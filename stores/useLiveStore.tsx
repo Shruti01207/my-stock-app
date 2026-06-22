@@ -78,6 +78,7 @@ export const useLiveStore = create<LivePricesState>((set, get) => ({
                 trades.forEach((trade: any) => {
                     latestPrices[trade.s] = trade.p
                 })
+
                 // passing zustand state (state) in to the function
                 // (state)=>{}
                 // Now this set function will ofcourse expect an object
