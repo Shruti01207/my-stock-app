@@ -38,17 +38,13 @@ import { useMarketData } from "@/hooks/useMarketData"
 import { useState } from "react"
 import { createAlert } from "@/lib/api/stocks-server"
 import { toast } from "sonner"
-
-// interface StockData {
-//     symbol: string;
-//     prevClose: number;
-//     chartColor: string;
-// }
-
+import { SymbolTypes } from "@/lib/enums"
+import { Loader2, Mountain } from "lucide-react"
 
 interface Alert {
     targetPrice?: number;
-    condition?: "above" | "below";
+    condition: "above" | "below" | "none";
+    isConditionManual: boolean;
 }
 
 export function AlertModal() {
@@ -59,58 +55,110 @@ export function AlertModal() {
     const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
     const symbolsData = useSymbolInfo(symbolDetails.symbol);
     const marketData = useMarketData(symbolDetails.symbol)
+
     const profile = (symbolDetails.type == 'Common Stock') ? companyProfileQuery.data : symbolsData.data
-    const [alert, setAlert] = useState<Alert>()
+    const defaultAlertState: Alert = {
+        targetPrice: undefined,
+        condition: "none",
+        isConditionManual: false
+    }
+    const [alertForm, setAlertForm] = useState<Alert>(defaultAlertState);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const onChange = (event: any) => {
+    function computeAutoCondition(
+        isManualCondition: boolean,
+        currentCondition: "above" | "below" | "none",
+        targetPrice: number | undefined,
+        marketDataLoading: boolean,
+        marketPrice: number | undefined
+    ): "above" | "below" | "none" {
 
-        console.log("on change called")
-        const targetPrice = (event.target.value != "") ? Number(event.target.value) : undefined;
-        if (targetPrice) {
-            setAlert({ targetPrice, condition: (marketData.displayPrice <= targetPrice) ? 'above' : 'below' })
+        if (isManualCondition) {
+            return currentCondition
         }
 
-        // setTargetPrice(targetPrice);
+        if (targetPrice === undefined || marketDataLoading || marketPrice === undefined) {
+            return "none"
+        }
+
+        return (marketPrice <= targetPrice) ? 'above' : 'below'
+
     }
 
-    const currentPrice = marketData.displayPrice;
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const targetPrice = (event.target.value != "") ? Number(event.target.value) : undefined;
+        setAlertForm((prev) => {
+            return { ...prev, targetPrice, condition: computeAutoCondition(prev?.isConditionManual, prev.condition, targetPrice, marketData.isLoading, marketData?.displayPrice) }
+        })
+    }
+
+
+
+    const currentPrice = marketData?.displayPrice ?? 0;
     // const condition = "above"
 
 
-    const addAlert = async () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-        if (!alert || (alert.targetPrice == undefined || alert.condition == undefined)) {
+        if (!alertForm || (alertForm.targetPrice == undefined || alertForm.condition == "none")) {
+            toast.error("Form is invalid")
             return;
         }
 
         let req: AlertRequest = {
             symbol: symbolDetails.symbol,
-            targetPrice: alert.targetPrice,
-            condition: alert.condition
+            targetPrice: alertForm.targetPrice,
+            condition: alertForm.condition
+        }
+        try {
+            setIsLoading(true)
+            const res = await createAlert(req);
+
+            if (res.success) {
+                setOpen(false, symbolDetails);
+                toast.success("Alert created successfully");
+                setAlertForm(defaultAlertState);
+                setIsLoading(false)
+            }
+            else {
+                toast.error("Failed to create alert");
+            }
+        }
+        catch (error) {
+            console.error("Error creating alert", error);
+            toast.error("An unexpected error occurred");
+        }
+        finally {
+            setIsLoading(false)
         }
 
-        const res = await createAlert(req);
-        console.log("res", res);
-        if (res.success) {
-            setOpen(false, symbolDetails);
-            toast.success("Alert created successfully");
+    }
 
+    const handleOpenChange = (isOpen: boolean) => {
+        setOpen(isOpen, symbolDetails)
+        if (!isOpen) {
+            setAlertForm(defaultAlertState)
         }
-
-
     }
 
 
 
 
+
+
     return (
-        <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen, symbolDetails)} >
-            <form>
-                <DialogContent className="sm:max-w-sm md:max-w-lg">
+        <Dialog open={open} onOpenChange={(isOpen) => handleOpenChange(isOpen)} >
+
+            <DialogContent className="sm:max-w-sm md:max-w-lg">
+                <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>
-                            <div className="flex flex-row items-center gap-2">
-                                {profile && <img className="w-10 h-10 rounded-full" src={profile?.logo} alt={profile?.name} />}
+                            <div className="flex flex-row items-center gap-2 mb-3">
+
+                                {symbolDetails.type == SymbolTypes.CommonStock && <img className="w-10 h-10 rounded-full" src={profile?.logo} alt={profile?.name} />}
+                                {symbolDetails.type == SymbolTypes.ETP ? <Mountain size={25} /> : ''}
+
                                 <span>Create Price Alert</span>
                             </div>
                         </DialogTitle>
@@ -126,15 +174,19 @@ export function AlertModal() {
                                 <div className="w-[50px] h-[50px] flex-1">
                                     <MiniTrendLineChart symbol={symbolDetails.symbol}></MiniTrendLineChart>
                                 </div>
+                                {!marketData.isLoading ?
+                                    <>
+                                        <div className="text-right w-[120px]">
+                                            <p className="text-3xl font-bold">
+                                                {marketData.displayPrice}
+                                            </p>
+                                            <p><span>{marketData.sign}</span>
+                                                <span>{Math.abs(marketData.absoluteChange).toFixed(2)}</span>
+                                                <span className={marketData.color}>  ({marketData.percentageChange.toFixed(2)}%)</span></p>
+                                        </div>
+                                    </> : <></>
+                                }
 
-                                <div className="text-right w-[120px]">
-                                    <p className="text-3xl font-bold text-green-500">
-                                        {marketData.displayPrice}
-                                    </p>
-                                    <p className="text-green-500"> <span>{marketData.sign}</span>
-                                        <span>{Math.abs(marketData.absoluteChange).toFixed(2)}</span>
-                                        <span className="ml-1">({marketData.percentageChange.toFixed(2)}%)</span></p>
-                                </div>
                             </div>
                         </CardHeader>
 
@@ -142,11 +194,11 @@ export function AlertModal() {
                             <FieldGroup>
                                 <Field>
                                     <Label htmlFor="target-price">Target Price </Label>
-                                    <Input id="target-price" name="target-price" type="number" value={alert?.targetPrice ?? ""} onChange={onChange} />
+                                    <Input id="target-price" name="target-price" type="number" value={alertForm?.targetPrice ?? ""} onChange={onChange} />
                                 </Field>
                                 <Field>
-                                    <Label htmlFor="alert-condition">Alert Condition</Label>
-                                    <Select value={alert?.condition ?? ""} onValueChange={(value) => { setAlert({ condition: value as Condition, targetPrice: alert?.targetPrice }) }}>
+                                    <Label htmlFor="alertForm-condition">Alert Condition</Label>
+                                    <Select value={alertForm?.condition ?? ""} onValueChange={(value) => { setAlertForm((prev) => { return { ...prev, condition: value as Condition, isConditionManual: true } }) }}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Alert Condition" />
                                         </SelectTrigger>
@@ -154,6 +206,7 @@ export function AlertModal() {
                                         <SelectContent>
                                             <SelectItem value="above">Above</SelectItem>
                                             <SelectItem value="below">Below</SelectItem>
+                                            <SelectItem value="none">Select Condition</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </Field>
@@ -164,14 +217,22 @@ export function AlertModal() {
                             <DialogClose asChild>
                                 <Button variant="outline">Cancel</Button>
                             </DialogClose>
-                            <Button className="flex-1" onClick={addAlert}>
-                                Create Alert
+                            <Button className="flex-1" type="submit">
+                                {isLoading ?
+                                    <>
+                                        <Loader2 className="h-5 w-5 animate-spin" />
+                                        <span>Creating..</span>
+                                    </>
+                                    :
+                                    <span>Create Alert</span>
+                                }
+
                             </Button>
                         </CardFooter>
                     </Card>
+                </form>
+            </DialogContent>
 
-                </DialogContent>
-            </form>
         </Dialog>
     )
 }

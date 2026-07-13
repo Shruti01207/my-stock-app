@@ -1,3 +1,4 @@
+import { SymbolTypes } from "@/lib/enums";
 import { create } from "zustand";
 
 interface AlertStore {
@@ -8,7 +9,7 @@ interface AlertStore {
 
 export const useAlertStore = create<AlertStore>((set) => ({
     open: false,
-    symbolDetails: { symbol: '', type: 'Common Stock' },
+    symbolDetails: { symbol: '', type: SymbolTypes.CommonStock },
     setOpen: (open: boolean, symbolDetails: SymbolDetails) => {
         console.log("open=", open);
         set({ open, symbolDetails })

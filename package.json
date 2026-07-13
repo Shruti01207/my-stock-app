@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "inngest": "inngest-cli dev --url http://localhost:3000/api/inngest",
     "start": "next start",
     "lint": "eslint"
   },

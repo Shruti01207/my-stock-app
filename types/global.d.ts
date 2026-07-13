@@ -1,3 +1,5 @@
+import { SymbolTypes } from "@/lib/enums";
+
 declare global {
     type SignInFormData = {
         email: string;
@@ -323,8 +325,10 @@ declare global {
 
     type SymbolDetails = {
         symbol: string;
-        type: "ETP" | "Common Stock"
+        type: SymbolTypes
     }
+
+    typeSymbol
 
 
     type AlertRequest = {
