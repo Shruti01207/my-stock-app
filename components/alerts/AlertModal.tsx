@@ -5,17 +5,13 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { useAlertStore } from "@/stores/useAlertStore"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ToggleGroup } from "radix-ui"
 import {
     Select,
     SelectContent,
@@ -30,9 +26,7 @@ import {
     CardHeader,
 } from "@/components/ui/card"
 import { MiniTrendLineChart } from "../dashboard/mini-trendline"
-import { useMarketQuote } from "@/hooks/useMarketQuote"
 import { useSymbolInfo } from "@/hooks/useSymbolInfo"
-import { useStockSearch } from "@/hooks/useStockSearch"
 import { useCompanyProfile } from "@/hooks/useCompanyProfile"
 import { useMarketData } from "@/hooks/useMarketData"
 import { useState } from "react"
@@ -56,7 +50,7 @@ export function AlertModal() {
     const symbolsData = useSymbolInfo(symbolDetails.symbol);
     const marketData = useMarketData(symbolDetails.symbol)
 
-    const profile = (symbolDetails.type == 'Common Stock') ? companyProfileQuery.data : symbolsData.data
+    const profile = (symbolDetails.type == SymbolTypes.CommonStock) ? companyProfileQuery.data : symbolsData.data
     const defaultAlertState: Alert = {
         targetPrice: undefined,
         condition: "none",
@@ -64,6 +58,9 @@ export function AlertModal() {
     }
     const [alertForm, setAlertForm] = useState<Alert>(defaultAlertState);
     const [isLoading, setIsLoading] = useState(false);
+
+    console.log("profile", profile);
+
 
     function computeAutoCondition(
         isManualCondition: boolean,
@@ -146,11 +143,10 @@ export function AlertModal() {
 
 
 
-
     return (
         <Dialog open={open} onOpenChange={(isOpen) => handleOpenChange(isOpen)} >
 
-            <DialogContent className="sm:max-w-sm md:max-w-lg">
+            <DialogContent className="max-w-lg sm:max-h-[90dvh] overflow-y">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>
@@ -163,15 +159,15 @@ export function AlertModal() {
                             </div>
                         </DialogTitle>
                     </DialogHeader>
-                    <Card className="w-full max-w-md">
+                    <Card className="w-full max-w-lg">
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <div className="w-[160px]">
+                                <div className="w-[30%]">
                                     <h2 className="text-2xl font-bold">{symbolDetails.symbol}</h2>
-                                    <p className="text-muted-foreground">{profile?.name}</p>
+                                    <p className="text-sm text-muted-foreground">{symbolDetails.type == SymbolTypes.CommonStock ? profile?.name : profile?.description}</p>
                                 </div>
 
-                                <div className="w-[50px] h-[50px] flex-1">
+                                <div className="w-[100%] h-[50px] flex-1">
                                     <MiniTrendLineChart symbol={symbolDetails.symbol}></MiniTrendLineChart>
                                 </div>
                                 {!marketData.isLoading ?
