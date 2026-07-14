@@ -7,17 +7,26 @@ import { useEffect, useState } from "react";
 export const MarketNewsWidget = () => {
 
     const [latestNews, setLatestNews] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(false)
 
 
     useEffect(() => {
         const getLatestNews = async () => {
-            const res = await getLatestNew();
-            let topStories = res.filter((res: any) => res.category == 'top news')
-            topStories.sort((a: any, b: any) => (b.datetime - a.datetime));
-            topStories = topStories.splice(0, 10);
-            const updatedStories = parseData(topStories)
-            setLatestNews(updatedStories);
-            console.log("res=", updatedStories);
+            try {
+                setLoading(true);
+                const res = await getLatestNew();
+                setLoading(false);
+                let topStories = res.filter((res: any) => res.category == 'top news')
+                topStories.sort((a: any, b: any) => (b.datetime - a.datetime));
+                topStories = topStories.splice(0, 10);
+                const updatedStories = parseData(topStories)
+                setLatestNews(updatedStories);
+                console.log("res=", updatedStories);
+            }
+            catch {
+
+            }
+
         }
         getLatestNews();
     }, [])
@@ -67,13 +76,10 @@ export const MarketNewsWidget = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {latestNews.map((news) => (
+            {!loading && latestNews.map((news) => (
                 <div className="news-card" key={news.id}>
 
                     <div className="flex items-center gap-3">
-                        {/* <div className="w-6 h-6 rounded-full bg-blue-500">
-                            <img className="w-full h-full" src={news.image} alt={news.id} />
-                        </div> */}
                         <span className="font-semibold">{news.source}</span>
                         <span className="font-extralight text-gray-500"><span className="me-1 font-extralight text-gray-500">&bull;</span>{news.timeAgo} </span>
                     </div>
@@ -82,8 +88,10 @@ export const MarketNewsWidget = () => {
                     </div>
                 </div>
             ))}
-
-
+            {loading && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((SkeletonNum) => (
+                <div className="h-[60px] animate-pulse rounded bg-muted" key={SkeletonNum}>
+                </div>
+            ))}
         </div>
     </>
 }

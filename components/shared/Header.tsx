@@ -77,9 +77,9 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className='hidden sm:flex items-center ml-2'>
+                    {/* <nav className='hidden sm:flex items-center ml-2'>
                         <NavItems />
-                    </nav>
+                    </nav> */}
                 </div>
 
                 {/* Right Section: Search & User */}
