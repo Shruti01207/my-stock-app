@@ -3,6 +3,7 @@ import { MarketOverviewWidget } from "@/components/dashboard/market-overview-wid
 import { PriceCharts } from "@/components/shared/price-charts";
 import { WatchList } from "@/components/watchlist/Watchlist";
 import { useCompanyProfile } from "@/hooks/useCompanyProfile";
+import { SymbolTypes } from "@/lib/enums";
 import { symbol } from "better-auth";
 import Link from "next/link";
 
@@ -13,45 +14,12 @@ export default function Home() {
 
   const symbolDetails: SymbolDetails = {
     symbol: 'QQQ',
-    type: "ETP"
+    type: SymbolTypes.ETP
   }
 
 
 
   return (
-    // <div >
-    //   <section className="grid w-full gap-8 home-section">
-    //     <div className="md:col-span-1 xl:col-span-1">
-    //       <TradingView title="Market Overview"
-    //         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js"
-    //         config={MARKET_DATA_WIDGET_CONFIG}
-    //         className="custom-chart"
-    //         height={600} />
-    //     </div>
-    //     <div className="md:col-span-1 xl:col-span-1">
-    //       <TradingView title="Stock HeatMap"
-    //         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js"
-    //         config={MARKET_DATA_WIDGET_CONFIG}
-    //         className="custom-chart"
-    //         height={600} />
-    //     </div>
-    //     <div className="md:col-span-1 xl:col-span-1">
-    //       <TradingView title="Top Stories"
-    //         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js"
-    //         config={TOP_STORIES_WIDGET_CONFIG}
-    //         className="custom-chart"
-    //         height={600} />
-    //     </div>
-    //     <div className="md:col-span-1 xl:col-span-1">
-    //       <TradingView title="Market Data"
-    //         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js"
-    //         config={MARKET_DATA_WIDGET_CONFIG}
-    //         className="custom-chart"
-    //         height={600} />
-    //     </div>
-    //   </section>
-    // </div>
-
     <div className="max-w-6xl mx-auto mx-3 flex flex-col md:flex-row">
       <div className="left md:w-[70%] flex flex-col gap-1">
         <div className="widget-section">
@@ -75,7 +43,7 @@ export default function Home() {
           <MarketNewsWidget></MarketNewsWidget>
         </div>
       </div>
-      <div className="hidden md:block md:w-[30%] right w-full">
+      <div className="hidden md:block md:w-[30%] right border border-t-0 w-full">
         <WatchList />
       </div>
 
