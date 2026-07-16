@@ -18,7 +18,7 @@ export const StockRow = ({ result, mode }: { result: Stock, mode: StockSearchMod
 
 
     return (
-        <CommandItem key={result.symbol} className="flex justify-between" >
+        <CommandItem key={result.symbol} className="flex hover:bg-muted" >
 
             <Link className="label flex" href={`/overview/${result.symbol}`}>
                 <div>

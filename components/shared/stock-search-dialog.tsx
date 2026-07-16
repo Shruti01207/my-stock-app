@@ -22,7 +22,6 @@ import { useStockSearch } from "@/hooks/useStockSearch"
 
 export function StockSearchModal() {
     const { isOpen, onClose, onOpen, mode } = useSearchStore()
-    // const [searchResults, setsearchResults] = React.useState<Stock[]>(POPULAR_STOCKS);
     const [inputValue, setInputValue] = React.useState<string>('');
     const { data: searchData } = useStockSearch(inputValue);
 
@@ -31,7 +30,6 @@ export function StockSearchModal() {
         const down = (e: KeyboardEvent) => {
             if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault()
-                // setOpen((open) => !open)
                 onOpen();
             }
         }
@@ -40,36 +38,6 @@ export function StockSearchModal() {
     }, [])
 
     let searchResults = inputValue.trim().length < 2 ? POPULAR_STOCKS : searchData
-    // React.useEffect(() => {
-    //     const fetchStock = async () => {
-    //         if (!debouncedQuery) {
-    //             setsearchResults(POPULAR_STOCKS);
-    //             return;
-    //         }
-    //         try {
-    //             setIsSearching(true);
-    //             const data = await searchStock(debouncedQuery);
-    //             console.log("data", data);
-    //             setsearchResults(data.result);
-    //         }
-    //         catch (error) {
-    //             console.log("error", error)
-    //         }
-    //         finally {
-    //             setIsSearching(false)
-    //         }
-    //     }
-    //     fetchStock();
-    // }, [debouncedQuery])
-
-    // const handleSearch = async (value: string) => {
-    //     const query = value.trim().toLowerCase();
-    //     // const results = mockStocks.filter((stock) => stock.symbol.toLowerCase().includes(query) || stock.name.toLowerCase().includes(query))
-    //     // console.log(`query=${query}`, results)
-    //     const data = await searchStock(value);
-    //     console.log("data", data);
-    //     setsearchResults(data.result);
-    // }
 
 
     return (
@@ -85,7 +53,7 @@ export function StockSearchModal() {
 
             }} shouldFilter={false}>
                 <CommandInput placeholder="Type a ticker (AAPL, TSLA...)" onValueChange={setInputValue} />
-                <CommandList className="max-h-[80vh] md:max-h-[450px]">
+                <CommandList className="max-h-[80vh] md:max-h-[450px] ">
                     <CommandEmpty>No results found.</CommandEmpty>
                     <CommandGroup>
                         {
