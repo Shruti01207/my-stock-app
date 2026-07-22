@@ -59,7 +59,6 @@ export function AlertModal() {
     const [alertForm, setAlertForm] = useState<Alert>(defaultAlertState);
     const [isLoading, setIsLoading] = useState(false);
 
-    console.log("profile", profile);
 
 
     function computeAutoCondition(
