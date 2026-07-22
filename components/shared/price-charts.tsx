@@ -57,8 +57,8 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
 
 
     useEffect(() => {
-        const currTime = getMarketTime();
-        if (isMarketOpen() && prices[symbolDetails.symbol]) {
+        const currTime = getMarketTime();// get current time
+        if (isMarketOpen() && prices[symbolDetails.symbol]) {//
             const date = new Date(currTime);
             setLivePrices((prev) => {
                 if (prev.length == 0) {
@@ -97,7 +97,6 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
                     return [...prev, newCandle]
                 }
             })
-
         }
 
     }, [prices[symbolDetails.symbol]])
@@ -108,7 +107,10 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
 
 
     const chartData = useMemo(() => {
-        return [...(data ?? []), ...livePrices]
+        if (!data || data.length == 0) return livePrices
+        const lastDataTime = data[data.length - 1].time
+        const filteredLivePrices = livePrices.filter(lp => lp.time > lastDataTime);
+        return [...(data ?? []), ...filteredLivePrices]
     }, [livePrices, data])
 
 

@@ -1,20 +1,16 @@
 'use client'
 
-import CountrySelectField from '@/components/forms/CountrySelectField'
 import FooterLink from '@/components/forms/FooterLink'
 import InputField from '@/components/forms/InputField'
-import SelectField from '@/components/forms/SelectField'
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/actions/auth-client'
-import { signInWithEmail } from '@/lib/actions/auth.actions'
-import { COUNTRIES, INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from '@/lib/constants'
-import { email } from 'better-auth'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 const SignInPage = () => {
+  
   const {
     register,
     handleSubmit,
@@ -39,16 +35,6 @@ const SignInPage = () => {
       password: data.password
     })
 
-
-    // if (response.success) {
-    //   toast.success("Login successfull");
-    //   route.push('/');
-    //   route.refresh()
-    // }
-    // else {
-    //   toast.error(response.error || "Login failed");
-
-    // }
 
     if (error) {
       toast.error(error.message || "Login failed");
