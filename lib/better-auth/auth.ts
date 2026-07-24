@@ -5,7 +5,6 @@ import { connectToDatabase } from "@/database/mongoose";
 let authInstance: ReturnType<typeof betterAuth> | null = null;
 
 
-
 // callback function so, getAuth means we are passing the function to get
 // authentication session
 export const getAuth = async () => {

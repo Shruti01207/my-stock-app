@@ -1,5 +1,6 @@
 import Providers from "@/components/providers/providers"
 import Header from "@/components/shared/Header"
+import { WatchList } from "@/components/watchlist/Watchlist";
 import { auth } from "@/lib/better-auth/auth";
 
 import { headers } from "next/headers"
@@ -18,10 +19,18 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             <div className="text-gray-400">
 
                 <Header intialUser={session?.user} />
-                <div className="container pt-4">
-                    <Providers>{children}</Providers>
+                <div className="max-w-6xl mx-auto mx-3 flex flex-col md:flex-row">
+                    <div className="container pt-4">
+                        <Providers>{children}</Providers>
+                    </div>
+                    <div className="hidden md:block md:w-[30%] right border border-t-0 w-full">
+                        <WatchList />
+                    </div>
                 </div>
+
             </div>
+
+
         </main>
     )
 }

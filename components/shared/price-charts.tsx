@@ -16,7 +16,7 @@ import { useMarketData } from "@/hooks/useMarketData";
 
 
 
-export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolDetails: SymbolDetails }) => {
+export const PriceCharts = ({ symbol, symbolDetails, showSymbolInfo }: { symbol: string, symbolDetails: SymbolDetails, showSymbolInfo: boolean }) => {
 
     const subcribe = useLiveStore((state) => state.subscribe);
     const unsubscribe = useLiveStore((state) => state.unsubscribe);
@@ -123,16 +123,17 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
     return <>
         <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
             <div className="chart-header p-2 ms-[2.5%] my-2">
-                <div className="flex gap-2">
+                {showSymbolInfo && <div className="flex gap-2">
 
-                    {<div className="font-semibold w-full md:text-xl sm:text-sm flex justify-between items-center">
+                    {<div className={`font-semibold w-full md:text-xl sm:text-sm flex justify-between items-center`}>
 
                         <div className="font-semibold md:text-xl sm:text-sm flex gap-2">
                             <span><Mountain size={25} />  </span>
                             <span>{symbolDetails.symbol}</span>
                             {profile && <span>| {profile.description}</span>}
-
                         </div>
+
+
 
                         <div className="action-btn">
                             <Button variant="outline" size="sm" className="gap-1" onClick={() => setOpen(true, symbolDetails)}>
@@ -146,40 +147,53 @@ export const PriceCharts = ({ symbol, symbolDetails }: { symbol: string, symbolD
 
 
                     </div>}
-                </div>
-                {(!marketData.isLoading && !marketData.isError) && <div className="flex gap-2">
-                    <div className="text-2xl font-semibold text-white/80"> ${marketData.displayPrice}</div>
-                    <div className={`text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
-                        <span>
-                            {marketData.absoluteChange > 0 && <ArrowUp size={20} className={`${marketData.color}`} />}
-                            {marketData.absoluteChange < 0 &&
-                                <ArrowDown size={20} className={`${marketData.color}`}></ArrowDown>}
-                        </span>
-                        <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
-                    </div>
-
-                    <div className={`text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
-                        <span>
-                            <span>(</span>
-                            <span >{marketData.sign}</span>
-                            <span> {Math.abs(marketData.absoluteChange).toFixed(2)}</span>
-                            <span>)</span>
-                        </span>
-
-                    </div>
-
-
-
-
-
                 </div>}
 
-                {(data && data.length > 0) &&
-                    <div className="market-status flex gap-2 text-zinc-400">
-                        {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-red-400">CLOSED</div>}
-                        <div>{getFormatedDate(new Date(data[data.length - 1].time))}</div>
+
+                <div className={`w-full flex ${!showSymbolInfo ? 'justify-between' : 'justify-start'} items-start`}>
+                    <div className="quotes">
+                        {(!marketData.isLoading && !marketData.isError) && <div className="flex gap-2">
+                            <div className="text-2xl font-semibold text-white/80"> ${marketData.displayPrice}</div>
+                            <div className={`text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
+                                <span>
+                                    {marketData.absoluteChange > 0 && <ArrowUp size={20} className={`${marketData.color}`} />}
+                                    {marketData.absoluteChange < 0 &&
+                                        <ArrowDown size={20} className={`${marketData.color}`}></ArrowDown>}
+                                </span>
+                                <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
+                            </div>
+
+                            <div className={`text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
+                                <span>
+                                    <span>(</span>
+                                    <span >{marketData.sign}</span>
+                                    <span> {Math.abs(marketData.absoluteChange).toFixed(2)}</span>
+                                    <span>)</span>
+                                </span>
+
+                            </div>
+
+                        </div>}
+
+                        {(data && data.length > 0) &&
+                            <div className="market-status flex gap-2 text-zinc-400">
+                                {isMarketOpen() ? <div className="text-green-400">OPEN</div> : <div className="text-red-400">CLOSED</div>}
+                                <div>{getFormatedDate(new Date(data[data.length - 1].time))}</div>
+                            </div>
+                        }
                     </div>
-                }
+                    {!showSymbolInfo && <div className="action-btn" >
+                        <Button variant="outline" size="sm" className="gap-1" onClick={() => setOpen(true, symbolDetails)}>
+                            <Bell
+                                size={16}
+                                className="text-[#D4AF37]"
+                                strokeWidth={3}
+                            /> Set Alert
+                        </Button>
+                    </div>}
+
+                </div>
+
 
             </div>
 

@@ -46,7 +46,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
 
     return (
         <>
-            <div className="m-0 bg-[#17181f] w-[200px] rounded-md">
+            <div className="m-0 bg-[#17181f] w-[24%] rounded-md">
                 <div className="card-content w-full p-3 pb-1">
                     <h1 className="font-semibold">{symbol}</h1>
                     <div className="text-sm text-white/80 font-semibold">{marketData.displayPrice}</div>

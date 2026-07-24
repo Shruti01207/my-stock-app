@@ -77,7 +77,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
 
                 <div className="main-center-chart">
                     {
-                        <PriceCharts symbol={finhubSymbol} symbolDetails={symbolData} ></PriceCharts>
+                        <PriceCharts symbol={finhubSymbol} symbolDetails={symbolData} showSymbolInfo={false} ></PriceCharts>
                     }
                 </div>
 
