@@ -18,7 +18,7 @@ export function useWatchlistData(watchlist: string[]) {
                     return {
                         symbol: sym,
                         price: apiData?.c ?? 0,
-                        change: apiData?.pc ?? 0, // Using 'dp' for percent change
+                        change: apiData?.dp ?? 0, // Using 'dp' for percent change
                         high: apiData?.h ?? 0,
                         low: apiData?.l ?? 0,
                     }

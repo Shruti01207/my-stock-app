@@ -39,7 +39,7 @@ export const MarketOverviewWidget = ({ symbol, finHubSymbol }: { symbol: string,
         }
     }, [finHubSymbol, subscribe, unsubscribe]);
 
-    if (isLoading) return <Skeleton className="h-[150px] w-[200px] opacity-30  rounded-xl" />;
+    if (isLoading) return <Skeleton className="h-[150px] w-[200px] opacity-30 rounded-xl" />;
     if (isError || !stockPrice) return <div>Error loading data</div>;
 
 
