@@ -71,9 +71,10 @@ export const StatsGrid = ({ finhubSymbol }: { finhubSymbol: string }) => {
 
                         <div className="flex justify-between items-center py-3 border-t border-zinc-700">
                             <span className="text-zinc-500">Mkt. cap</span>
-                            <span className="font-semibold">
-                                {formatMarketCap(companyProfile?.marketCapitalization)}
-                            </span>
+                            {companyProfile && <span className="font-semibold">
+                                {formatMarketCap(companyProfile.marketCapitalization)}
+                            </span>}
+
                         </div>
 
                         <div className="flex justify-between items-center py-3 border-t border-zinc-700">
@@ -112,9 +113,9 @@ export const StatsGrid = ({ finhubSymbol }: { finhubSymbol: string }) => {
 
                         <div className="flex justify-between items-center py-3 border-t border-zinc-700">
                             <span className="text-zinc-500">Volume</span>
-                            <span className="font-semibold">
+                            {/* <span className="font-semibold">
                                 {quoteData?.v?.toLocaleString()}
-                            </span>
+                            </span> */}
                         </div>
 
                     </div>
