@@ -35,7 +35,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
     return <>
 
 
-        <div className="max-w-6xl mx-auto mx-3 flex flex-col">
+        <div className="max-w-6xl mx-auto mx-3 flex flex-col gap-2">
             <div className="flex items-center gap-2 py-1.5">
                 <Link href="/" className="flex items-center gap-2" >
                     <ArrowLeft size={15} strokeWidth={2.5} className="leading-none relative -top-[1px] text-sm" />
@@ -52,7 +52,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
 
             </div>
 
-            <div className="company-name mt-3 flex flex-row gap-3 items-center">
+            <div className="company-name flex flex-row gap-3 items-center">
                 {isLoading ?
                     <Skeleton className="w-10 h-10 rounded-full"></Skeleton> :
                     data?.logo && !logoError ? <img className="w-10 h-10 rounded-full" src={data?.logo} alt={data?.name} onError={() => setLogoError(true)} /> :

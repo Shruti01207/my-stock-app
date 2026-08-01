@@ -152,28 +152,30 @@ export const PriceCharts = ({ symbol, symbolDetails, showSymbolInfo }: { symbol:
 
                 <div className={`w-full flex ${!showSymbolInfo ? 'justify-between' : 'justify-start'} items-start`}>
                     <div className="quotes">
-                        {(!marketData.isLoading && !marketData.isError) && <div className="flex gap-2">
-                            <div className="text-2xl font-semibold text-white/80"> ${marketData.displayPrice}</div>
-                            <div className={`text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
-                                <span>
-                                    {marketData.absoluteChange > 0 && <ArrowUp size={20} className={`${marketData.color}`} />}
-                                    {marketData.absoluteChange < 0 &&
-                                        <ArrowDown size={20} className={`${marketData.color}`}></ArrowDown>}
-                                </span>
-                                <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
+                        {(!marketData.isLoading && !marketData.isError) &&
+                            <div className="flex gap-2 items-center">
+                                <div className="sm:text-xl md:text-2xl  font-semibold text-white/80"> ${marketData.displayPrice}</div>
+                                <div className={`sm:text-lg md:text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
+                                    <span>
+                                        {marketData.absoluteChange > 0 && <ArrowUp size={20} className={`${marketData.color}`} />}
+                                        {marketData.absoluteChange < 0 &&
+                                            <ArrowDown size={20} className={`${marketData.color}`}></ArrowDown>}
+                                    </span>
+                                    <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
+                                </div>
+
+                                <div className={`sm:text-lg md:text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
+                                    <span>
+                                        <span>(</span>
+                                        <span >{marketData.sign}</span>
+                                        <span> {Math.abs(marketData.absoluteChange).toFixed(2)}</span>
+                                        <span>)</span>
+                                    </span>
+
+                                </div>
+
                             </div>
-
-                            <div className={`text-xl mt-1 flex items-center text-md font-semibold ${marketData.color}`}>
-                                <span>
-                                    <span>(</span>
-                                    <span >{marketData.sign}</span>
-                                    <span> {Math.abs(marketData.absoluteChange).toFixed(2)}</span>
-                                    <span>)</span>
-                                </span>
-
-                            </div>
-
-                        </div>}
+                        }
 
                         {(data && data.length > 0) &&
                             <div className="market-status flex gap-2 text-zinc-400">
@@ -205,17 +207,28 @@ export const PriceCharts = ({ symbol, symbolDetails, showSymbolInfo }: { symbol:
                     </div>
                 </> :
                 <>
-                    <div className="h-[182px] md:h-[250px] lg:h-[300px] w-full">
+                    <div className="h-[200px] md:h-[250px] lg:h-[300px] w-full">
                         <div className="lg:hidden sm:block h-[100%] w-full min-w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 {chartData && <PriceChartContent data={chartData} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={marketData.chartColor}></PriceChartContent>}
+
                             </ResponsiveContainer>
+
                         </div>
                         <div className="hidden lg:block h-[100%] w-full min-w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 {chartData && <PriceChartContent data={chartData} mainGraphFilter={mainGraphFilter} symbol={symbol} chartColor={marketData.chartColor}></PriceChartContent>}
                             </ResponsiveContainer>
+
                         </div>
+
+
+                    </div>
+                    <div className="action-btns py-2 flex justify-center md:justify-start ms-0 md:ms-[1.5em]">
+                        <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("1D")}>1D</button>
+                        <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("5D")}  >5D</button>
+                        <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("1M")}  >1M</button>
+                        <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("6M")}  >6M</button>
                     </div>
 
                 </>
@@ -223,12 +236,7 @@ export const PriceCharts = ({ symbol, symbolDetails, showSymbolInfo }: { symbol:
             }
 
 
-            <div className="action-btns mt-4">
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("1D")}>1D</button>
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("5D")}  >5D</button>
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("1M")}  >1M</button>
-                <button type="button" className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5" onClick={() => handleFilterChange("6M")}  >6M</button>
-            </div>
+
 
         </div>
 
