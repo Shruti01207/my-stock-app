@@ -114,7 +114,7 @@ export async function getStockMetric(symbol: string) {
 
 export async function getNewsSentiments(symbol: string) {
     const apiKey = process.env.ALPHA_VANTAGE_KEY
-    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${apiKey}`;
+    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&sort=RELEVANCE&apikey=${apiKey}`;
     const res = await fetch(url);
     return res.json();
 }
