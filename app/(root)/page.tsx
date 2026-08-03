@@ -7,46 +7,41 @@ import { SymbolTypes } from "@/lib/enums";
 import { symbol } from "better-auth";
 import Link from "next/link";
 
-
-
-
 export default function Home() {
-
   const symbolDetails: SymbolDetails = {
-    symbol: 'QQQ',
-    type: SymbolTypes.ETP
-  }
-
-
+    symbol: "QQQ",
+    type: SymbolTypes.ETP,
+  };
 
   return (
-
-    <div className="left">
+    <div className="left flex flex-col gap-2">
       <div className="widget-section">
-        <div className="widget-container overflow-x-scroll md:overflow-x-hidden flex justify-between">
-          <MarketOverviewWidget symbol='SPY' finHubSymbol="SPY" />
-          <MarketOverviewWidget symbol='QQQ' finHubSymbol="QQQ" />
-          <MarketOverviewWidget symbol='DIA' finHubSymbol="DIA" />
+        <div className="widget-container overflow-x-scroll scrollbar-hide md:overflow-x-hidden flex justify-between gap-3">
+          <MarketOverviewWidget symbol="SPY" finHubSymbol="SPY" />
+          <MarketOverviewWidget symbol="QQQ" finHubSymbol="QQQ" />
+          <MarketOverviewWidget symbol="DIA" finHubSymbol="DIA" />
           <MarketOverviewWidget symbol="IWM" finHubSymbol="IWM" />
         </div>
       </div>
       <div className="main-chart my-3">
-        {<PriceCharts symbol="QQQ" symbolDetails={symbolDetails} showSymbolInfo={true}></PriceCharts>}
+        {
+          <PriceCharts
+            symbol="QQQ"
+            symbolDetails={symbolDetails}
+            showSymbolInfo={true}
+          ></PriceCharts>
+        }
       </div>
 
       <div className="md:hidden list-buttons">
-        <Link className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none" href="/watchlist">
+        <Link
+          className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+          href="/watchlist"
+        >
           Watchlist
         </Link>
       </div>
       <MarketNewsWidget></MarketNewsWidget>
-
     </div>
-
-
-
-
-
-
   );
 }

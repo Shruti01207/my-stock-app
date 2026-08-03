@@ -567,3 +567,11 @@
 .scrollbar-hide-default::-webkit-scrollbar-thumb:hover {
   background-color: #9095A1;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
