@@ -1,20 +1,24 @@
-'use client'
+"use client";
 
-import CountrySelectField from '@/components/forms/CountrySelectField'
-import FooterLink from '@/components/forms/FooterLink'
-import InputField from '@/components/forms/InputField'
-import SelectField from '@/components/forms/SelectField'
-import { Button } from '@/components/ui/button'
-import { signUpWithEmail } from '@/lib/actions/auth.actions'
-import { COUNTRIES, INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from '@/lib/constants'
-import { useRouter } from 'next/navigation'
-import React from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import CountrySelectField from "@/components/forms/CountrySelectField";
+import FooterLink from "@/components/forms/FooterLink";
+import InputField from "@/components/forms/InputField";
+import SelectField from "@/components/forms/SelectField";
+import { Button } from "@/components/ui/button";
+import { signUpWithEmail } from "@/lib/actions/auth.actions";
+import {
+  COUNTRIES,
+  INVESTMENT_GOALS,
+  PREFERRED_INDUSTRIES,
+  RISK_TOLERANCE_OPTIONS,
+} from "@/lib/constants";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const SignUpPage = () => {
-
-  const router = useRouter()
+  const router = useRouter();
 
   const {
     register,
@@ -24,70 +28,66 @@ const SignUpPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     defaultValues: {
-      fullName: '',
-      email: '',
-      password: '',
-      country: 'United States',
-      investmentGoals: 'Growth',
-      riskTolerance: 'Medium',
-      preferredIndustry: 'Technology',
-    }, mode: 'onBlur'
-
-  })
+      fullName: "",
+      email: "",
+      password: "",
+      country: "United States",
+      investmentGoals: "Growth",
+      riskTolerance: "Medium",
+      preferredIndustry: "Technology",
+    },
+    mode: "onBlur",
+  });
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
-
     try {
       console.log("sign up with email called");
 
       const result = await signUpWithEmail(data);
-      if (result.success) router.push('/')
-    }
-    catch (error) {
-      console.log(error)
-      toast.error('Sign up failed', {
-        description: error instanceof Error ? error.message : 'An unknown error occurred'
+      if (result.success) router.push("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Sign up failed", {
+        description:
+          error instanceof Error ? error.message : "An unknown error occurred",
       });
-
     }
-
-
-
-  }
+  };
 
   return (
     <>
-      <h1 className='form-title'>Sign Up & Personalize</h1>
+      <h1 className="form-title">Sign Up & Personalize</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
-
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <InputField
-          name='fullName'
-          label='Full Name'
-          placeholder='Enter your full name'
+          name="fullName"
+          label="Full Name"
+          placeholder="Enter your full name"
           register={register}
           error={errors.fullName}
-          validation={{ required: 'Full name is required', minLength: 2 }}
+          validation={{ required: "Full name is required", minLength: 2 }}
         />
 
-
         <InputField
-          name='email'
-          label='Email'
-          placeholder='Enter your email'
+          name="email"
+          label="Email"
+          placeholder="Enter your email"
           register={register}
           error={errors.email}
-          validation={{ required: 'Email is required', pattern: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'] }}
+          validation={{
+            required: "Email is required",
+            pattern: [/^\S+@\S+\.\S+$/, "Please provide a valid email"],
+          }}
         />
 
         <InputField
-          name='password'
-          type='password'
-          label='Password'
-          placeholder='Enter your password'
+          name="password"
+          type="password"
+          label="Password"
+          placeholder="Enter your password"
           register={register}
           error={errors.password}
-          validation={{ required: 'Password is required', minLength: 8 }}
+          validation={{ required: "Password is required", minLength: 8 }}
         />
 
         <CountrySelectField
@@ -99,7 +99,6 @@ const SignUpPage = () => {
           error={errors.country}
           required
         />
-
 
         <SelectField
           name="investmentGoals"
@@ -130,15 +129,22 @@ const SignUpPage = () => {
           required
         />
 
-        <Button type='submit' disabled={isSubmitting} className='yellow-btn w-full mt-5'>
-          {isSubmitting ? 'Creating Account' : 'Start your investing journey'}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="yellow-btn w-full mt-5"
+        >
+          {isSubmitting ? "Creating Account" : "Start your investing journey"}
         </Button>
 
-        <FooterLink text='Already have an account?' linkText='Sign In' href='/sign-in'></FooterLink>
+        <FooterLink
+          text="Already have an account?"
+          linkText="Sign In"
+          href="/sign-in"
+        ></FooterLink>
       </form>
-
     </>
-  )
-}
+  );
+};
 
-export default SignUpPage
+export default SignUpPage;
