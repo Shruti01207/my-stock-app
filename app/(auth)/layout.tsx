@@ -8,8 +8,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="pb-6 lg:pb-8 flex-1">{children}</div>
       </section>
 
-      <section className="auth-right-section">
-        <div className="z-10 relative lg:mt-4 lg:mb-16">
+      <section className="auth-right-section hidden lg:block">
+        <div className="z-10 relative lg:mt-4 lg:mb-16 hidden lg:block">
           <blockquote className="auth-blockquote">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto
             nulla officiis tenetur, eaque impedit iusto dolorem deserunt
@@ -40,7 +40,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
 
-        <div className="flex-1 relative">
+        <div className="flex-1 relative hidden lg:block">
           <Image
             src={"/assets/images/dashboard.png"}
             width={600}

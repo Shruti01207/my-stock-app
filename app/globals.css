@@ -182,7 +182,7 @@
   }
 
   .auth-right-section {
-    @apply w-full max-lg:border-t max-lg:border-gray-600 lg:w-[55%] lg:h-screen bg-gray-800 px-6 py-4 md:p-6 lg:py-12 lg:px-18 flex flex-col justify-start;
+    @apply w-full max-lg:border-t max-lg:border-gray-600 hidden lg:block lg:w-[55%] lg:h-screen bg-gray-800 p-0 lg:px-6 lg:py-4 lg:p-6 lg:py-12 lg:px-18 flex flex-col justify-start;
   }
 
   .auth-blockquote {
@@ -198,7 +198,7 @@
   }
 
   .form-title {
-    @apply text-3xl font-bold text-gray-400 mb-5;
+    @apply text-xl md:text-3xl font-bold text-gray-400 mb-5;
   }
 
   .form-label {
@@ -569,9 +569,13 @@
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
+
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
