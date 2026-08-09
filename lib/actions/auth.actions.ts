@@ -5,11 +5,9 @@ import { inngest } from "../inngest/client";
 import { headers } from "next/headers";
 
 export const signUpWithEmail = async ({ email, password, fullName, country, investmentGoals, riskTolerance, preferredIndustry }: SignUpFormData) => {
-
   try {
     const authInstance = await auth();// calling getauth
-    const response = await authInstance.api.signUpEmail({ body: { email, password, name: fullName } });
-
+    const response = await authInstance.api.signUpEmail({ body: { email, password, name: fullName }, headers: await headers() });
     if (response) {
       await inngest.send({
         name: "app/user.created",
@@ -23,16 +21,11 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
         }
       })
     }
-
     return { success: true, data: response };
-
   }
-  catch (error) {
-    console.log(error);
-    return { success: false, error: 'Sign up failed' };
+  catch (error: any) {
+    return { success: false, error: error?.message || "An unexpected error during signup" };
   }
-
-
 
 }
 

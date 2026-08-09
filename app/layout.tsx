@@ -36,7 +36,7 @@ export default function RootLayout({
           <StockSearchModal />
           <AlertModal />
           <WebSocketProvider> {children}</WebSocketProvider>
-          <Toaster />
+          <Toaster richColors position="top-right" duration={3000} closeButton />
         </Providers>
 
       </body>

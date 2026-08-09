@@ -46,7 +46,7 @@ export const sendSignUpEmail = inngest.createFunction(
 
             return await sendWelcomeEmail({
                 email: event.data.email,
-                name: event.data.name,
+                name: event.data.fullName,
                 intro: introText
             })
         })

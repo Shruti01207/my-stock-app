@@ -13,7 +13,6 @@ import {
   RISK_TOLERANCE_OPTIONS,
 } from "@/lib/constants";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -40,18 +39,13 @@ const SignUpPage = () => {
   });
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
-    try {
-      console.log("sign up with email called");
-
-      const result = await signUpWithEmail(data);
-      if (result.success) router.push("/");
-    } catch (error) {
-      console.log(error);
-      toast.error("Sign up failed", {
-        description:
-          error instanceof Error ? error.message : "An unknown error occurred",
-      });
+    const result = await signUpWithEmail(data);
+    if (!result.success) {
+      toast.error(result.error)
+      return
     }
+    toast.success("Sign up successful")
+    router.push("/");
   };
 
   return (

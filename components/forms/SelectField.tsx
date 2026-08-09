@@ -1,15 +1,12 @@
 
-import React from 'react'
-import { Controller } from 'react-hook-form'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select"
+import { Controller } from 'react-hook-form'
 
 const SelectField = ({
   name, label, placeholder, options, control, error,
@@ -35,7 +32,7 @@ const SelectField = ({
               </SelectTrigger>
               <SelectContent className='bg-gray-800 border-gray-600 text-white'>
                 {
-                  options.map((option)=>{
+                  options.map((option) => {
                     return (
                       <SelectItem value={option.value} key={option.value} className='focus:bg-ray-600 focus:text-white'>{option.label}</SelectItem>
                     )

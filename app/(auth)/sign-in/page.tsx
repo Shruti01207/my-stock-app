@@ -5,7 +5,6 @@ import InputField from "@/components/forms/InputField";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/actions/auth-client";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -13,8 +12,6 @@ const SignInPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    control,
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     defaultValues: {
@@ -28,7 +25,7 @@ const SignInPage = () => {
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
     console.log(data);
-    //const response = await signInWithEmail({ email: data.email, password: data.password });
+
     const { data: session, error } = await authClient.signIn.email({
       email: data.email,
       password: data.password,
