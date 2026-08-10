@@ -1,24 +1,19 @@
 'use client'
 
-import React from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/navigation"
 import {
   Avatar, AvatarFallback, AvatarImage
 } from "@/components/ui/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { authClient } from '@/lib/actions/auth-client'
+import { useRouter } from "next/navigation"
 
 interface UserDropdownProps {
   user: User | null
@@ -27,8 +22,16 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
 
   const router = useRouter();
 
-  const handleLogout = () => {
-    router.push("/sign-in");
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/sign-in");
+          router.refresh();
+        }
+      }
+    })
+
   }
 
 

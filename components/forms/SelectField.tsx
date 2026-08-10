@@ -34,7 +34,7 @@ const SelectField = ({
                 {
                   options.map((option) => {
                     return (
-                      <SelectItem value={option.value} key={option.value} className='focus:bg-ray-600 focus:text-white'>{option.label}</SelectItem>
+                      <SelectItem value={option.value} key={option.value} className='focus:bg-gray-600 focus:text-white'>{option.label}</SelectItem>
                     )
                   })
                 }

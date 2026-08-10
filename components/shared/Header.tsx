@@ -8,7 +8,6 @@ import NavItems from '../ui/NavItems'
 import UserDropdown from '../ui/UserDropdown'
 import { Button } from '../ui/button'
 import { useSearchStore } from '@/stores/useSearchStore'
-import { auth } from '@/lib/better-auth/auth'
 import { authClient } from '@/lib/actions/auth-client'
 import { useAuthStore } from '@/stores/useAuthStore'
 

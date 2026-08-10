@@ -4,7 +4,6 @@ import { PriceCharts } from "@/components/shared/price-charts";
 import { WatchList } from "@/components/watchlist/Watchlist";
 import { useCompanyProfile } from "@/hooks/useCompanyProfile";
 import { SymbolTypes } from "@/lib/enums";
-import { symbol } from "better-auth";
 import Link from "next/link";
 
 export default function Home() {
