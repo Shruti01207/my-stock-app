@@ -76,12 +76,6 @@ declare global {
         email: string;
     };
 
-    // type Stock = {
-    //     symbol: string;
-    //     name: string;
-    //     exchange: string;
-    //     type: string;
-    // };
 
     type StockWithWatchlistStatus = Stock & {
         isInWatchlist: boolean;
@@ -328,7 +322,10 @@ declare global {
         type: SymbolTypes
     }
 
-    typeSymbol
+    type MarketOverviewWidgetProps = {
+        symbol: string;
+        finHubSymbol: string
+    }
 
 
     type AlertRequest = {
