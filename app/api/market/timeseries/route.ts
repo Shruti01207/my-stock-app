@@ -1,7 +1,6 @@
 
 import { getGraphData } from "@/lib/api/stocks-server";
 import { getCached, setCached } from "@/lib/server-cache";
-import { symbol } from "better-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 

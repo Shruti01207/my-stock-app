@@ -12,8 +12,7 @@ interface WatchlistStore {
   setWatchList: (symbols: string[]) => void
 }
 
-// create()(config)->curied function syntax
-// first create the typedstore->wrap the store login in persist
+
 export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => ({
   watchlist: [],
   addStock: async (symbol) => {
@@ -37,8 +36,7 @@ export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => 
   removeStock: async (symbol) => {
 
     const oldlist = get().watchlist;
-    //we can't use splice because it will mutate the same array i.e doesn't create the new memory reference
-    // but filter create the new memory reference.
+
     const updated = oldlist.filter((oldlist) => oldlist != symbol);
     set({ watchlist: updated });
 
@@ -52,17 +50,6 @@ export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => 
     }
 
   },
-  // toggleStock: (symbol) => {
-  //   // here
-  //   const curr = get().watchlist
-  //   if (curr.includes(symbol)) {
-  //     get().removeStock(symbol);
-  //   }
-  //   else {
-  //     get().addStock(symbol);
-  //   }
-  // },
-
   toggleStock: (symbol) => {
     set((state) => {
       if (state.watchlist.includes(symbol)) {
@@ -83,6 +70,3 @@ export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => 
   name: "watchlist-storage",
 }))
 
-// ()=>{} <=> function getWatchList(id){}<=> (id)=>{}
-// ()=>{} => an function that returns undefined.
-//()=>({})=> expects an object need to explicit return statement

@@ -1,5 +1,4 @@
-import { symbol } from "better-auth";
-import { log } from "console";
+;
 
 export interface FinhubQuote {
   c: number,
