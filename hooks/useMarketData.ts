@@ -8,14 +8,14 @@ export function useMarketData(symbol: string) {
     const { data: stockPrice, isLoading, isError } = useMarketQuote(symbol);
     const livePrice = useLiveStore(state => state.prices[symbol]);
 
-    const currentPrice = (stockPrice?.c ?? 0);
-    const prevClose = (stockPrice?.pc ?? 0);
+    const currentPrice = (stockPrice?.c ?? undefined);
+    const prevClose = (stockPrice?.pc ?? undefined);
     const displayPrice = livePrice ?? currentPrice;
 
     const metrics = useMemo(() => {
         return getMarketMetrics(displayPrice,
             prevClose,
-            stockPrice?.dp ?? 0
+            stockPrice?.dp ?? undefined
         )
     }, [displayPrice, prevClose, stockPrice?.dp])
 
@@ -23,6 +23,7 @@ export function useMarketData(symbol: string) {
         isLoading,
         isError,
         displayPrice,
+        timestamp: stockPrice?.t,
         prevClose,
         ...metrics
     }

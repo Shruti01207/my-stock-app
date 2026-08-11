@@ -1,10 +1,9 @@
 "use client";
 
 import { useMarketData } from "@/hooks/useMarketData";
-import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import dynamic from "next/dynamic";
-import React, { useEffect } from "react";
+import React from "react";
 import { Skeleton } from "../ui/skeleton";
 
 const MiniTrendLineChart = dynamic(
@@ -25,7 +24,7 @@ export const MarketOverviewWidget = React.memo(({ symbol, finHubSymbol }: Market
       <Skeleton className="h-[150px] w-[40%] sm:w-[40%] shrink-0  md:w-[24%] opacity-30 rounded-xl" />
     );
 
-  if (marketData.isError || !marketData.displayPrice) return <div>Error loading data</div>;
+  if (marketData.isError || marketData.timestamp === 0) return <div className="h-[150px] w-[40%] sm:w-[40%] shrink-0 bg-[#17181f] md:w-[24%] rounded-xl flex justify-center items-center">Error loading</div>;
 
   return (
     <>
@@ -35,26 +34,30 @@ export const MarketOverviewWidget = React.memo(({ symbol, finHubSymbol }: Market
           <div className="text-sm text-white/80 font-semibold">
             {marketData.displayPrice}
           </div>
-          <div className="leading-none text-sm text-white/80 font-semibold">
-            <span>(</span>
-            <span>{marketData.sign}</span>
-            <span> {Math.abs(marketData.absoluteChange).toFixed(2)}</span>
-            <span>)</span>
-          </div>
-          <div
-            className={`mt-1 flex items-center text-md font-semibold ${marketData.color}`}
-          >
-            <span>{marketData.sign}</span>
-            <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
-            <span>
-              {marketData.trend === "up" && (
-                <ArrowUp size={20} className={`${marketData.color}`} />
-              )}
-              {marketData.trend === "down" && (
-                <ArrowDown size={20} className={`${marketData.color}`} />
-              )}
-            </span>
-          </div>
+          {(marketData?.absoluteChange != undefined) &&
+            <div className="leading-none text-sm text-white/80 font-semibold">
+              <span>(</span>
+              <span>{marketData.sign}</span>
+              <span> {Math.abs(marketData?.absoluteChange).toFixed(2)}</span>
+              <span>)</span>
+            </div>}
+
+          {(marketData?.percentageChange != undefined) &&
+            <div
+              className={`mt-1 flex items-center text-md font-semibold ${marketData.color}`}
+            >
+              <span>{marketData.sign}</span>
+              <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
+              <span>
+                {marketData.trend === "up" && (
+                  <ArrowUp size={20} className={`${marketData.color}`} />
+                )}
+                {marketData.trend === "down" && (
+                  <ArrowDown size={20} className={`${marketData.color}`} />
+                )}
+              </span>
+            </div>}
+
         </div>
 
         <div className="line-chart">
@@ -65,6 +68,6 @@ export const MarketOverviewWidget = React.memo(({ symbol, finHubSymbol }: Market
   );
 });
 
-MarketOverviewWidget.displayName = "MaketOverviewWidget"
+MarketOverviewWidget.displayName = "MarketOverviewWidget"
 
 

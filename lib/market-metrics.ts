@@ -1,10 +1,23 @@
 import { CHART_COLOR_MAP, COLOR_MAP } from "./constants";
 
 export function getMarketMetrics(
-    currentPrice: number,
-    prevClose: number,
-    fallbackDp: number
+    currentPrice?: number,
+    prevClose?: number,
+    fallbackDp?: number
 ) {
+
+    if (currentPrice === undefined || prevClose === undefined) {
+
+        return {
+            absoluteChange: undefined,
+            percentageChange: undefined,
+            trend: undefined,
+            sign: undefined,
+            color: undefined,
+            chartColor: undefined
+        }
+    }
+
     const absoluteChange = (currentPrice - prevClose);
     const percentageChange = (prevClose > 0) ? (absoluteChange / prevClose) * 100 : (fallbackDp ?? 0);
     const trend: Trend = (absoluteChange > 0) ? 'up' : (absoluteChange < 0) ? 'down' : 'flat'
