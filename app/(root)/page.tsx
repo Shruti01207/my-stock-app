@@ -42,7 +42,7 @@ export default async function Home() {
         <HydrationBoundary state={dehydrate(queryClient)}>
           <div className="widget-container overflow-x-scroll scrollbar-hide md:overflow-x-hidden flex justify-between gap-3">
             <MarketOverviewWidget symbol="SPY" finHubSymbol="SPY" />
-            <MarketOverviewWidget symbol="QQQQ" finHubSymbol="QQQQ" />
+            <MarketOverviewWidget symbol="QQQ" finHubSymbol="QQQ" />
             <MarketOverviewWidget symbol="DIA" finHubSymbol="DIA" />
             <MarketOverviewWidget symbol="IWM" finHubSymbol="IWM" />
           </div>
