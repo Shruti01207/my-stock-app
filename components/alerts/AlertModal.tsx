@@ -176,8 +176,15 @@ export function AlertModal() {
                                                 {marketData.displayPrice}
                                             </p>
                                             <p><span>{marketData.sign}</span>
-                                                <span>{Math.abs(marketData.absoluteChange).toFixed(2)}</span>
-                                                <span className={marketData.color}>  ({marketData.percentageChange.toFixed(2)}%)</span></p>
+                                                {(marketData.absoluteChange != undefined) &&
+                                                    <span>{Math.abs(marketData.absoluteChange).toFixed(2)}</span>
+                                                }
+
+                                                {(marketData.percentageChange != undefined) &&
+                                                    <span className={marketData.color}>  ({marketData.percentageChange.toFixed(2)}%)</span>
+                                                }
+
+                                            </p>
                                         </div>
                                     </> : <></>
                                 }

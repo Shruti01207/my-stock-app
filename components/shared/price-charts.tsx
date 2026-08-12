@@ -139,6 +139,7 @@ export const PriceCharts = ({
     setMainGraphFilter(filter);
   };
 
+  console.log("marketData", marketData)
   return (
     <>
       <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
@@ -193,19 +194,22 @@ export const PriceCharts = ({
                     className={`sm:text-lg md:text-lg mt-1 flex items-center text-md font-semibold ${marketData.color}`}
                   >
                     <span>
-                      {marketData.absoluteChange > 0 && (
+                      {(marketData.absoluteChange != undefined) && (marketData.absoluteChange > 0) && (
                         <ArrowUp size={20} className={`${marketData.color}`} />
                       )}
-                      {marketData.absoluteChange < 0 && (
+                      {(marketData.absoluteChange != undefined) && (marketData.absoluteChange < 0) && (
                         <ArrowDown
                           size={20}
                           className={`${marketData.color}`}
                         ></ArrowDown>
                       )}
                     </span>
-                    <span>
-                      {Math.abs(marketData.percentageChange).toFixed(2)}%
-                    </span>
+
+                    {(marketData.percentageChange != undefined) &&
+                      <span>{Math.abs(marketData.percentageChange).toFixed(2)} %</span>
+                    }
+
+
                   </div>
 
                   <div
@@ -214,10 +218,11 @@ export const PriceCharts = ({
                     <span>
                       <span>(</span>
                       <span>{marketData.sign}</span>
-                      <span>
-                        {" "}
-                        {Math.abs(marketData.absoluteChange).toFixed(2)}
-                      </span>
+                      {(marketData.absoluteChange != undefined) &&
+                        <span>
+                          {Math.abs(marketData.absoluteChange).toFixed(2)}
+                        </span>
+                      }
                       <span>)</span>
                     </span>
                   </div>
@@ -269,7 +274,7 @@ export const PriceCharts = ({
                       data={chartData}
                       mainGraphFilter={mainGraphFilter}
                       symbol={symbol}
-                      chartColor={marketData.chartColor}
+                      chartColor={marketData?.chartColor ?? "gray"}
                     ></PriceChartContent>
                   )}
                 </ResponsiveContainer>
@@ -281,7 +286,7 @@ export const PriceCharts = ({
                       data={chartData}
                       mainGraphFilter={mainGraphFilter}
                       symbol={symbol}
-                      chartColor={marketData.chartColor}
+                      chartColor={marketData.chartColor ?? "gray"}
                     ></PriceChartContent>
                   )}
                 </ResponsiveContainer>

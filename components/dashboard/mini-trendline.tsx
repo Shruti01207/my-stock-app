@@ -20,7 +20,9 @@ export const MiniTrendLineChart = ({ symbol }: { symbol: string }) => {
         endDate = `${ISODate} 16:00:00`;
     }
     const marketData = useMarketData(symbol);
-    const { data, isLoading, isError, isFetching } = useMiniTrend(symbol, startDate, endDate, marketData.prevClose);
+
+
+    const { data, isLoading, isError, isFetching } = useMiniTrend(symbol, startDate, endDate, marketData?.prevClose ?? 0);
 
 
     // useEffect(() => {
