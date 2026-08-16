@@ -18,7 +18,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
     const [mounted, setMounted] = React.useState(false);
 
     const storedUser = useAuthStore((state) => state.user)
-    const setUser = useAuthStore((state) => state.setUser)// it means it will return set user
+    const setUser = useAuthStore((state) => state.setUser)
     const clearUser = useAuthStore((state) => state.clearUser)
     const { data: session, isPending } = authClient.useSession()
 
@@ -39,9 +39,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
 
     }, [isPending, session, setUser, clearUser])
 
-    // user-changed->set user->user changed->changed user->infinite loop
 
-    // why this work?
     React.useEffect(() => {
         setMounted(true)
     }, [])

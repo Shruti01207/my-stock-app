@@ -34,6 +34,7 @@ const SignInForm = () => {
     toast.success("Login successful");
     router.push("/");
     router.refresh();
+
   };
 
   return (

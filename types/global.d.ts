@@ -335,6 +335,25 @@ declare global {
 
     }
 
+    type SymbolInfo =
+        {
+            currency: string,
+            description: string,
+            displaySymbol: string,
+            figi: string,
+            figiComposite: string,
+            isin: string,
+            mic: string,
+            shareClassFIGI: string,
+            symbol: string,
+            symbol2: string,
+            type: string
+        }
+
+
+
+
+
     type Condition = "above" | "below"
 }
 

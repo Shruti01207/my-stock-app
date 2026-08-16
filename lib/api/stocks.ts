@@ -123,8 +123,8 @@ export async function getNewsSentiments(symbol: string): Promise<NewsSentimentAp
   return res.json();
 }
 
-export async function getSymbolsInfo(symbol: string) {
-  const url = `/api/market/symbols-info?symbol=${symbol}`;
+export async function getSymbolsInfo(): Promise<SymbolInfo[]> {
+  const url = `/api/market/symbols-info`;
   const res = await fetch(url);
   return res.json();
 }

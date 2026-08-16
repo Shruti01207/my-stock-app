@@ -156,7 +156,7 @@ export const PriceCharts = ({
                       <span>{symbolDetails.symbol}</span>
                     </div>
                     <div className="description">
-                      {profile && <span> {profile.description}</span>}
+                      {profile && <span> {(profile as any).description}</span>}
                     </div>
                   </div>
 

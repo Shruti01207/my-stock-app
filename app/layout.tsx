@@ -1,11 +1,12 @@
+import { AlertModal } from "@/components/alerts/AlertModal";
+import AppIntializer from "@/components/providers/app-intializer";
+import Providers from "@/components/providers/providers";
+import { WebSocketProvider } from "@/components/providers/web-socket-provider";
+import { StockSearchModal } from "@/components/shared/stock-search-dialog";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
-import { StockSearchModal } from "@/components/shared/stock-search-dialog";
-import { WebSocketProvider } from "@/components/providers/web-socket-provider";
-import Providers from "@/components/providers/providers";
-import { AlertModal } from "@/components/alerts/AlertModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,17 +23,19 @@ export const metadata: Metadata = {
   description: "Track real time stock prices, get personalised alerts and explore detailed company insights",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
+          <AppIntializer />
           <StockSearchModal />
           <AlertModal />
           <WebSocketProvider> {children}</WebSocketProvider>
