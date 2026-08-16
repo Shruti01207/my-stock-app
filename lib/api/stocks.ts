@@ -51,9 +51,9 @@ export const getTrendData = async (symbol: string, startDate: string, endDate: s
   return data[symbol];
 }
 
-export const getGraphData = async (symbol: string, interval: string | null, outputSize: String | null, startDate: String | null, endDate: String | null): Promise<any[]> => {
+export const getGraphData = async (symbol: string, interval: string | null, outputSize: String | null, startDate: String | null, endDate: String | null, lastActiveTradingDay: boolean): Promise<any[]> => {
   const apiKey = process.env.TWELVEDATA_API_KEY;
-  const url = `/api/market/timeseries?symbols=${symbol}&outputSize=${outputSize}&interval=${interval}&startDate=${startDate}&endDate=${endDate}&ttlMs=120000`;
+  const url = `/api/market/timeseries?symbols=${symbol}&outputSize=${outputSize}&interval=${interval}&startDate=${startDate}&endDate=${endDate}&ttlMs=120000&lastActiveTradingDay=${lastActiveTradingDay}`;
   const response = await fetch(url)
   if (!response.ok) {
     throw new Error("Failed to fetch stock data");

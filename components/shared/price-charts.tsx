@@ -52,6 +52,7 @@ export const PriceCharts = ({
     startDate,
     endDate,
     outputSize,
+    (mainGraphFilter == '1D' ? true : false)
   );
 
   const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
