@@ -151,7 +151,7 @@ export function AlertModal() {
                         <DialogTitle>
                             <div className="flex flex-row items-center gap-2 mb-3">
 
-                                {symbolDetails.type == SymbolTypes.CommonStock && <img className="w-10 h-10 rounded-full" src={profile?.logo} alt={profile?.name} />}
+                                {symbolDetails.type == SymbolTypes.CommonStock && <img className="w-10 h-10 rounded-full" src={(profile as any)?.logo} alt={(profile as any)?.name} />}
                                 {symbolDetails.type == SymbolTypes.ETP ? <Mountain size={25} /> : ''}
 
                                 <span>Create Price Alert</span>
@@ -163,7 +163,7 @@ export function AlertModal() {
                             <div className="flex items-center justify-between">
                                 <div className="w-[30%]">
                                     <h2 className="text-2xl font-bold">{symbolDetails.symbol}</h2>
-                                    <p className="text-sm text-muted-foreground">{symbolDetails.type == SymbolTypes.CommonStock ? profile?.name : profile?.description}</p>
+                                    <p className="text-sm text-muted-foreground">{symbolDetails.type == SymbolTypes.CommonStock ? (profile as any)?.name : (profile as any)?.description}</p>
                                 </div>
 
                                 <div className="w-[100%] h-[50px] flex-1">
