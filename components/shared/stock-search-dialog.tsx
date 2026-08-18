@@ -6,17 +6,10 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandInput,
-  CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import { useSearchStore } from "@/stores/useSearchStore";
-
-import { Plus, Trash } from "lucide-react";
-import { useWatchlistStore } from "@/stores/useWatchlistStore";
 import { StockRow } from "./stock-row";
-import { searchStock } from "@/lib/api/stocks";
-import { useDebounce } from "@/hooks/useDebounce";
 import { POPULAR_STOCKS } from "@/lib/mockdata";
 import { useStockSearch } from "@/hooks/useStockSearch";
 
@@ -62,8 +55,8 @@ export function StockSearchModal() {
           <CommandGroup>
             {searchResults &&
               searchResults.length > 0 &&
-              searchResults?.map((result: any) => (
-                <StockRow result={result} key={result.symbol}></StockRow>
+              searchResults?.map((result: Stock) => (
+                <StockRow result={result} key={result.description}></StockRow>
               ))}
           </CommandGroup>
         </CommandList>

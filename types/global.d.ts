@@ -81,16 +81,16 @@ declare global {
         isInWatchlist: boolean;
     };
 
-    type FinnhubSearchResult = {
-        symbol: string;
-        description: string;
-        displaySymbol?: string;
-        type: string;
-    };
+    // type FinnhubSt = {
+    //     symbol: string;
+    //     description: string;
+    //     displaySymbol?: string;
+    //     type: string;
+    // };
 
     type FinnhubSearchResponse = {
         count: number;
-        result: FinnhubSearchResult[];
+        result: Stock[];
     };
 
     type StockDetailsPageProps = {
@@ -218,6 +218,7 @@ declare global {
         symbol: string,
         displaySymbol: string;
         description: string,
+        type: string
     }
 
     type StockData = {

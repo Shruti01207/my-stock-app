@@ -1,7 +1,7 @@
 
 
 import { getSymbolsInfo } from "@/lib/api/stocks";
-import { LocalStorageKeys } from "@/lib/enums";
+import { useSupportedSymbols } from "@/stores/useSupportedSymbolStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -11,23 +11,25 @@ export const useSymbolInfo = (symbol?: string) => {
 
 
     const queryClient = useQueryClient();
+    const lastUpdated = useSupportedSymbols(state => state.lastUpdated)
+    const supportedSymbols = useSupportedSymbols(state => state.supportedSymbols)
 
 
     const isStale = () => {
         if (typeof window == 'undefined') {
             return false;
         }
-        const lastUpdated = localStorage.getItem(LocalStorageKeys.signalistSymbolslastUpdated);
+        //const lastUpdated = localStorage.getItem(LocalStorageKeys.signalistSymbolslastUpdated);
         return !lastUpdated || Date.now() > (Number(lastUpdated) + ONE_DAY_MS)
     }
 
     useEffect(() => {
-        const saved = localStorage.getItem(
-            LocalStorageKeys.signalistSymbols
-        );
-        if (!saved) return
+        // const saved = localStorage.getItem(
+        //     LocalStorageKeys.signalistSymbols
+        // );
+        if (supportedSymbols.length == 0) return
 
-        queryClient.setQueryData(['etp-profile'], JSON.parse(saved))
+        queryClient.setQueryData(['etp-profile'], supportedSymbols)
     }, [queryClient])
 
 

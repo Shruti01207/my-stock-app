@@ -2,21 +2,21 @@
 'use client'
 
 import { useSymbolInfo } from "@/hooks/useSymbolInfo"
-import { LocalStorageKeys } from "@/lib/enums"
+import { useSupportedSymbols } from "@/stores/useSupportedSymbolStore"
 import { useEffect } from "react"
 
 
 const AppIntializer = () => {
 
     const { data: symbolData } = useSymbolInfo()
+    const setSupportedSymbols = useSupportedSymbols((state) => state.setSupportedSymbols)
 
 
 
 
     useEffect(() => {
         if (symbolData) {
-            localStorage.setItem(LocalStorageKeys.signalistSymbols, JSON.stringify(symbolData))
-            localStorage.setItem(LocalStorageKeys.signalistSymbolslastUpdated, JSON.stringify(Date.now()))
+            setSupportedSymbols(symbolData as SymbolInfo[])
         }
 
     }, [symbolData])

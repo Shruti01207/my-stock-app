@@ -15,7 +15,6 @@ interface AuthStore {
 
 
 export const useAuthStore = create<AuthStore>()(persist((set) => ({
-
     user: null,
     setUser: ((user) => set({ user })),
     clearUser: (() => set({ user: null }))

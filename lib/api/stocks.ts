@@ -1,4 +1,4 @@
-;
+
 
 export interface FinhubQuote {
   c: number,
@@ -27,7 +27,7 @@ export const fetchStockPrice = async (symbol: string): Promise<FinhubQuote> => {
 
 }
 
-export const searchStock = async (symbol: string): Promise<any> => {
+export const searchStock = async (symbol: string): Promise<FinnhubSearchResponse> => {
   const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY
   const url = `https://finnhub.io/api/v1/search?q=${symbol}&exchange=US&token=${apiKey}`;
   const response = await fetch(url)

@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const lastActiveTradingDay = request.nextUrl.searchParams.get('lastActiveTradingDay');
 
 
+
     if (symbols?.length == 0) {
         return NextResponse.json({
             error: "Symbols are required"
