@@ -3,13 +3,12 @@
 import { NewsList } from "@/components/shared/news-list";
 import { PriceCharts } from "@/components/shared/price-charts";
 import { StatsGrid } from "@/components/stock-overview/stats-grid";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCompanyProfile } from "@/hooks/useCompanyProfile";
 import { useStockSearch } from "@/hooks/useStockSearch";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import React, { use, useState } from "react";
+import { use, useState } from "react";
 
 interface PageProps {
     params: Promise<{ symbol: string }>
@@ -22,10 +21,18 @@ export default function StockSymbolOverview({ params }: PageProps) {
     const finhubSymbol = unwrappedParams.symbol;
     const { data: symbolDetails } = useStockSearch(finhubSymbol);
     const [logoError, setLogoError] = useState(false);
-    const symbolData: SymbolDetails = {
-        symbol: symbolDetails?.[0]?.symbol,
-        type: symbolDetails?.[0]?.type
+    let symbolData = {
+        symbol: '',
+        type: ''
     }
+
+    if (symbolDetails) {
+        symbolData = {
+            symbol: symbolDetails?.[0]?.symbol,
+            type: symbolDetails?.[0]?.type
+        }
+    }
+
 
     const { data, isLoading, isLoadingError } = useCompanyProfile(finhubSymbol)
 
@@ -67,6 +74,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
                 }
 
             </div>
+
 
             <div className="main-center-chart">
                 <PriceCharts symbol={finhubSymbol} symbolDetails={symbolData} showSymbolInfo={false} ></PriceCharts>

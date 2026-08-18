@@ -9,7 +9,6 @@ export const useStockSearch = (symbol: string) => {
     const debouncedQuery = useDebounce(symbol.trim(), 400);
     const supportedSymbols = useSupportedSymbols(state => state.supportedSymbols)
 
-    console.log("supportedSymbols", supportedSymbols)
 
 
 

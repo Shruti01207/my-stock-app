@@ -320,7 +320,7 @@ declare global {
 
     type SymbolDetails = {
         symbol: string;
-        type: SymbolTypes
+        type: string
     }
 
     type MarketOverviewWidgetProps = {
