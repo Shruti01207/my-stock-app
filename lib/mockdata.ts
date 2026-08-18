@@ -11,11 +11,12 @@ export const POPULAR_STOCKS: Stock[] = [
     {
         symbol: 'AAPL',
         displaySymbol: 'AAPL',
-        description: 'Apple Inc.'
+        description: 'Apple Inc.',
+        type: 'Common Stock'
     },
-    { symbol: 'TSLA', displaySymbol: 'TSLA', description: 'Tesla Inc.' },
-    { symbol: 'NVDA', displaySymbol: 'NVDA', description: 'NVIDIA Corp.' },
-    { symbol: 'MSFT', displaySymbol: 'MSFT', description: 'Microsoft Corp.' },
-    { symbol: 'AMZN', displaySymbol: 'AMZN', description: 'Amazon.com Inc.' },
-    { symbol: 'GOOGL', displaySymbol: 'GOOGL', description: 'Alphabet Inc.' },
+    { symbol: 'TSLA', displaySymbol: 'TSLA', description: 'Tesla Inc.', type: 'Common Stock' },
+    { symbol: 'NVDA', displaySymbol: 'NVDA', description: 'NVIDIA Corp.', type: 'Common Stock' },
+    { symbol: 'MSFT', displaySymbol: 'MSFT', description: 'Microsoft Corp.', type: 'Common Stock' },
+    { symbol: 'AMZN', displaySymbol: 'AMZN', description: 'Amazon.com Inc.', type: 'Common Stock' },
+    { symbol: 'GOOGL', displaySymbol: 'GOOGL', description: 'Alphabet Inc.', type: 'Common Stock' },
 ];
