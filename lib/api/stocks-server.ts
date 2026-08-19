@@ -150,3 +150,19 @@ export async function createAlert(alertRequest: AlertRequest): Promise<any> {
     }
 
 }
+
+
+export async function getAlerts() {
+    try {
+        const url = `/api/alerts`;
+        const res = await fetch(url)
+
+        const data = await res.json()
+        return data;
+        console.log("data", data);
+    }
+    catch (error) {
+        console.log("error", error);
+
+    }
+}

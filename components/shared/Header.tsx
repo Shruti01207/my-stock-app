@@ -3,13 +3,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, Search, X } from 'lucide-react'
+import { AlarmClock, Clock, Menu, Search, X } from 'lucide-react'
 import NavItems from '../ui/NavItems'
 import UserDropdown from '../ui/UserDropdown'
 import { Button } from '../ui/button'
 import { useSearchStore } from '@/stores/useSearchStore'
 import { authClient } from '@/lib/actions/auth-client'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useRouter } from 'next/navigation'
+
 
 const Header = ({ intialUser }: { intialUser: any }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,6 +25,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
     const { data: session, isPending } = authClient.useSession()
 
     const displayUser = mounted ? storedUser || intialUser : intialUser;
+    const router = useRouter();
 
 
     useEffect(() => {
@@ -90,6 +93,14 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                     >
                         <Search className='size-6
                         ' />
+                    </Button>
+
+                    <Button variant="ghost"
+                        size="icon"
+                        onClick={() => router.push('/alert-dashboard')}
+                    >
+
+                        <AlarmClock className='size-6'></AlarmClock>
                     </Button>
 
                     {/* User Dropdown */}

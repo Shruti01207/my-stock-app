@@ -92,24 +92,18 @@ export const getLatestNew = async () => {
 
 
 export async function getMarketStatus(exchange: string) {
-  const apiKey = process.env.FINNHUB_API_KEY;
   const url = `/api/market/market-status?exchange=${exchange}`;
   const response = await fetch(url);
-
   return response.json();
 }
 
 export async function getCompanyProfile(symbol: string): Promise<CompanyProfile> {
-
-  const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
   const url = `/api/market/company-profile?symbol=${symbol}`;
   const res = await fetch(url);
   return res.json();
-
 }
 
 export async function getStockMetric(symbol: string) {
-  const apiKey = process.env.FINNHUB_API_KEY
   const url = `/api/market/stock-metric?symbol=${symbol}`;
   const res = await fetch(url);
   return res.json();
