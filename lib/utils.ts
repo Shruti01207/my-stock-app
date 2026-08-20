@@ -113,3 +113,7 @@ export const normalizeText = (text: string) => {
   // Converts "Somewhat-Bullish" or "Somewhat_Bullish" to "somewhatbullish"
   return text.toLowerCase().replace(/[-_\s]/g, '');
 };
+
+export const firstCharToUpperCase = (str: string) => {
+  return str[0].toUpperCase() + str.slice(1);
+}

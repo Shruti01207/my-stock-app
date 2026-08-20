@@ -1,6 +1,13 @@
 import { SymbolTypes } from "@/lib/enums";
 
 declare global {
+
+    type ApiResponse<T> = {
+        success: boolean,
+        error?: string,
+        data?: T
+    }
+
     type SignInFormData = {
         email: string;
         password: string;
@@ -145,9 +152,7 @@ declare global {
         peRatio?: string;
     };
 
-    type AlertsListProps = {
-        alertData: Alert[] | undefined;
-    };
+
 
     type MarketNewsArticle = {
         id: number;
@@ -202,16 +207,6 @@ declare global {
         related?: string;
     };
 
-    type Alert = {
-        id: string;
-        symbol: string;
-        company: string;
-        alertName: string;
-        currentPrice: number;
-        alertType: 'upper' | 'lower';
-        threshold: number;
-        changePercent?: number;
-    };
 
 
     type Stock = {
@@ -328,6 +323,14 @@ declare global {
         finHubSymbol: string
     }
 
+    type Alert = {
+        condition: 'above' | 'below'
+        createdAt: string
+        isActive: boolean
+        symbol: string
+        targetPrice: number
+        updatedAt: string
+    }
 
     type AlertRequest = {
         symbol: string;
@@ -353,11 +356,9 @@ declare global {
 
     type Condition = "above" | "below"
 
-    type ApiResponse<T> = {
-        success: boolean,
-        error?: string,
-        data?: T
-    }
+
+
+
 }
 
 

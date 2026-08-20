@@ -8,5 +8,8 @@ export const useAlerts = () => {
     return useQuery({
         queryKey: ['alerts-list'],
         queryFn: () => getAlerts(),
+        select: (res): Alert[] => {
+            return res?.data;
+        }
     })
 }
