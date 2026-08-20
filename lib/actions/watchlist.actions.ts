@@ -8,7 +8,8 @@ import { revalidatePath } from "next/cache";
 import { serializeWatchlist } from "../serializer/watchlist.serializer";
 
 
-export const addSymbolToWatchlist = async (symbol: string) => {
+
+export const addSymbolToWatchlist = async (symbol: string): Promise<ApiResponse<any>> => {
     try {
         await connectToDatabase();
         // const session= await auth();// get current user session
@@ -17,7 +18,7 @@ export const addSymbolToWatchlist = async (symbol: string) => {
             headers: await headers()
         });
         if (!session?.user?.id) {
-            throw new Error("Unauthorized");
+            throw new Error("UNAUTHORIZED");
         }
         const userId = session.user.id;
         const updatedList = await Watchlist.findOneAndUpdate(
@@ -30,12 +31,12 @@ export const addSymbolToWatchlist = async (symbol: string) => {
     }
     catch (error: any) {
         console.error("WATCHLIST_ERROR:", error.message || error);
-        return { success: false, error: "Database operation failed" };
+        return { success: false, error: error.message || "DB_ERROR" };
     }
 
 }
 
-export const removeSymbolFromWatchlist = async (symbol: string) => {
+export const removeSymbolFromWatchlist = async (symbol: string): Promise<ApiResponse<any>> => {
 
     try {
         await connectToDatabase();
@@ -46,7 +47,7 @@ export const removeSymbolFromWatchlist = async (symbol: string) => {
         });
 
         if (!session?.user?.id) {
-            throw new Error("Unauthorised")
+            throw new Error("UNAUTHORIZED")
         }
 
         const userId = session.user.id;
@@ -60,16 +61,16 @@ export const removeSymbolFromWatchlist = async (symbol: string) => {
             { new: true }
         ).lean()
         //lean tells don't give me moongoose doc, instead give me plain javascript object
-        return serializeWatchlist(updatedList);
+        return { success: true, data: serializeWatchlist(updatedList) }
     }
-    catch (error) {
+    catch (error: any) {
         console.error("Error removing symbol:", error);
-        throw error;
+        return { success: false, error: error.message || "DB_ERROR" };
     }
 
 }
 
-export const getWatchlist = async () => {
+export const getWatchlist = async (): Promise<ApiResponse<any>> => {
     try {
         await connectToDatabase();
         const authInstance = await auth();
@@ -79,16 +80,48 @@ export const getWatchlist = async () => {
         });
 
         if (!session?.user?.id) {
-            throw new Error("Unauthorised")
+            throw new Error("UNAUTHORIZED")
         }
 
         const userId = session.user.id;
         const list = await Watchlist.findOne({ userId }).lean()
         //lean tells don't give me moongoose doc, instead give me plain javascript object
-        return serializeWatchlist(list);
+        return { success: true, data: serializeWatchlist(list) };
     }
-    catch (error) {
+    catch (error: any) {
         console.error("Error removing symbol:", error);
-        throw error;
+        return { success: false, error: error.message || "DB_ERROR" };
     }
+}
+
+
+export const syncWatchlist = async (localSymbols: string[]): Promise<ApiResponse<any>> => {
+
+    try {
+        await connectToDatabase();
+        const authInstance = await auth();
+
+        const session = await authInstance.api.getSession({
+            headers: await headers()
+        })
+
+        if (!session?.user?.id) {
+            throw new Error("UNAUTHORIZED")
+        }
+
+        const userId = session.user.id;
+        const updatedWatchlist = await Watchlist.findOneAndUpdate(
+            { userId: userId, title: "Default" },
+            { $addToSet: { symbols: { $each: localSymbols } } },
+            { upsert: true, new: true }
+        ).lean();
+
+        return { success: true, data: serializeWatchlist(updatedWatchlist) }
+
+    }
+    catch (error: any) {
+        console.error("Error syncing watchlist:", error);
+        return { success: false, error: error.message || "DB_ERROR" };
+    }
+
 }

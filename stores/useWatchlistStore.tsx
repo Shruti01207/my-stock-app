@@ -1,5 +1,6 @@
 import { addSymbolToWatchlist, removeSymbolFromWatchlist } from '@/lib/actions/watchlist.actions';
-import { symbol } from 'better-auth';
+import { LocalStorageKeys } from '@/lib/enums';
+import { toast } from 'sonner';
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -23,14 +24,20 @@ export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => 
       watchlist: [...oldlist, symbol]
     })
     //server sync
-    try {
-      await addSymbolToWatchlist(symbol);
+
+    const res = await addSymbolToWatchlist(symbol);
+    if (!res.success) {
+      if (res.error == 'UNAUTHORIZED') {
+        toast.info("Stock added locally. Please login to sync across devices")
+      }
+      else {
+        toast.error("Failed to add stock to your account.")
+        set({ watchlist: oldlist })
+      }
     }
-    catch {
-      // if adding in db fails rollback on frontend also
-      set({ watchlist: oldlist })
-    }
-    console.log("watchlist", [...oldlist, symbol])
+
+
+
   },
 
   removeStock: async (symbol) => {
@@ -40,14 +47,20 @@ export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => 
     const updated = oldlist.filter((oldlist) => oldlist != symbol);
     set({ watchlist: updated });
 
-    try {
-      await removeSymbolFromWatchlist(symbol)
-    }
-    catch {
-      console.log("catch called");
-      set({ watchlist: oldlist });
 
+    const res = await removeSymbolFromWatchlist(symbol)
+    if (!res.success) {
+      if (res.error == 'UNAUTHORIZED') {
+        toast.info("Stock removed locally. Please login to sync across devices")
+      }
+      else {
+        toast.error("Failed to remove stock to your account.")
+        set({ watchlist: oldlist })
+      }
     }
+
+
+
 
   },
   toggleStock: (symbol) => {
@@ -67,6 +80,6 @@ export const useWatchlistStore = create<WatchlistStore>()(persist((set, get) => 
     set({ watchlist: symbols })
   } // function setting watchlist
 }), {
-  name: "watchlist-storage",
+  name: LocalStorageKeys.watchlistStorage,
 }))
 

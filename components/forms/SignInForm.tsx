@@ -4,6 +4,7 @@ import FooterLink from "@/components/forms/FooterLink";
 import InputField from "@/components/forms/InputField";
 import { Button } from "@/components/ui/button";
 import { signInWithEmail } from "@/lib/actions/auth.actions";
+import { syncDataWithServer } from "@/lib/client-helpers";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,10 +33,13 @@ const SignInForm = () => {
     }
 
     toast.success("Login successful");
+    await syncDataWithServer();
     router.push("/");
     router.refresh();
 
   };
+
+
 
   return (
     <>

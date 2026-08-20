@@ -351,11 +351,13 @@ declare global {
             type: string
         }
 
-
-
-
-
     type Condition = "above" | "below"
+
+    type ApiResponse<T> = {
+        success: boolean,
+        error?: string,
+        data?: T
+    }
 }
 
 

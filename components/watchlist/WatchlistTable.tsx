@@ -7,19 +7,22 @@ import {
 } from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useWatchlistColumns } from "./useWatchlistColumns";
-import React, { useState } from "react";
-import { Delete, Trash } from "lucide-react";
+import React from "react";
+import { Trash } from "lucide-react";
 import { useWatchlistStore } from "@/stores/useWatchlistStore";
+import { useWatchlistData } from "./useWatchlistData";
 
 
 
 
 
 
-export function WatchlistTable({ data }: WatchListTableProps) {
+export function WatchlistTable() {
     const columns = useWatchlistColumns();
     const [sorting, setSorting] = React.useState<SortingState>([])
     const removeStock = useWatchlistStore((state) => state.removeStock);
+    const watchlist = useWatchlistStore((state) => state.watchlist)// explicit return when without {}
+    const { data, isLoading, isError } = useWatchlistData(watchlist)
 
     const table = useReactTable({
         data,

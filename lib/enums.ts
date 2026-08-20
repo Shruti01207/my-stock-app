@@ -8,5 +8,6 @@ export enum SymbolTypes {
 
 export enum LocalStorageKeys {
     signalistSymbols = "signalist-symbols",
-    signalistSymbolslastUpdated = "signalist-symbols-last-updated"
+    signalistSymbolslastUpdated = "signalist-symbols-last-updated",
+    watchlistStorage = "watchlist-storage"
 }

@@ -6,6 +6,7 @@ import InputField from "@/components/forms/InputField";
 import SelectField from "@/components/forms/SelectField";
 import { Button } from "@/components/ui/button";
 import { signUpWithEmail } from "@/lib/actions/auth.actions";
+import { syncDataWithServer } from "@/lib/client-helpers";
 import {
   COUNTRIES,
   INVESTMENT_GOALS,
@@ -43,6 +44,7 @@ const SignUpForm = () => {
       toast.error(result.error);
       return;
     }
+    await syncDataWithServer();
     toast.success("Sign up successful");
     router.push("/");
   };

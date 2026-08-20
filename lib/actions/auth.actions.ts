@@ -39,7 +39,7 @@ export const signInWithEmail = async ({ email, password }: SignInFormData) => {
       },
       headers: await headers(),
     });
-    console.log("response", response);
+
 
     return { success: true, data: response };
   } catch (error: any) {
