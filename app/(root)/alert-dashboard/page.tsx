@@ -33,7 +33,7 @@ export default function AlertDashboard() {
         <div className="alert-container mt-7">
             {alertLists && alertLists.map((a: Alert) => {
                 return (
-                    <div key={a.createdAt} className="alert-card shadow w-[100%] md:w-[45%] bg-[#17181f] hover:bg-[#4f515e66] rounded-lg p-2 px-4">
+                    <div key={a.createdAt} className="alert-card shadow w-[100%] md:w-[45%] bg-[#17181f] hover:bg-[#22232b] rounded-lg p-2 px-4">
                         <div className="symbol-details flex items-center justify-between">
                             {/* <span><img className="w-10 h-10 rounded-full" /></span> */}
                             <div className="flex gap-2">

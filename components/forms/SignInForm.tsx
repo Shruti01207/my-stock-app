@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const SignInForm = () => {
+export const SignInForm = () => {
   const router = useRouter();
 
   const {

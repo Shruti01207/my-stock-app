@@ -28,7 +28,7 @@ export const MarketOverviewWidget = React.memo(({ symbol, finHubSymbol }: Market
 
   return (
     <>
-      <div className="m-0 bg-[#17181f] hover:bg-[#4f515e66] w-[40%] sm:w-[40%] shrink-0  md:w-[24%] rounded-md">
+      <div className="m-0 bg-[#17181f] hover:bg-[#22232b] w-[40%] sm:w-[40%] shrink-0  md:w-[24%] rounded-md">
         <div className="card-content w-full p-3 pb-1">
           <h1 className="font-semibold">{symbol.toUpperCase()}</h1>
           <div className="text-sm text-white/80 font-semibold">

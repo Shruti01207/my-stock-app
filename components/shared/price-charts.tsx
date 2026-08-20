@@ -294,34 +294,20 @@ export const PriceCharts = ({
               </div>
             </div>
             <div className="action-btns py-2 flex justify-center md:justify-start ms-0 md:ms-[1.5em]">
-              <button
-                type="button"
-                className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5"
-                onClick={() => handleFilterChange("1D")}
-              >
+
+              <Button variant="outline" size="sm" className={`mr-1.5 ${(mainGraphFilter === '1D') ? '!bg-[#22232b]' : '!bg-transparent'}`} onClick={() => handleFilterChange("1D")}>
                 1D
-              </button>
-              <button
-                type="button"
-                className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5"
-                onClick={() => handleFilterChange("5D")}
-              >
+              </Button>
+              <Button variant="outline" size="sm" className={`mr-1.5 ${(mainGraphFilter === '5D') ? '!bg-[#22232b]' : '!bg-transparent'}`} onClick={() => handleFilterChange("5D")}>
                 5D
-              </button>
-              <button
-                type="button"
-                className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5"
-                onClick={() => handleFilterChange("1M")}
-              >
+              </Button>
+              <Button variant="outline" size="sm" className={`mr-1.5 ${(mainGraphFilter === '1M') ? '!bg-[#22232b]' : '!bg-transparent'}`} onClick={() => handleFilterChange("1M")}>
                 1M
-              </button>
-              <button
-                type="button"
-                className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-1 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-base text-sm px-2 py-1 focus:outline-none mr-1.5"
-                onClick={() => handleFilterChange("6M")}
-              >
+              </Button>
+              <Button variant="outline" size="sm" className={` ${(mainGraphFilter === '6M') ? '!bg-[#22232b]' : '!bg-transparent'}`} onClick={() => handleFilterChange("6M")}>
                 6M
-              </button>
+              </Button>
+
             </div>
           </>
         )}
