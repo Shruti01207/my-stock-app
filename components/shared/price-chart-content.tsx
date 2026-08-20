@@ -14,6 +14,34 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
         }
     }
 
+
+    const LastPriceDot = ({ cx, cy, index, dataLength, dotColor }: any) => {
+        if (index !== dataLength - 1) return null;
+
+        return (
+            <g>
+                {/* pulse */}
+                <circle
+                    cx={cx}
+                    cy={cy}
+                    r={6}
+                    fill="#ef4444"
+                    style={{
+                        animation: "pricePulse 1.5s infinite"
+                    }}
+                />
+
+                {/* actual dot */}
+                <circle
+                    cx={cx}
+                    cy={cy}
+                    r={4}
+                    fill={dotColor}
+                />
+            </g>
+        );
+    };
+
     return <>
         <ComposedChart
             data={data}
@@ -83,13 +111,20 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                 dataKey="close"
                 stroke={chartColor}
                 strokeWidth={2}
-                dot={false}
+                // dot={false}
                 strokeLinecap={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinecap}
                 strokeLinejoin={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinejoin}
                 isAnimationActive={false}
-                activeDot={{
-                    stroke: 'green',
-                }}
+                dot={(props) => (
+                    <LastPriceDot
+                        {...props}
+                        dataLength={data.length}
+                        dotColor={chartColor}
+                    />
+                )}
+            // activeDot={{
+            //     stroke: 'green',
+            // }}
             />
 
         </ComposedChart>

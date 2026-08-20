@@ -579,3 +579,15 @@
   display: none;
   /* Chrome, Safari, Opera */
 }
+
+@keyframes pricePulse {
+  0% {
+    r: 5;
+    opacity: 0.7;
+  }
+
+  100% {
+    r: 14;
+    opacity: 0;
+  }
+}
