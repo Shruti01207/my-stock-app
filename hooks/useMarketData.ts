@@ -21,6 +21,7 @@ export function useMarketData(symbol: string) {
 
     return {
         isLoading,
+        symbol,
         isError,
         displayPrice,
         timestamp: stockPrice?.t,

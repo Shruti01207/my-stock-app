@@ -25,7 +25,7 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                     cx={cx}
                     cy={cy}
                     r={6}
-                    fill="#ef4444"
+                    fill={dotColor}
                     style={{
                         animation: "pricePulse 1.5s infinite"
                     }}
