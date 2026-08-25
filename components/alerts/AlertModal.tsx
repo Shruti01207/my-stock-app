@@ -29,35 +29,32 @@ import { MiniTrendLineChart } from "../dashboard/mini-trendline"
 import { useSymbolInfo } from "@/hooks/useSymbolInfo"
 import { useCompanyProfile } from "@/hooks/useCompanyProfile"
 import { useMarketData } from "@/hooks/useMarketData"
-import { useState } from "react"
-import { createAlert } from "@/lib/api/stocks-server"
+import { useEffect, useState } from "react"
+import { createAlert, editAlert } from "@/lib/api/stocks-server"
 import { toast } from "sonner"
 import { SymbolTypes } from "@/lib/enums"
 import { Loader2, Mountain } from "lucide-react"
 
-interface Alert {
-    targetPrice?: number;
-    condition: "above" | "below" | "none";
-    isConditionManual: boolean;
-}
+
 
 export function AlertModal() {
 
     const open = useAlertStore((state) => state.open);
     const setOpen = useAlertStore((state) => state.setOpen);
     const symbolDetails = useAlertStore((state) => state.symbolDetails);
-    const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
-    const symbolsData = useSymbolInfo(symbolDetails.symbol);
-    const marketData = useMarketData(symbolDetails.symbol)
-
-    const profile = (symbolDetails.type == SymbolTypes.CommonStock) ? companyProfileQuery.data : symbolsData.data
-    const defaultAlertState: Alert = {
-        targetPrice: undefined,
-        condition: "none",
-        isConditionManual: false
-    }
-    const [alertForm, setAlertForm] = useState<Alert>(defaultAlertState);
+    const companyProfileQuery = useCompanyProfile(symbolDetails?.symbol);
+    const symbolsData = useSymbolInfo(symbolDetails?.symbol);
+    const marketData = useMarketData(symbolDetails?.symbol);
+    const defaultAlertState = useAlertStore(state => state.alertForm);
+    const mode = useAlertStore((state) => state.mode)
+    const profile = (symbolDetails?.type == SymbolTypes.CommonStock) ? companyProfileQuery.data : symbolsData.data
+    const [alertForm, setAlertForm] = useState<AlertForm | EditAlertForm>(defaultAlertState);
     const [isLoading, setIsLoading] = useState(false);
+
+
+    useEffect(() => {
+        setAlertForm(defaultAlertState)
+    }, [defaultAlertState])
 
 
 
@@ -81,10 +78,11 @@ export function AlertModal() {
 
     }
 
+
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const targetPrice = (event.target.value != "") ? Number(event.target.value) : undefined;
         setAlertForm((prev) => {
-            return { ...prev, targetPrice, condition: computeAutoCondition(prev?.isConditionManual, prev.condition, targetPrice, marketData.isLoading, marketData?.displayPrice) }
+            return { ...prev, targetPrice, condition: computeAutoCondition(prev?.isConditionManual, prev?.condition, targetPrice, marketData.isLoading, marketData?.displayPrice) }
         })
     }
 
@@ -103,40 +101,69 @@ export function AlertModal() {
         }
 
         let req: AlertRequest = {
-            symbol: symbolDetails.symbol,
+            symbol: symbolDetails?.symbol,
             targetPrice: alertForm.targetPrice,
             condition: alertForm.condition
         }
-        try {
-            setIsLoading(true)
-            const res = await createAlert(req);
 
-            if (res.success) {
-                setOpen(false, symbolDetails);
-                toast.success("Alert created successfully");
-                setAlertForm(defaultAlertState);
-                setIsLoading(false)
-            }
-            else {
-                toast.error("Failed to create alert");
-            }
+        if (mode == 'add') {
+            await createNewAlert(req)
         }
-        catch (error) {
-            console.error("Error creating alert", error);
-            toast.error("An unexpected error occurred");
+        else {
+
+            req = {
+                ...req,
+                alertId: (alertForm as EditAlertForm)?.alertId
+            }
+            await updateAlert(req)
         }
-        finally {
-            setIsLoading(false)
+
+
+
+    }
+
+
+    const createNewAlert = async (req: AlertRequest) => {
+        setIsLoading(true)
+        const res = await createAlert(req);
+        setIsLoading(false)
+
+        if (res.success) {
+            setOpen(false, mode, symbolDetails);
+            toast.success("Alert created successfully");
+            setAlertForm(defaultAlertState);
+        }
+        else {
+            toast.error(res.error || "Failed to update alert");
+        }
+
+    }
+
+
+    const updateAlert = async (req: AlertRequest) => {
+
+        setIsLoading(true)
+        const res = await editAlert(req);
+        setIsLoading(false)
+        if (res.success) {
+            setOpen(false, mode, symbolDetails);
+            toast.success("Alert updated successfully");
+            setAlertForm(defaultAlertState);
+        }
+        else {
+            toast.error(res.error || "Failed to update alert");
         }
 
     }
 
     const handleOpenChange = (isOpen: boolean) => {
-        setOpen(isOpen, symbolDetails)
+        setOpen(isOpen, mode, symbolDetails)
         if (!isOpen) {
             setAlertForm(defaultAlertState)
         }
     }
+
+
 
 
 
@@ -151,10 +178,10 @@ export function AlertModal() {
                         <DialogTitle>
                             <div className="flex flex-row items-center gap-2 mb-3">
 
-                                {symbolDetails.type == SymbolTypes.CommonStock && <img className="w-10 h-10 rounded-full" src={(profile as any)?.logo} alt={(profile as any)?.name} />}
-                                {symbolDetails.type == SymbolTypes.ETP ? <Mountain size={25} /> : ''}
+                                {symbolDetails?.type == SymbolTypes.CommonStock && <img className="w-10 h-10 rounded-full" src={(profile as any)?.logo} alt={(profile as any)?.name} />}
+                                {symbolDetails?.type == SymbolTypes.ETP ? <Mountain size={25} /> : ''}
 
-                                <span>Create Price Alert</span>
+                                <span>{mode == 'add' ? 'Create' : 'Edit'}  Price Alert</span>
                             </div>
                         </DialogTitle>
                     </DialogHeader>
@@ -162,12 +189,12 @@ export function AlertModal() {
                         <CardHeader>
                             <div className="flex items-center justify-between">
                                 <div className="w-[30%]">
-                                    <h2 className="text-2xl font-bold">{symbolDetails.symbol}</h2>
-                                    <p className="text-sm text-muted-foreground">{symbolDetails.type == SymbolTypes.CommonStock ? (profile as any)?.name : (profile as any)?.description}</p>
+                                    <h2 className="text-2xl font-bold">{symbolDetails?.symbol}</h2>
+                                    <p className="text-sm text-muted-foreground">{symbolDetails?.type == SymbolTypes.CommonStock ? (profile as any)?.name : (profile as any)?.description}</p>
                                 </div>
 
                                 <div className="w-[100%] h-[50px] flex-1">
-                                    <MiniTrendLineChart symbol={symbolDetails.symbol}></MiniTrendLineChart>
+                                    <MiniTrendLineChart symbol={symbolDetails?.symbol}></MiniTrendLineChart>
                                 </div>
                                 {!marketData.isLoading ?
                                     <>
@@ -223,10 +250,10 @@ export function AlertModal() {
                                 {isLoading ?
                                     <>
                                         <Loader2 className="h-5 w-5 animate-spin" />
-                                        <span>Creating..</span>
+                                        <span>{mode == 'add' ? 'Creating...' : 'Updating'}</span>
                                     </>
                                     :
-                                    <span>Create Alert</span>
+                                    <span>{mode == 'add' ? 'Create Alert' : 'Update Alert'} </span>
                                 }
 
                             </Button>

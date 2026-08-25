@@ -315,7 +315,7 @@ declare global {
 
     type SymbolDetails = {
         symbol: string;
-        type: string
+        type: string | null
     }
 
     type MarketOverviewWidgetProps = {
@@ -324,18 +324,20 @@ declare global {
     }
 
     type Alert = {
-        condition: 'above' | 'below'
+        condition: 'above' | 'below' | "none"
         createdAt: string
         isActive: boolean
         symbol: string
-        targetPrice: number
+        targetPrice?: number
         updatedAt: string
+        _id: string
     }
 
     type AlertRequest = {
         symbol: string;
         targetPrice: number;
         condition: string;
+        alertId?: string;
 
     }
 
@@ -356,7 +358,18 @@ declare global {
 
     type Condition = "above" | "below"
 
+    type AlertForm = {
+        targetPrice?: number;
+        condition: "above" | "below" | "none";
+        isConditionManual: boolean;
+    }
 
+    type EditAlertForm = {
+        targetPrice?: number;
+        condition: "above" | "below" | "none";
+        isConditionManual: boolean;
+        alertId: string
+    }
 
 
 }

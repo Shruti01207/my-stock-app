@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 
 export interface FinhubQuote {
     c: number,
@@ -140,24 +141,82 @@ export async function createAlert(alertRequest: AlertRequest): Promise<any> {
         if (!res.ok) {
             throw new Error("Failed to create alert");
         }
+        const data = await res.json();
+        return data;
+
+    }
+    catch (error: any) {
+        console.error("error", error);
+        return NextResponse.json({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+    }
+
+}
+
+export async function editAlert(alertRequest: AlertRequest): Promise<any> {
+    try {
+        const url = `/api/alerts?id=${alertRequest.alertId}`;
+        const res = await fetch(url, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(alertRequest)
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to update alert");
+        }
 
         const data = await res.json();
         return data;
 
     }
-    catch (error) {
+    catch (error: any) {
         console.error("error", error)
+        return NextResponse.json({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+    }
+
+}
+export async function deleteAlert(alertId: string): Promise<any> {
+    try {
+        const url = `/api/alerts?id=${alertId}`;
+        const res = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to delete alert");
+        }
+
+        const data = await res.json();
+        return data;
+
+    }
+    catch (error: any) {
+        console.error("error", error)
+        return NextResponse.json({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
     }
 
 }
 
 
-export async function getAlerts(): Promise<ApiResponse<any>> {
+export async function getAlerts(): Promise<any> {
 
-    const url = `/api/alerts`;
-    const res = await fetch(url)
+    try {
+        const url = `/api/alerts`;
+        const res = await fetch(url)
+        if (!res.ok) {
+            throw new Error("Failed to get alerts");
+        }
+        const data = await res.json()
+        return data;
+    }
+    catch (error) {
+        console.error("error", error)
+    }
 
-    const data = await res.json()
-    return data;
 
 }

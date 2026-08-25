@@ -140,7 +140,7 @@ export const PriceCharts = ({
     setMainGraphFilter(filter);
   };
 
-  console.log("marketData", marketData)
+
   return (
     <>
       <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
@@ -166,7 +166,7 @@ export const PriceCharts = ({
                       variant="outline"
                       size="sm"
                       className="gap-1"
-                      onClick={() => setOpen(true, symbolDetails)}
+                      onClick={() => setOpen(true, 'add', symbolDetails)}
                     >
                       <Bell
                         size={16}
@@ -249,7 +249,8 @@ export const PriceCharts = ({
                   variant="outline"
                   size="sm"
                   className="gap-1"
-                  onClick={() => setOpen(true, symbolDetails)}
+                  onClick={() => setOpen(true, 'add', symbolDetails,
+                  )}
                 >
                   <Bell size={16} className="text-[#D4AF37]" strokeWidth={3} />{" "}
                   Set Alert

@@ -2,10 +2,14 @@
 
 import { useMarketData } from "@/hooks/useMarketData";
 import { firstCharToUpperCase, getDateToLocaleString } from "@/lib/utils";
-import { ArrowDown, ArrowUp, Pencil, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Loader2, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
-import { memo } from "react";
+import { memo, useState } from "react";
+import { useAlertStore } from "@/stores/useAlertStore";
+import { useSupportedSymbols } from "@/stores/useSupportedSymbolStore";
+import { deleteAlert } from "@/lib/api/stocks-server";
+import { toast } from "sonner";
 
 
 
@@ -14,6 +18,44 @@ import { memo } from "react";
 export const AlertCard = memo(({ alert }: { alert: Alert }) => {
 
     const marketData = useMarketData(alert.symbol);
+    const setOpen = useAlertStore((state) => state.setOpen)
+    const supportedSymbols = useSupportedSymbols((state) => state.supportedSymbols)
+    const [isDeleting, setIsDeleting] = useState(false)
+
+
+    const editAlert = () => {
+        const symbol: SymbolInfo | undefined = (supportedSymbols.find((s: SymbolInfo) => s.symbol === alert.symbol || s.symbol2 === alert.symbol))
+        let symbolType = null;
+        if (symbol) {
+            symbolType = symbol.type
+        }
+        const symDetails: SymbolDetails = {
+            symbol: alert.symbol,
+            type: symbolType
+        }
+
+        let alertForm: EditAlertForm = {
+            targetPrice: alert?.targetPrice,
+            condition: alert?.condition,
+            isConditionManual: false,
+            alertId: alert?._id
+        }
+
+        setOpen(true, 'edit', symDetails, alertForm)
+
+    }
+
+    const removeAlert = async (alertId: string) => {
+        setIsDeleting(true)
+        const res = await deleteAlert(alertId)
+        setIsDeleting(false)
+        if (res.success) {
+            toast.success("Alert deleted successfully")
+        }
+        else {
+            toast.error(res.error || "Failed to delete alert")
+        }
+    }
 
 
 
@@ -81,24 +123,25 @@ export const AlertCard = memo(({ alert }: { alert: Alert }) => {
             <div className="footer mt-2 flex items-center justify-between">
                 <span className="mr-2 text-sm text-gray-500"> <i>Created {getDateToLocaleString(alert.createdAt)}</i> </span>
                 <div className="action-buttons">
-                    <span className="condition font-bold mr-2 text-md">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-zinc-400 hover:bg-zinc-800 hover:text-green-400 "
-                        >
-                            <Pencil size={16} />
-                        </Button>
-                    </span>
-                    <span className="price font-bold text-md">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-zinc-400 hover:bg-red-500/10 hover:text-red-400"
-                        >
-                            <Trash2 size={16} />
-                        </Button>
-                    </span>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-zinc-400 hover:bg-zinc-800 hover:text-green-400 "
+                        onClick={editAlert}
+                    >
+                        <Pencil size={16} />
+                    </Button>
+
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-zinc-400 hover:bg-red-500/10 hover:text-red-400"
+                        disabled={isDeleting}
+                        onClick={() => { removeAlert(alert._id) }}
+                    >
+                        {isDeleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                    </Button>
+
                 </div>
 
             </div>

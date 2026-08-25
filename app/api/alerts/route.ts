@@ -1,7 +1,6 @@
 import Alert from "@/database/models/alert.model";
 import { connectToDatabase } from "@/database/mongoose";
 import { auth } from "@/lib/better-auth/auth";
-import { error } from "better-auth/api";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -101,18 +100,71 @@ export async function DELETE(request: NextRequest) {
 
         const deletedAlert = await Alert.findOneAndDelete({
             _id: id,
-
+            userId: session?.user?.id
         })
 
-        return NextResponse.json({success: true, data: deletedAlert}, { status: 200 })
+        if (!deletedAlert) {
+            return NextResponse.json({ error: "Alert not found" }, { status: 404 })
+        }
+
+        return NextResponse.json({ success: true, data: deletedAlert }, { status: 200 })
 
     }
-    catch(error:any){
-         console.error("DELETE_ALERTS_ERROR:", error);
+    catch (error: any) {
+        console.error("DELETE_ALERTS_ERROR:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
 
 
 
+
+
 }
+
+export async function PATCH(request: NextRequest) {
+    try {
+        await connectToDatabase()
+        const authInstance = await auth()
+        const session = await authInstance.api.getSession({
+            headers: await headers()
+        })
+
+        if (!session?.user?.id) {
+            return NextResponse.json({
+                error: "UNAUTHORIZED"
+            }, {
+                status: 401
+            });
+        }
+
+        const id = request.nextUrl.searchParams.get('id');
+        const { targetPrice, condition } = await request.json()
+
+        if (targetPrice === undefined || !condition) {
+            return NextResponse.json({ success: false, error: "Missing required fields" })
+        }
+        const updatedAlert = await Alert.findOneAndUpdate({ _id: id, userId: session?.user?.id }, { $set: { targetPrice: Number(targetPrice), condition } }, { new: true })
+        return NextResponse.json({
+            success: true,
+            data: updatedAlert
+        });
+    }
+    catch (error: any) {
+
+        console.error("PATCH_ERROR:", error);
+
+        return NextResponse.json(
+            {
+                success: false,
+                error: error?.message || "Internal Server Error"
+            },
+            { status: 500 }
+        );
+
+    }
+
+
+}
+
+

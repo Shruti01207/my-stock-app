@@ -1,18 +1,24 @@
-import { SymbolTypes } from "@/lib/enums";
 import { create } from "zustand";
 
 interface AlertStore {
     open: boolean;
+    mode: 'add' | 'edit'
     symbolDetails: SymbolDetails;
-    setOpen: (open: boolean, symbolDetails: SymbolDetails) => void
+    setOpen: (open: boolean, mode: 'add' | 'edit', symbolDetails: SymbolDetails, alertForm?: AlertForm) => void
+    alertForm: AlertForm | EditAlertForm
 }
 
 export const useAlertStore = create<AlertStore>((set) => ({
     open: false,
-    symbolDetails: { symbol: '', type: SymbolTypes.CommonStock },
-    setOpen: (open: boolean, symbolDetails: SymbolDetails) => {
-        console.log("open=", open);
-        set({ open, symbolDetails })
+    mode: 'add',
+    alertForm: {
+        targetPrice: undefined,
+        condition: "none",
+        isConditionManual: false
+    },
+    symbolDetails: { symbol: '', type: null },
+    setOpen: (open: boolean, mode: 'add' | 'edit', symbolDetails: SymbolDetails, alertForm?: AlertForm | EditAlertForm) => {
+        set({ open, mode, symbolDetails, alertForm })
     }
 
 }))
