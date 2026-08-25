@@ -104,7 +104,7 @@ export async function getSymbolsInfo(): Promise<SymbolInfo[]> {
   return res.json();
 }
 
-export async function createAlert(alertRequest: AlertRequest): Promise<any> {
+export async function createAlert(alertRequest: AlertRequest): Promise<ApiResponse<Alert>> {
   try {
     const url = `/api/alerts`;
     const res = await fetch(url, {
@@ -126,7 +126,7 @@ export async function createAlert(alertRequest: AlertRequest): Promise<any> {
 
 }
 
-export async function editAlert(alertRequest: AlertRequest): Promise<any> {
+export async function editAlert(alertRequest: AlertRequest): Promise<ApiResponse<Alert>> {
   try {
     const url = `/api/alerts?id=${alertRequest.alertId}`;
     const res = await fetch(url, {
@@ -146,7 +146,8 @@ export async function editAlert(alertRequest: AlertRequest): Promise<any> {
   }
 
 }
-export async function deleteAlert(alertId: string): Promise<any> {
+
+export async function deleteAlert(alertId: string): Promise<ApiResponse<Alert>> {
   try {
     const url = `/api/alerts?id=${alertId}`;
     const res = await fetch(url, {
@@ -168,7 +169,7 @@ export async function deleteAlert(alertId: string): Promise<any> {
 }
 
 
-export async function getAlerts(): Promise<any> {
+export async function getAlerts(): Promise<ApiResponse<Alert[]>> {
 
   try {
     const url = `/api/alerts`;

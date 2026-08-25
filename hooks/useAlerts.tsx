@@ -10,7 +10,7 @@ export const useAlerts = () => {
         queryKey: ['alerts-list'],
         queryFn: () => getAlerts(),
         select: (res): Alert[] => {
-            return res?.data;
+            return res?.data || [];
         }
     })
 }
