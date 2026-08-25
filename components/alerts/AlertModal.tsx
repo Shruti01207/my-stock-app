@@ -30,10 +30,10 @@ import { useSymbolInfo } from "@/hooks/useSymbolInfo"
 import { useCompanyProfile } from "@/hooks/useCompanyProfile"
 import { useMarketData } from "@/hooks/useMarketData"
 import { useEffect, useState } from "react"
-import { createAlert, editAlert } from "@/lib/api/stocks-server"
 import { toast } from "sonner"
 import { SymbolTypes } from "@/lib/enums"
 import { Loader2, Mountain } from "lucide-react"
+import { createAlert, editAlert } from "@/lib/api/stocks"
 
 
 
@@ -144,6 +144,7 @@ export function AlertModal() {
 
         setIsLoading(true)
         const res = await editAlert(req);
+        console.log("res", res)
         setIsLoading(false)
         if (res.success) {
             setOpen(false, mode, symbolDetails);

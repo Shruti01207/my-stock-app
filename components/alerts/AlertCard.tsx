@@ -8,8 +8,9 @@ import { Skeleton } from "../ui/skeleton";
 import { memo, useState } from "react";
 import { useAlertStore } from "@/stores/useAlertStore";
 import { useSupportedSymbols } from "@/stores/useSupportedSymbolStore";
-import { deleteAlert } from "@/lib/api/stocks-server";
+
 import { toast } from "sonner";
+import { deleteAlert } from "@/lib/api/stocks";
 
 
 

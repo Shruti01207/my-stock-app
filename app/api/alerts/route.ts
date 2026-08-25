@@ -141,7 +141,7 @@ export async function PATCH(request: NextRequest) {
         const id = request.nextUrl.searchParams.get('id');
         const { targetPrice, condition } = await request.json()
 
-        if (targetPrice === undefined || !condition) {
+        if (targetPrice !== undefined || !condition) {
             return NextResponse.json({ success: false, error: "Missing required fields" })
         }
         const updatedAlert = await Alert.findOneAndUpdate({ _id: id, userId: session?.user?.id }, { $set: { targetPrice: Number(targetPrice), condition } }, { new: true })

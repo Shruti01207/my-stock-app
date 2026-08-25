@@ -1,5 +1,3 @@
-
-
 export interface FinhubQuote {
   c: number,
   h: number,
@@ -63,33 +61,16 @@ export const getGraphData = async (symbol: string, interval: string | null, outp
   return data[symbol];
 }
 
-// arrow function-> ()=>{ }
+
 export const getLatestNew = async () => {
-  // const url = `https://finnhub.io/api/v1/news?category=general&token=${apiKey}`;
   const url = `/api/market/news?category=general`;
-  // why await?
-  // await is required because fetch-> makes an api call->it creates http request->communicate with network
-  // fetch is asynchronous function and returns promise
-  // by await wait for the promise to resolve and give us actual response data
-  // without await response will contain promise object
-  // instead of resolved promise data
-
-  // promise-> a future value
-  // **VERY IMPORTANT**
-  //  await doesn't block the entire javascript thread means
-  // browser remain responsive
-  // event loop continues
-  // other code can execute
-
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch news");
   }
-
   return response.json();
 
 }
-
 
 export async function getMarketStatus(exchange: string) {
   const url = `/api/market/market-status?exchange=${exchange}`;
@@ -121,4 +102,84 @@ export async function getSymbolsInfo(): Promise<SymbolInfo[]> {
   const url = `/api/market/symbols-info`;
   const res = await fetch(url);
   return res.json();
+}
+
+export async function createAlert(alertRequest: AlertRequest): Promise<any> {
+  try {
+    const url = `/api/alerts`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(alertRequest)
+    })
+
+    const data = await res.json();
+    return data;
+
+  }
+  catch (error: any) {
+    console.error("error", error);
+    return ({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+  }
+
+}
+
+export async function editAlert(alertRequest: AlertRequest): Promise<any> {
+  try {
+    const url = `/api/alerts?id=${alertRequest.alertId}`;
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(alertRequest)
+    })
+    const data = await res.json();
+    return data;
+
+  }
+  catch (error: any) {
+    console.error("error", error)
+    return ({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+  }
+
+}
+export async function deleteAlert(alertId: string): Promise<any> {
+  try {
+    const url = `/api/alerts?id=${alertId}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+
+    const data = await res.json();
+    return data;
+
+  }
+  catch (error: any) {
+    console.error("error", error)
+    return ({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+  }
+
+}
+
+
+export async function getAlerts(): Promise<any> {
+
+  try {
+    const url = `/api/alerts`;
+    const res = await fetch(url)
+    const data = await res.json()
+    return data;
+  }
+  catch (error: any) {
+    console.error("error", error)
+    return ({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+  }
+
+
 }
