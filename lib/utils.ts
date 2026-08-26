@@ -22,7 +22,7 @@ export const getUSStockTime = (date: Date = new Date()) => {
 
 }
 
-export const getMarketTime = () => {
+export const getUSMarketTime = () => {
   const now = new Date();
   // Convert current time to a string in New York time, then back to a Date object
   const etString = now.toLocaleString("en-US", { timeZone: "America/New_York" });

@@ -1,22 +1,22 @@
 "use client";
+import { useCompanyProfile } from "@/hooks/useCompanyProfile";
+import { useMainChartData } from "@/hooks/useMainChartData";
+import { useMarketData } from "@/hooks/useMarketData";
+import { useSymbolInfo } from "@/hooks/useSymbolInfo";
 import { FILTER_KEY, TIMEFRAME_CONFIGS } from "@/lib/config/chartFilter";
 import {
   getFormatedDate,
   getISOFormattedDate,
-  getMarketTime,
-  isMarketOpen,
+  getUSMarketTime,
+  isMarketOpen
 } from "@/lib/utils";
+import { useAlertStore } from "@/stores/useAlertStore";
 import { useLiveStore } from "@/stores/useLiveStore";
 import { ArrowDown, ArrowUp, Bell, Mountain } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ResponsiveContainer } from "recharts";
-import { PriceChartContent } from "./price-chart-content";
-import { useCompanyProfile } from "@/hooks/useCompanyProfile";
-import { useSymbolInfo } from "@/hooks/useSymbolInfo";
-import { useMainChartData } from "@/hooks/useMainChartData";
 import { Button } from "../ui/button";
-import { useAlertStore } from "@/stores/useAlertStore";
-import { useMarketData } from "@/hooks/useMarketData";
+import { PriceChartContent } from "./price-chart-content";
 
 export const PriceCharts = ({
   symbol,
@@ -27,25 +27,26 @@ export const PriceCharts = ({
   symbolDetails: SymbolDetails;
   showSymbolInfo: boolean;
 }) => {
+
   const subcribe = useLiveStore((state) => state.subscribe);
   const unsubscribe = useLiveStore((state) => state.unsubscribe);
   const prices = useLiveStore((state) => state.prices);
+
   const setOpen = useAlertStore((state) => state.setOpen);
+
   const [mainGraphFilter, setMainGraphFilter] = useState<FILTER_KEY>("1D");
   const { interval, outputSize } = TIMEFRAME_CONFIGS[mainGraphFilter];
-  const { startDate, endDate } = useMemo(() => {
-    if (mainGraphFilter !== "1D" || !isMarketOpen()) {
-      return {
-        startDate: "",
-        endDate: "",
-      };
+
+  const ISODate = getISOFormattedDate(new Date());
+  const { startDate, endDate } = (mainGraphFilter === "1D" && isMarketOpen()) ? {
+    startDate: `${ISODate} 09:30:00`,
+    endDate: `${ISODate} 16:00:00`,
+  } :
+    {
+      startDate: "",
+      endDate: "",
     }
-    const ISODate = getISOFormattedDate(new Date());
-    return {
-      startDate: `${ISODate} 09:30:00`,
-      endDate: `${ISODate} 16:00:00`,
-    };
-  }, [mainGraphFilter]);
+
   const { data, isLoading: chartDataLoading } = useMainChartData(
     symbolDetails.symbol,
     interval,
@@ -73,9 +74,9 @@ export const PriceCharts = ({
   }, [subcribe, unsubscribe, symbolDetails.symbol]);
 
   useEffect(() => {
-    const currTime = getMarketTime(); // get current time
+    const currTime = getUSMarketTime(); // get current time
     if (isMarketOpen() && prices[symbolDetails.symbol]) {
-      //
+
       const date = new Date(currTime);
       setLivePrices((prev) => {
         if (prev.length == 0) {
@@ -139,6 +140,7 @@ export const PriceCharts = ({
   const handleFilterChange = (filter: "1D" | "5D" | "1M" | "6M") => {
     setMainGraphFilter(filter);
   };
+
 
 
   return (
