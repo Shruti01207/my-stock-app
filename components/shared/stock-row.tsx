@@ -1,10 +1,8 @@
 import { useSearchStore } from "@/stores/useSearchStore";
 import { useWatchlistStore } from "@/stores/useWatchlistStore";
-import { symbol } from "better-auth";
 import { CommandItem } from "cmdk";
 import { Plus, Trash } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export const StockRow = ({ result }: { result: Stock }) => {
   const addToWatchlist = useWatchlistStore((state) => state.addStock);

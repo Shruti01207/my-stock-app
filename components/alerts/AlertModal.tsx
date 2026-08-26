@@ -144,7 +144,6 @@ export function AlertModal() {
 
         setIsLoading(true)
         const res = await editAlert(req);
-        console.log("res", res)
         setIsLoading(false)
         if (res.success) {
             setOpen(false, mode, symbolDetails);
