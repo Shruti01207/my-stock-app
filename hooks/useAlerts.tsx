@@ -11,6 +11,7 @@ export const useAlerts = () => {
         queryFn: () => getAlerts(),
         select: (res): Alert[] => {
             return res?.data || [];
-        }
+        },
+
     })
 }

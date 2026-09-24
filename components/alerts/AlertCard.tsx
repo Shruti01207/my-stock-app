@@ -11,6 +11,7 @@ import { useSupportedSymbols } from "@/stores/useSupportedSymbolStore";
 
 import { toast } from "sonner";
 import { deleteAlert } from "@/lib/api/stocks";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -22,6 +23,7 @@ export const AlertCard = memo(({ alert }: { alert: Alert }) => {
     const setOpen = useAlertStore((state) => state.setOpen)
     const supportedSymbols = useSupportedSymbols((state) => state.supportedSymbols)
     const [isDeleting, setIsDeleting] = useState(false)
+    const queryClient = useQueryClient()
 
 
     const editAlert = () => {
@@ -52,6 +54,7 @@ export const AlertCard = memo(({ alert }: { alert: Alert }) => {
         setIsDeleting(false)
         if (res.success) {
             toast.success("Alert deleted successfully")
+            queryClient.refetchQueries({ queryKey: ['alerts-list'] })
         }
         else {
             toast.error(res.error || "Failed to delete alert")

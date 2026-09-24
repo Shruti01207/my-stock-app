@@ -34,6 +34,7 @@ import { toast } from "sonner"
 import { SymbolTypes } from "@/lib/enums"
 import { Loader2, Mountain } from "lucide-react"
 import { createAlert, editAlert } from "@/lib/api/stocks"
+import { useQueryClient } from "@tanstack/react-query"
 
 
 
@@ -50,6 +51,7 @@ export function AlertModal() {
     const profile = (symbolDetails?.type == SymbolTypes.CommonStock) ? companyProfileQuery.data : symbolsData.data
     const [alertForm, setAlertForm] = useState<AlertForm | EditAlertForm>(defaultAlertState);
     const [isLoading, setIsLoading] = useState(false);
+    const queryClient = useQueryClient();
 
 
     useEffect(() => {
@@ -149,12 +151,16 @@ export function AlertModal() {
             setOpen(false, mode, symbolDetails);
             toast.success("Alert updated successfully");
             setAlertForm(defaultAlertState);
+            queryClient.refetchQueries({ queryKey: ['alerts-list'] })
         }
         else {
             toast.error(res.error || "Failed to update alert");
         }
 
     }
+
+    // optimistic UI updates
+
 
     const handleOpenChange = (isOpen: boolean) => {
         setOpen(isOpen, mode, symbolDetails)

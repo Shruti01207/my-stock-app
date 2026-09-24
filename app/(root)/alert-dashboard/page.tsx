@@ -3,12 +3,14 @@
 import AlertCard from "@/components/alerts/AlertCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAlerts } from "@/hooks/useAlerts";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
 export default function AlertDashboard() {
 
-    const { data: alertLists, isLoading } = useAlerts()
+    const { data: alertLists, isFetching } = useAlerts()
+    const queryClient = useQueryClient();
 
 
 
@@ -21,7 +23,7 @@ export default function AlertDashboard() {
                 Manage your active and triggered price notifications</span>
         </header>
 
-        {isLoading &&
+        {isFetching &&
             <div className="alert-container  mt-7 grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[1, 2, 3, 4, 5].map((num: number) => {
                     return (
@@ -31,7 +33,7 @@ export default function AlertDashboard() {
 
             </div>}
         {
-            !(isLoading) &&
+            !(isFetching) &&
 
             <div className="alert-container mt-7 grid grid-cols-1 md:grid-cols-2 gap-3">
                 {alertLists?.map((a: Alert) => {
