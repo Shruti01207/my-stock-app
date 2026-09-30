@@ -29,7 +29,7 @@ export const MarketMovers = () => {
 
     return <>
 
-        <div className="market-movers grid grid-cols-3 gap-7">
+        <div className="market-movers grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:md:grid-cols-3 gap-7">
             {data &&
                 <>
                     {topGainers && <div>

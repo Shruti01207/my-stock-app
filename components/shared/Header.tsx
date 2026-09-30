@@ -52,7 +52,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
         <header className='sticky top-0 z-50 w-full border-b border-gray-700 bg-gray-900/80 backdrop-blur-md'>
             <div className='container flex h-[64px] items-center justify-between px-4 sm:px-6'>
                 {/* Left Section: Menu & Logo */}
-                <div className='flex items-center gap-2 sm:gap-6'>
+                <div className='flex items-center gap-2 sm:gap-0'>
                     {/* Mobile Menu Toggle */}
                     <div className='flex sm:hidden items-center'>
                         <Button
@@ -68,11 +68,11 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                     {/* Logo */}
                     <Link href="/" className="flex items-center">
                         <Image
-                            src="/assets/images/logo.png"
+                            src="/assets/images/logo.svg"
                             alt="Logo"
-                            width={110}
-                            height={44}
-                            className='h-9 w-auto cursor-pointer brightness-110'
+                            width={100}
+                            height={100}
+                            className='w-20 h-30 sm:w-20 sm:h-30 md:w-20 md:h-30 lg:w-30 lg:h-30 cursor-pointer brightness-110'
                         />
                     </Link>
 
