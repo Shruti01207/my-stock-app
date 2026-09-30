@@ -21,7 +21,6 @@ export const MarketNewsWidget = () => {
                 topStories = topStories.splice(0, 10);
                 const updatedStories = parseData(topStories)
                 setLatestNews(updatedStories);
-                console.log("res=", updatedStories);
             }
             catch {
 
@@ -70,7 +69,7 @@ export const MarketNewsWidget = () => {
 
 
     return <>
-        <div className="my-3">
+        <div >
             <h1 className="text-2xl font-semibold">Top News Stories</h1>
             <span className="font-thin text-gray-500">From sources across the web</span>
         </div>

@@ -1,10 +1,12 @@
+import MarketMovers from "@/components/dashboard/market-movers";
 import { MarketNewsWidget } from "@/components/dashboard/market-news-widget";
 import { MarketOverviewWidget } from "@/components/dashboard/market-overview-widget";
 import { PriceCharts } from "@/components/shared/price-charts";
-import { SymbolTypes } from "@/lib/enums";
-import Link from "next/link";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { useTopGainersLoosers } from "@/hooks/useTopGainersLoosers";
 import { fetchStockPrice } from "@/lib/api/stocks-server";
+import { SymbolTypes } from "@/lib/enums";
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import Link from "next/link";
 
 export default async function Home() {
 
@@ -13,7 +15,10 @@ export default async function Home() {
     type: SymbolTypes.ETP,
   };
 
+
   const queryClient = new QueryClient();
+
+
 
   // Prefetch data on the server for the widgets to eliminate loading skeletons
   await Promise.all([
@@ -34,6 +39,8 @@ export default async function Home() {
       queryFn: () => fetchStockPrice('IWM'),
     }),
   ]);
+
+
 
   return (
     <div className="left flex flex-col gap-2">
@@ -65,7 +72,14 @@ export default async function Home() {
           Watchlist
         </Link>
       </div>
-      <MarketNewsWidget></MarketNewsWidget>
+      <div className="my-3">
+        <MarketNewsWidget></MarketNewsWidget>
+      </div>
+      <div className="my-3">
+        <MarketMovers></MarketMovers>
+      </div>
+
+
     </div>
   );
 }

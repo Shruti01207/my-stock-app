@@ -127,3 +127,9 @@ export async function getSymbolsInfo(): Promise<SymbolInfo[]> {
     return res.json();
 }
 
+export async function getTopGainersLosers(): Promise<MarketMoversData> {
+    const apiKey = process.env.ALPHA_VANTAGE_KEY
+    const url = `https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${apiKey}`
+    const res = await fetch(url);
+    return res.json();
+}

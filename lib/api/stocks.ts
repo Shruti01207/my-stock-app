@@ -175,6 +175,7 @@ export async function getAlerts(): Promise<ApiResponse<Alert[]>> {
     const url = `/api/alerts`;
     const res = await fetch(url)
     const data = await res.json()
+    console.log("data", data);
     return data;
   }
   catch (error: any) {
@@ -183,4 +184,21 @@ export async function getAlerts(): Promise<ApiResponse<Alert[]>> {
   }
 
 
+}
+
+
+export async function getMarketMovers(): Promise<ApiResponse<MarketMoversData>> {
+  console.log("get market movers called");
+  try {
+    const url = '/api/market/market-movers';
+    const res = await fetch(url)
+
+    const data = await res.json()
+    console.log("data in market movers func", data);
+    return data;
+  }
+  catch (error: any) {
+    console.error("error", error)
+    return ({ success: false, error: error?.message || "INTERNAL_SERVER_ERROR" })
+  }
 }

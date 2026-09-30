@@ -1,7 +1,7 @@
 
 import { FILTER_KEY, PRICE_CHART_FILTER_CONFIG } from "@/lib/config/chartFilter"
 import { useState } from "react"
-import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts"
 
 
 
@@ -48,8 +48,8 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
             onClick={handleClick}
         >
-            <CartesianGrid strokeDasharray="2 2" horizontal={false} strokeOpacity={0.3}
-            />
+            {/* <CartesianGrid strokeDasharray="3 3" horizontal={false} strokeOpacity={0.3}
+            /> */}
             <XAxis
 
                 type={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].type}

@@ -372,6 +372,25 @@ declare global {
     }
 
 
+    type MarketMoversData = {
+        last_updated: string;
+        metadata: string;
+        most_actively_traded: Array<AlphaVantageTickData>,
+        top_gainers: Array<AlphaVantageTickData>,
+        top_losers: Array<AlphaVantageTickData>
+
+    }
+
+
+    type AlphaVantageTickData = {
+        change_amount: string,
+        change_percentage: string,
+        price: string,
+        ticker: string,
+        volume: string
+    }
+
+
 }
 
 
