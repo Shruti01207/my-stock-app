@@ -1,14 +1,12 @@
-'use client'
+'use client';
 
-import { useNewsSentiments } from "@/hooks/useNewsSentiments";
+import { NewsCard, NewsCardSkeleton } from "@/components/shared/news-card";
 import { getLatestNew } from "@/lib/api/stocks";
 import { useEffect, useState } from "react";
 
 export const MarketNewsWidget = () => {
-
     const [latestNews, setLatestNews] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false)
-
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const getLatestNews = async () => {
@@ -16,22 +14,20 @@ export const MarketNewsWidget = () => {
                 setLoading(true);
                 const res = await getLatestNew();
                 setLoading(false);
-                let topStories = res.filter((res: any) => res.category == 'top news')
+                let topStories = res.filter((res: any) => res.category == 'top news');
                 topStories.sort((a: any, b: any) => (b.datetime - a.datetime));
                 topStories = topStories.splice(0, 10);
-                const updatedStories = parseData(topStories)
+                const updatedStories = parseData(topStories);
                 setLatestNews(updatedStories);
             }
             catch {
 
             }
-
-        }
+        };
         getLatestNews();
-    }, [])
+    }, []);
 
     const parseData = (stories: any) => {
-
         const updatedStories = stories.map((story: any) => {
             let currTime = Date.now();
             let diff = currTime - (story.datetime * 1000);
@@ -39,58 +35,50 @@ export const MarketNewsWidget = () => {
             let mins = Math.ceil(seconds / 60);
             let hrs = Math.ceil(mins / 60);
             let days = Math.ceil(hrs / 24);
-            let timeAgo = ""
+            let timeAgo = "";
             if (seconds < 60) {
-                timeAgo = `${seconds} sec ago`
+                timeAgo = `${seconds} sec ago`;
             }
             else if (mins < 60) {
-                timeAgo = `${mins} min ago`
+                timeAgo = `${mins} min ago`;
             }
             else if (hrs < 24) {
-                timeAgo = `${hrs} hr ago`
+                timeAgo = `${hrs} hr ago`;
             }
             else {
-                timeAgo = `${days} day ago`
+                timeAgo = `${days} day ago`;
             }
 
             return {
                 ...story,
                 timeAgo
-
-            }
-
-        })
+            };
+        });
 
         return updatedStories;
+    };
 
-    }
+    return (
+        <>
+            <div className="my-4">
+                <h1 className="text-2xl font-semibold">Top News Stories</h1>
+                <span className="font-thin text-gray-500">From sources across the web</span>
+            </div>
 
-
-
-
-    return <>
-        <div >
-            <h1 className="text-2xl font-semibold">Top News Stories</h1>
-            <span className="font-thin text-gray-500">From sources across the web</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {!loading && latestNews.map((news) => (
-                <div className="news-card" key={news.id}>
-
-                    <div className="flex items-center gap-3">
-                        <span className="font-semibold">{news.source}</span>
-                        <span className="font-extralight text-gray-500"><span className="me-1 font-extralight text-gray-500">&bull;</span>{news.timeAgo} </span>
-                    </div>
-                    <div className="font-semibold">
-                        <a href={news.url}>{news.headline}</a>
-                    </div>
-                </div>
-            ))}
-            {loading && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((SkeletonNum) => (
-                <div className="h-[60px] animate-pulse rounded bg-muted" key={SkeletonNum}>
-                </div>
-            ))}
-        </div>
-    </>
-}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {!loading && latestNews.map((news) => (
+                    <NewsCard
+                        key={news.id}
+                        title={news.headline}
+                        url={news.url}
+                        source={news.source}
+                        timeAgo={news.timeAgo}
+                    />
+                ))}
+                {loading && [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((SkeletonNum) => (
+                    <NewsCardSkeleton key={SkeletonNum} />
+                ))}
+            </div>
+        </>
+    );
+};

@@ -19,7 +19,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
             <div className="text-gray-400">
 
                 <Header intialUser={session?.user} />
-                <div className="max-w-6xl mx-auto mx-3 flex flex-col md:flex-row">
+                <div className="max-w-7xl mx-auto mx-3 flex flex-col md:flex-row">
                     <div className="container h-[100vh] pt-4 overflow-y-scroll scrollbar-hide">
                         {/* <Providers>{children}</Providers> */}
                         {children}
