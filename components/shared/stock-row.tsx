@@ -12,7 +12,7 @@ export const StockRow = ({ result }: { result: Stock }) => {
   const { isOpen, onClose, onOpen, mode } = useSearchStore();
 
   return (
-    <CommandItem key={result.symbol} className="flex hover:bg-muted">
+    <CommandItem key={result.symbol} className="flex hover:bg-muted justify-between">
       <Link
         className="label flex"
         href={`/overview/${result.symbol}`}
@@ -46,6 +46,7 @@ export const StockRow = ({ result }: { result: Stock }) => {
                 onClick={() => removeFromWatchlist(result.symbol)}>
                 <Trash strokeWidth={4}></Trash>
             </button>} */}
+
     </CommandItem>
   );
 };

@@ -15,7 +15,6 @@ export const MarketMovers = () => {
     const supportedSymbols = useSupportedSymbols((state) => state.supportedSymbols);
 
     useEffect(() => {
-        console.log("data", data);
         if (!data)
             return
         const tG = data?.top_gainers?.filter((tick: AlphaVantageTickData) => supportedSymbols.find((sym) => sym.symbol == tick.ticker || sym.symbol2 == tick.ticker)).slice(0, Math.min(4, data?.top_gainers.length)) ?? []

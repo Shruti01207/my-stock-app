@@ -58,6 +58,8 @@ export const PriceCharts = ({
 
   const companyProfileQuery = useCompanyProfile(symbolDetails.symbol);
   const symbolsData = useSymbolInfo(symbolDetails.symbol);
+
+
   const profile =
     symbolDetails.type == "Common Stock"
       ? companyProfileQuery.data
@@ -65,6 +67,8 @@ export const PriceCharts = ({
 
   const [livePrices, setLivePrices] = useState<PriceChartData[]>([]);
   const marketData = useMarketData(symbolDetails.symbol);
+
+
 
   useEffect(() => {
     subcribe(symbolDetails.symbol);
