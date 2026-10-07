@@ -1,9 +1,8 @@
-import Providers from "@/components/providers/providers"
-import Header from "@/components/shared/Header"
+import Header from "@/components/shared/Header";
 import { WatchList } from "@/components/watchlist/Watchlist";
 import { auth } from "@/lib/better-auth/auth";
 
-import { headers } from "next/headers"
+import { headers } from "next/headers";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
 

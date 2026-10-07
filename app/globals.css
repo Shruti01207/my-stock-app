@@ -462,7 +462,7 @@
   }
 
   .divider {
-    @apply h-[10px] w-full bg-[#17181f] my-4 md:hidden
+    @apply h-[8px] w-full bg-[#141415de] my-5 md:hidden
   }
 }
 

@@ -43,7 +43,7 @@ export default async function Home() {
 
 
   return (
-    <div className="left flex flex-col gap-2">
+    <div className="left flex flex-col">
       <div className="widget-section">
         {/* Pass the dehydrated server state to the client */}
         <HydrationBoundary state={dehydrate(queryClient)}>

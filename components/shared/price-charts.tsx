@@ -155,125 +155,112 @@ export const PriceCharts = ({
 
   return (
     <>
-      <div className="my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
-        <div className="chart-header p-2 ms-[2.5%] my-2">
+      <div className="my-0 md:my-3 bg-[#17181f] p-0 lg:p-3 rounded-md">
+        <div className="chart-header p-2 ms-[2.5%]">
           {showSymbolInfo && (
-            <div className="flex gap-2">
-              {
-                <div
-                  className={`font-semibold w-full text-sm sm:text-sm md:text-lg flex justify-between items-end`}
-                >
-                  <div className="font-semibold text-sm sm:text-sm md:text-lg flex flex-col">
-                    <div className="symbol flex items-center gap-2">
-                      {symbolDetails.type === 'Common Stock' &&
-                        <MyAvatar isLoading={companyProfileQuery.isLoading} name={companyProfileQuery?.data?.name} logo={companyProfileQuery?.data?.logo} avatarSize="5" fontSize="xs"></MyAvatar>
-                      }
-                      {symbolDetails.type !== 'Common Stock' &&
-                        <MyAvatar isLoading={symbolsData.isLoading} name={symbolDetails.symbol} logo={undefined} avatarSize="5" fontSize="xs"></MyAvatar>
-                      }
-                      <span className="font-bold text-base">{symbolDetails?.symbol}</span>
+            <div className="flex gap-2 items-center">
+              <div className="avatar">
+                {symbolDetails.type === 'Common Stock' &&
+                  <MyAvatar isLoading={companyProfileQuery.isLoading} name={companyProfileQuery?.data?.name} logo={companyProfileQuery?.data?.logo} avatarSize="8" fontSize="base"></MyAvatar>
+                }
+                {symbolDetails.type !== 'Common Stock' &&
+                  <MyAvatar isLoading={symbolsData.isLoading} name={symbolDetails.symbol} logo={undefined} avatarSize="8" fontSize="base"></MyAvatar>
+                }
+              </div>
 
-
-                    </div>
-                    <div className="description">
-                      {profile && <span> {(profile as any).description}</span>}
-                    </div>
+              <div
+                className={`font-semibold w-full text-sm sm:text-sm md:text-lg flex flex-col justify-between`}
+              >
+                <div className="font-semibold text-sm sm:text-sm md:text-lg flex flex-col">
+                  <div className="symbol flex items-center gap-2">
+                    <span className="font-bold text-base">{symbolDetails?.symbol}</span>
                   </div>
-
-                  {/* <div className="action-btn">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setOpen(true, 'add', symbolDetails)}
-                    >
-                      <BellRing
-                        size={40}
-                        className="text-[#D4AF37] !w-6 !h-6"
-                        strokeWidth={3}
-                      />
-                    </Button>
-                  </div> */}
+                  <div className="description">
+                    {profile && <span> {(profile as any).description}</span>}
+                  </div>
                 </div>
-              }
+                <div
+                  className={`w-full flex ${!showSymbolInfo ? "justify-between" : "justify-start"} items-start`}
+                >
+                  <div className="quotes">
+                    {!marketData.isLoading && !marketData.isError && (
+                      <div className="flex gap-2 items-center">
+                        <div className="sm:text-lg md:text-lg font-semibold text-white/80">
+                          ${marketData.displayPrice}
+                        </div>
+                        <div
+                          className={`sm:text-lg md:text-lg flex items-center text-md font-semibold ${marketData.color}`}
+                        >
+                          <span>
+                            {(marketData.absoluteChange != undefined) && (marketData.absoluteChange > 0) && (
+                              <ArrowUp size={20} className={`${marketData.color}`} />
+                            )}
+                            {(marketData.absoluteChange != undefined) && (marketData.absoluteChange < 0) && (
+                              <ArrowDown
+                                size={20}
+                                className={`${marketData.color}`}
+                              ></ArrowDown>
+                            )}
+                          </span>
+
+                          {(marketData.percentageChange != undefined) &&
+                            <span>{Math.abs(marketData.percentageChange).toFixed(2)} %</span>
+                          }
+
+
+                        </div>
+
+                        <div
+                          className={`sm:text-lg md:text-lg flex items-center text-md font-semibold ${marketData.color}`}
+                        >
+                          <span>
+                            <span>(</span>
+                            <span>{marketData.sign}</span>
+                            {(marketData.absoluteChange != undefined) &&
+                              <span>
+                                {Math.abs(marketData.absoluteChange).toFixed(2)}
+                              </span>
+                            }
+                            <span>)</span>
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* {data && data.length > 0 && (
+                      <div className="market-status flex gap-2 text-zinc-400 text-sm md:text-lg">
+                        {isMarketOpen() ? (
+                          <div className="text-green-400">OPEN</div>
+                        ) : (
+                          <div className="text-red-400">CLOSED</div>
+                        )}
+                        <div className="text-sm md:text-lg">
+                          {getFormatedDate(new Date(data[data.length - 1].time))}
+                        </div>
+                      </div>
+                    )} */}
+                  </div>
+                  {!showSymbolInfo && (
+                    <div className="action-btn">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1"
+                        onClick={() => setOpen(true, 'add', symbolDetails,
+                        )}
+                      >
+                        <Bell size={16} className="text-[#D4AF37]" strokeWidth={3} />{" "}
+                        Set Alert
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
             </div>
           )}
 
-          <div
-            className={`w-full flex ${!showSymbolInfo ? "justify-between" : "justify-start"} items-start`}
-          >
-            <div className="quotes">
-              {!marketData.isLoading && !marketData.isError && (
-                <div className="flex gap-2 items-center">
-                  <div className="sm:text-lg md:text-lg font-semibold text-white/80">
-                    ${marketData.displayPrice}
-                  </div>
-                  <div
-                    className={`sm:text-lg md:text-lg flex items-center text-md font-semibold ${marketData.color}`}
-                  >
-                    <span>
-                      {(marketData.absoluteChange != undefined) && (marketData.absoluteChange > 0) && (
-                        <ArrowUp size={20} className={`${marketData.color}`} />
-                      )}
-                      {(marketData.absoluteChange != undefined) && (marketData.absoluteChange < 0) && (
-                        <ArrowDown
-                          size={20}
-                          className={`${marketData.color}`}
-                        ></ArrowDown>
-                      )}
-                    </span>
 
-                    {(marketData.percentageChange != undefined) &&
-                      <span>{Math.abs(marketData.percentageChange).toFixed(2)} %</span>
-                    }
-
-
-                  </div>
-
-                  <div
-                    className={`sm:text-lg md:text-lg flex items-center text-md font-semibold ${marketData.color}`}
-                  >
-                    <span>
-                      <span>(</span>
-                      <span>{marketData.sign}</span>
-                      {(marketData.absoluteChange != undefined) &&
-                        <span>
-                          {Math.abs(marketData.absoluteChange).toFixed(2)}
-                        </span>
-                      }
-                      <span>)</span>
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {data && data.length > 0 && (
-                <div className="market-status flex gap-2 text-zinc-400 text-sm md:text-lg">
-                  {isMarketOpen() ? (
-                    <div className="text-green-400">OPEN</div>
-                  ) : (
-                    <div className="text-red-400">CLOSED</div>
-                  )}
-                  <div className="text-sm md:text-lg">
-                    {getFormatedDate(new Date(data[data.length - 1].time))}
-                  </div>
-                </div>
-              )}
-            </div>
-            {!showSymbolInfo && (
-              <div className="action-btn">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-1"
-                  onClick={() => setOpen(true, 'add', symbolDetails,
-                  )}
-                >
-                  <Bell size={16} className="text-[#D4AF37]" strokeWidth={3} />{" "}
-                  Set Alert
-                </Button>
-              </div>
-            )}
-          </div>
         </div>
 
         {chartDataLoading ? (
