@@ -1,16 +1,20 @@
+import { BellRing, LayoutDashboard, Star } from "lucide-react";
 
 export const NAV_ITEMS = [
     {
         href: '/',
-        title: 'Dashboards'
-    },
-    {
-        href: '/search',
-        title: 'Search'
+        title: 'Dashboard',
+        icon: LayoutDashboard
     },
     {
         href: '/watchlist',
-        title: 'Watchlist'
+        title: 'Watchlist',
+        icon: Star
+    },
+    {
+        href: '/alert-dashboard',
+        title: 'Alert Dashboard',
+        icon: BellRing
     }
 ]
 

@@ -145,9 +145,9 @@
 }
 
 @layer utilities {
-  .container {
+  /* .container {
     @apply mx-auto max-w-screen-2xl px-3 md:px-6 lg:px-8;
-  }
+  } */
 
   .yellow-btn {
     @apply h-12 cursor-pointer bg-gradient-to-b from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-gray-950 font-medium text-base rounded-lg shadow-lg disabled:opacity-50;
@@ -455,6 +455,14 @@
 
   .alert-delete-btn {
     @apply text-gray-400 rounded-full hover:bg-red-600/15 bg-transparent cursor-pointer transition-colors;
+  }
+
+  .main-padding {
+    @apply px-3 md:px-6 lg:px-8
+  }
+
+  .divider {
+    @apply h-[10px] w-full bg-[#17181f] my-4 md:hidden
   }
 }
 

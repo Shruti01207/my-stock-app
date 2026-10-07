@@ -1,16 +1,16 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from 'react'
-import Link from 'next/link'
+import { authClient } from '@/lib/actions/auth-client'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { useSearchStore } from '@/stores/useSearchStore'
+import { AlarmClock, BellRing, Menu, Search, X } from 'lucide-react'
 import Image from 'next/image'
-import { AlarmClock, Clock, Menu, Search, X } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import NavItems from '../ui/NavItems'
 import UserDropdown from '../ui/UserDropdown'
 import { Button } from '../ui/button'
-import { useSearchStore } from '@/stores/useSearchStore'
-import { authClient } from '@/lib/actions/auth-client'
-import { useAuthStore } from '@/stores/useAuthStore'
-import { useRouter } from 'next/navigation'
 
 
 const Header = ({ intialUser }: { intialUser: any }) => {
@@ -52,7 +52,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
         <header className='sticky top-0 z-50 w-full border-b border-gray-700 bg-gray-900/80 backdrop-blur-md'>
             <div className='container flex h-[64px] items-center justify-between px-4 sm:px-6'>
                 {/* Left Section: Menu & Logo */}
-                <div className='flex items-center gap-2 sm:gap-0'>
+                <div className='flex items-center sm:gap-0'>
                     {/* Mobile Menu Toggle */}
                     <div className='flex sm:hidden items-center'>
                         <Button
@@ -70,9 +70,9 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                         <Image
                             src="/assets/images/logo.svg"
                             alt="Logo"
-                            width={100}
-                            height={100}
-                            className='w-20 h-30 sm:w-20 sm:h-30 md:w-20 md:h-30 lg:w-30 lg:h-30 cursor-pointer brightness-110'
+                            width={60}
+                            height={60}
+                            className=' cursor-pointer brightness-110'
                         />
                     </Link>
 
@@ -98,9 +98,9 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                     <Button variant="ghost"
                         size="icon"
                         onClick={() => router.push('/alert-dashboard')}
+                        className='hidden md:inline-block'
                     >
-
-                        <AlarmClock className='size-6'></AlarmClock>
+                        <BellRing className='size-6'></BellRing>
                     </Button>
 
                     {/* User Dropdown */}

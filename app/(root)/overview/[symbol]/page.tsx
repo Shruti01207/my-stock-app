@@ -1,5 +1,7 @@
 'use client'
 
+import MyAvatar from "@/components/shared/my-avatar";
+import Logo from "@/components/shared/my-avatar";
 import { NewsList } from "@/components/shared/news-list";
 import { PriceCharts } from "@/components/shared/price-charts";
 import { StatsGrid } from "@/components/stock-overview/stats-grid";
@@ -34,7 +36,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
     }
 
 
-    const { data, isLoading, isLoadingError } = useCompanyProfile(finhubSymbol)
+    const { data, isLoading } = useCompanyProfile(finhubSymbol)
 
 
 
@@ -60,7 +62,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
             </div>
 
             <div className="company-name flex flex-row gap-3 items-center">
-                {isLoading ?
+                {/* {isLoading ?
                     <Skeleton className="w-10 h-10 rounded-full"></Skeleton> :
                     data?.logo && !logoError ? <img className="w-10 h-10 rounded-full" src={data?.logo} alt={data?.name} onError={() => setLogoError(true)} /> :
                         <div className="w-10 h-10 rounded-full bg-zinc-400">{data?.name?.[0] ?? 'U'}</div>
@@ -71,7 +73,16 @@ export default function StockSymbolOverview({ params }: PageProps) {
                         <Skeleton className="animate h-[25px] w-[150px] opacity-30 rounded-xl"></Skeleton> :
                         data?.name ? <span className="font-bold text-lg">{data?.name}</span> : <span>-</span>
 
+                } */}
+                <MyAvatar isLoading={isLoading} name={data?.name} logo={data?.logo} avatarSize="10" fontSize="lg"></MyAvatar>
+
+                {
+                    isLoading ?
+                        <Skeleton className="animate h-[25px] w-[150px] opacity-30 rounded-xl"></Skeleton> :
+                        data?.name ? <span className="font-bold text-lg">{data?.name}</span> : <span>-</span>
+
                 }
+
 
             </div>
 

@@ -2,11 +2,11 @@ import MarketMovers from "@/components/dashboard/market-movers";
 import { MarketNewsWidget } from "@/components/dashboard/market-news-widget";
 import { MarketOverviewWidget } from "@/components/dashboard/market-overview-widget";
 import { PriceCharts } from "@/components/shared/price-charts";
-import { useTopGainersLoosers } from "@/hooks/useTopGainersLoosers";
 import { fetchStockPrice } from "@/lib/api/stocks-server";
 import { SymbolTypes } from "@/lib/enums";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import Link from "next/link";
+
 
 export default async function Home() {
 
@@ -47,7 +47,7 @@ export default async function Home() {
       <div className="widget-section">
         {/* Pass the dehydrated server state to the client */}
         <HydrationBoundary state={dehydrate(queryClient)}>
-          <div className="widget-container overflow-x-scroll scrollbar-hide md:overflow-x-hidden flex justify-between gap-3">
+          <div className="widget-container main-padding overflow-x-scroll scrollbar-hide md:overflow-x-hidden flex justify-between gap-3">
             <MarketOverviewWidget symbol="SPY" finHubSymbol="SPY" />
             <MarketOverviewWidget symbol="QQQ" finHubSymbol="QQQ" />
             <MarketOverviewWidget symbol="DIA" finHubSymbol="DIA" />
@@ -55,7 +55,11 @@ export default async function Home() {
           </div>
         </HydrationBoundary>
       </div>
-      <div className="main-chart my-3">
+
+      <div className="divider" />
+
+
+      <div className="main-chart main-padding">
         <PriceCharts
           symbol="QQQ"
           symbolDetails={symbolDetails}
@@ -64,7 +68,9 @@ export default async function Home() {
 
       </div>
 
-      <div className="md:hidden list-buttons">
+      <div className="divider" />
+
+      <div className="md:hidden list-buttons main-padding">
         <Link
           className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
           href="/watchlist"
@@ -72,10 +78,12 @@ export default async function Home() {
           Watchlist
         </Link>
       </div>
-      <div className="my-3">
+      <div className="divider" />
+      <div className="main-padding">
         <MarketNewsWidget></MarketNewsWidget>
       </div>
-      <div className="my-3">
+      <div className="divider" />
+      <div className="main-padding">
         <MarketMovers></MarketMovers>
       </div>
 

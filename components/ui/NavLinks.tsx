@@ -1,22 +1,31 @@
 
 "use client"
 
-import Link from 'next/link'
+import { LucideIcon } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react'
 
 interface NavLinksProps {
     href: string;
     title: string;
+    icon: LucideIcon;
 }
 
-const NavLinks = ({ href, title }: NavLinksProps) => {
+const NavLinks = ({ href, title, icon }: NavLinksProps) => {
     const currPath = usePathname();
     const isActive = currPath === href;
+    const Icon = icon
 
     return (
-        <Link href={href} key={title} className={`text-white hover:text-yellow-500 transition-colors
-            ${isActive ? 'font-bold text-white' : 'font-normal'} `}>{title}</Link>
+        <Link href={href} key={title} className={`text-white hover:text-yellow-500 transition-colors flex flex-row gap-2
+            ${isActive ? 'font-bold text-white' : 'font-normal'} `}>
+            <div className="icon">
+                <Icon size={20} />
+            </div>
+            <div className="menu-title">
+                {title}
+            </div>
+        </Link>
     )
 }
 

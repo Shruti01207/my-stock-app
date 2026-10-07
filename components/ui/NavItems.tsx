@@ -1,5 +1,3 @@
-import Link from 'next/link'
-import React from 'react'
 import { NAV_ITEMS } from '@/lib/constants'
 import NavLinks from './NavLinks'
 
@@ -11,7 +9,7 @@ const NavItems = () => {
             {
                 NAV_ITEMS.map((item: any) => {
                     return (
-                        <NavLinks key={item.title} href={item.href} title={item.title} />
+                        <NavLinks key={item.title} href={item.href} title={item.title} icon={item.icon} />
                     )
                 })
             }

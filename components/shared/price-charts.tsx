@@ -12,11 +12,14 @@ import {
 } from "@/lib/utils";
 import { useAlertStore } from "@/stores/useAlertStore";
 import { useLiveStore } from "@/stores/useLiveStore";
-import { ArrowDown, ArrowUp, Bell, Mountain } from "lucide-react";
+import { ArrowDown, ArrowUp, Bell, BellRing, Mountain } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ResponsiveContainer } from "recharts";
 import { Button } from "../ui/button";
 import { PriceChartContent } from "./price-chart-content";
+import MyAvatar from "./my-avatar";
+import { SymbolTypes } from "@/lib/enums";
+import { Skeleton } from "../ui/skeleton";
 
 export const PriceCharts = ({
   symbol,
@@ -64,6 +67,9 @@ export const PriceCharts = ({
     symbolDetails.type == "Common Stock"
       ? companyProfileQuery.data
       : symbolsData.data;
+
+
+  console.log(" symbolsData.data", symbolsData.data)
 
   const [livePrices, setLivePrices] = useState<PriceChartData[]>([]);
   const marketData = useMarketData(symbolDetails.symbol);
@@ -155,33 +161,38 @@ export const PriceCharts = ({
             <div className="flex gap-2">
               {
                 <div
-                  className={`font-semibold w-full text-sm sm:text-sm md:text-lg  flex justify-between items-center`}
+                  className={`font-semibold w-full text-sm sm:text-sm md:text-lg flex justify-between items-end`}
                 >
-                  <div className="font-semibold text-sm sm:text-sm md:text-lg flex flex-col gap-1">
-                    <div className="symbol flex items-center gap-1">
-                      <Mountain className="h-5 w-5 md:h-6 md:w-6" />
-                      <span>{symbolDetails.symbol}</span>
+                  <div className="font-semibold text-sm sm:text-sm md:text-lg flex flex-col">
+                    <div className="symbol flex items-center gap-2">
+                      {symbolDetails.type === 'Common Stock' &&
+                        <MyAvatar isLoading={companyProfileQuery.isLoading} name={companyProfileQuery?.data?.name} logo={companyProfileQuery?.data?.logo} avatarSize="5" fontSize="xs"></MyAvatar>
+                      }
+                      {symbolDetails.type !== 'Common Stock' &&
+                        <MyAvatar isLoading={symbolsData.isLoading} name={symbolDetails.symbol} logo={undefined} avatarSize="5" fontSize="xs"></MyAvatar>
+                      }
+                      <span className="font-bold text-base">{symbolDetails?.symbol}</span>
+
+
                     </div>
                     <div className="description">
                       {profile && <span> {(profile as any).description}</span>}
                     </div>
                   </div>
 
-                  <div className="action-btn">
+                  {/* <div className="action-btn">
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
-                      className="gap-1"
                       onClick={() => setOpen(true, 'add', symbolDetails)}
                     >
-                      <Bell
-                        size={16}
-                        className="text-[#D4AF37]"
+                      <BellRing
+                        size={40}
+                        className="text-[#D4AF37] !w-6 !h-6"
                         strokeWidth={3}
-                      />{" "}
-                      Set Alert
+                      />
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
               }
             </div>
@@ -193,12 +204,11 @@ export const PriceCharts = ({
             <div className="quotes">
               {!marketData.isLoading && !marketData.isError && (
                 <div className="flex gap-2 items-center">
-                  <div className="sm:text-xl md:text-2xl  font-semibold text-white/80">
-                    {" "}
+                  <div className="sm:text-lg md:text-lg font-semibold text-white/80">
                     ${marketData.displayPrice}
                   </div>
                   <div
-                    className={`sm:text-lg md:text-lg mt-1 flex items-center text-md font-semibold ${marketData.color}`}
+                    className={`sm:text-lg md:text-lg flex items-center text-md font-semibold ${marketData.color}`}
                   >
                     <span>
                       {(marketData.absoluteChange != undefined) && (marketData.absoluteChange > 0) && (
@@ -220,7 +230,7 @@ export const PriceCharts = ({
                   </div>
 
                   <div
-                    className={`sm:text-lg md:text-lg mt-1 flex items-center text-md font-semibold ${marketData.color}`}
+                    className={`sm:text-lg md:text-lg flex items-center text-md font-semibold ${marketData.color}`}
                   >
                     <span>
                       <span>(</span>

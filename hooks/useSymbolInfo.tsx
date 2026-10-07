@@ -45,6 +45,7 @@ export const useSymbolInfo = (symbol?: string) => {
                 return data.filter((symData: any) => symData.symbol == symbol)[0]
             }
             else {
+                console.log("symbols data", data);
                 return data
             }
         }
