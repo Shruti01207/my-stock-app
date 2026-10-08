@@ -1,7 +1,6 @@
 'use client'
 
 import MyAvatar from "@/components/shared/my-avatar";
-import Logo from "@/components/shared/my-avatar";
 import { NewsList } from "@/components/shared/news-list";
 import { PriceCharts } from "@/components/shared/price-charts";
 import { StatsGrid } from "@/components/stock-overview/stats-grid";
