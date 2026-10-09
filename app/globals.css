@@ -466,6 +466,60 @@
   }
 }
 
+/* Remove accessibility focus outline & border on all SVG and Recharts elements */
+svg,
+svg *,
+svg:focus,
+svg:focus-visible,
+svg:focus-within,
+svg *:focus,
+svg *:focus-visible,
+svg *:focus-within,
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-wrapper:focus-within,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible,
+.recharts-wrapper *:focus-within,
+.recharts-surface,
+.recharts-surface *,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+.recharts-surface:focus-within,
+.recharts-surface *:focus,
+.recharts-surface *:focus-visible,
+.recharts-surface *:focus-within,
+.recharts-responsive-container,
+.recharts-responsive-container *,
+.recharts-responsive-container:focus,
+.recharts-responsive-container:focus-visible,
+.recharts-responsive-container:focus-within,
+.recharts-responsive-container *:focus,
+.recharts-responsive-container *:focus-visible,
+.recharts-responsive-container *:focus-within,
+.recharts-layer,
+.recharts-layer *,
+.recharts-layer:focus,
+.recharts-layer *:focus,
+.recharts-area,
+.recharts-area *,
+.recharts-area:focus,
+.recharts-area *:focus,
+.recharts-area-area,
+.recharts-area-area:focus,
+.recharts-curve,
+.recharts-curve:focus {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+  outline-color: transparent !important;
+  box-shadow: none !important;
+  ring: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 /* Market News Component Styles */
 .scrollbar-hide {
   -ms-overflow-style: none;

@@ -47,8 +47,9 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
             data={data}
             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
             onClick={handleClick}
-
-
+            accessibilityLayer={false}
+            style={{ outline: "none" }}
+            className="outline-none focus:outline-none focus-visible:outline-none"
         >
             {/* <CartesianGrid strokeDasharray="3 3" horizontal={false} strokeOpacity={0.3}
             /> */}
@@ -109,6 +110,8 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                 baseValue="dataMin"
                 isAnimationActive={false}
                 tooltipType="none"
+                style={{ pointerEvents: 'none', outline: 'none' }}
+                pointerEvents="none"
             />
 
             <Line
@@ -120,6 +123,8 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                 strokeLinecap={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinecap}
                 strokeLinejoin={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].strokeLinejoin}
                 isAnimationActive={false}
+                style={{ pointerEvents: 'none', outline: 'none' }}
+                pointerEvents="none"
                 dot={(props) => (
                     <LastPriceDot
                         {...props}

@@ -273,7 +273,7 @@ export const PriceCharts = ({
           <>
             <div className="h-[200px] md:h-[250px] lg:h-[300px] w-full">
               <div className="lg:hidden sm:block h-[100%] w-full min-w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" style={{ outline: "none" }}>
                   {chartData && (
                     <PriceChartContent
                       data={chartData}
@@ -285,7 +285,7 @@ export const PriceCharts = ({
                 </ResponsiveContainer>
               </div>
               <div className="hidden lg:block h-[100%] w-full min-w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" style={{ outline: "none" }}>
                   {chartData && (
                     <PriceChartContent
                       data={chartData}
