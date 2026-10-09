@@ -83,6 +83,7 @@ export default async function Home() {
         <MarketNewsWidget></MarketNewsWidget>
       </div>
       <div className="divider" />
+
       <div className="main-padding">
         <MarketMovers></MarketMovers>
       </div>

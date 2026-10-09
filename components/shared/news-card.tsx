@@ -34,13 +34,12 @@ export const NewsCard: React.FC<NewsCardProps> = ({
     flex h-[120px] flex-col
     overflow-hidden
     rounded-md
-    border border-gray-700/50
-    bg-gray-800/40
-    p-4
+    bg-[#17181f]
+    p-3
     shadow-sm
     transition-all duration-200 ease-in-out
     hover:border-gray-600
-    hover:bg-gray-800/80
+    hover:bg-[#22232b]
     ${className}
   `}
     >
