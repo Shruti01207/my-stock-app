@@ -3,6 +3,7 @@
 import { useMarketData } from "@/hooks/useMarketData";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import React from "react";
 import { Skeleton } from "../ui/skeleton";
 
@@ -27,44 +28,45 @@ export const MarketOverviewWidget = React.memo(({ symbol, finHubSymbol }: Market
   if (marketData.isError || marketData.timestamp === 0) return <div className="h-[150px] w-[40%] sm:w-[40%] shrink-0 bg-[#17181f] md:w-[24%] rounded-xl flex justify-center items-center">Error loading</div>;
 
   return (
-    <>
-      <div className="m-0 bg-[#17181f] hover:bg-[#22232b] w-[40%] sm:w-[40%] shrink-0  md:w-[24%] rounded-md">
-        <div className="card-content w-full p-3 pb-1">
-          <h1 className="font-semibold">{symbol.toUpperCase()}</h1>
-          <div className="text-sm text-white/80 font-semibold">
-            {marketData.displayPrice}
-          </div>
-          {(marketData?.absoluteChange != undefined) &&
-            <div className="leading-none text-sm text-white/80 font-semibold">
-              <span>(</span>
-              <span>{marketData.sign}</span>
-              <span> {Math.abs(marketData?.absoluteChange).toFixed(2)}</span>
-              <span>)</span>
-            </div>}
-
-          {(marketData?.percentageChange != undefined) &&
-            <div
-              className={`mt-1 flex items-center text-md font-semibold ${marketData.color}`}
-            >
-              <span>{marketData.sign}</span>
-              <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
-              <span>
-                {marketData.trend === "up" && (
-                  <ArrowUp size={20} className={`${marketData.color}`} />
-                )}
-                {marketData.trend === "down" && (
-                  <ArrowDown size={20} className={`${marketData.color}`} />
-                )}
-              </span>
-            </div>}
-
+    <Link
+      href={`/overview/${symbol}`}
+      className="m-0 bg-[#17181f] hover:bg-[#22232b] active:bg-[#2b2c3a] transition-colors duration-200 ease-in-out cursor-pointer touch-manipulation select-none w-[40%] sm:w-[40%] shrink-0 md:w-[24%] rounded-md block"
+    >
+      <div className="card-content w-full p-3 pb-1">
+        <h1 className="font-semibold">{symbol.toUpperCase()}</h1>
+        <div className="text-sm text-white/80 font-semibold">
+          {marketData.displayPrice}
         </div>
+        {(marketData?.absoluteChange != undefined) &&
+          <div className="leading-none text-sm text-white/80 font-semibold">
+            <span>(</span>
+            <span>{marketData.sign}</span>
+            <span> {Math.abs(marketData?.absoluteChange).toFixed(2)}</span>
+            <span>)</span>
+          </div>}
 
-        <div className="line-chart">
-          <MiniTrendLineChart symbol={symbol}></MiniTrendLineChart>
-        </div>
+        {(marketData?.percentageChange != undefined) &&
+          <div
+            className={`mt-1 flex items-center text-md font-semibold ${marketData.color}`}
+          >
+            <span>{marketData.sign}</span>
+            <span>{Math.abs(marketData.percentageChange).toFixed(2)}%</span>
+            <span>
+              {marketData.trend === "up" && (
+                <ArrowUp size={20} className={`${marketData.color}`} />
+              )}
+              {marketData.trend === "down" && (
+                <ArrowDown size={20} className={`${marketData.color}`} />
+              )}
+            </span>
+          </div>}
+
       </div>
-    </>
+
+      <div className="line-chart">
+        <MiniTrendLineChart symbol={symbol}></MiniTrendLineChart>
+      </div>
+    </Link>
   );
 });
 

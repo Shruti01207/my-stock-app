@@ -3,6 +3,7 @@
 import { firstCharToUpperCase } from "@/lib/utils";
 import { useSupportedSymbols } from "@/stores/useSupportedSymbolStore";
 import { ArrowDown, ArrowUp } from "lucide-react";
+import Link from "next/link";
 
 
 
@@ -28,7 +29,11 @@ const Widget = ({ title, data }: { title: string, data: AlphaVantageTickData[] }
 
 
                 return (
-                    <div className="card border-b border-zinc-800 my-3 pb-1" key={tick.ticker}>
+                    <Link
+                        key={tick.ticker}
+                        href={`/overview/${tick.ticker}`}
+                        className="card border-b border-zinc-800 my-3 p-2 rounded-lg hover:bg-[#17181f] active:bg-[#22232b] transition-colors duration-200 cursor-pointer block select-none touch-manipulation"
+                    >
                         <div className="flex justify-between align-center">
                             <span className="font-bold">{tick?.ticker}</span>
                             <span >{tick?.price}</span>
@@ -49,7 +54,7 @@ const Widget = ({ title, data }: { title: string, data: AlphaVantageTickData[] }
                                 </span>
                             </div>
                         </div>
-                    </div>)
+                    </Link>)
             })
         }
 

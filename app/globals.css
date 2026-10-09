@@ -81,7 +81,7 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
+  --background: #101218;
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
@@ -140,7 +140,7 @@
   }
 
   body {
-    @apply bg-gray-900 text-foreground;
+    @apply !bg-[#101218] text-foreground;
   }
 }
 
@@ -462,7 +462,7 @@
   }
 
   .divider {
-    @apply h-[8px] w-full bg-[#141415de] my-5 md:hidden
+    @apply h-[8px] w-full bg-[#17181f] my-5 md:hidden
   }
 }
 
@@ -587,6 +587,8 @@
   display: none;
   /* Chrome, Safari, Opera */
 }
+
+
 
 @keyframes pricePulse {
   0% {

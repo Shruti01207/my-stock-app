@@ -47,6 +47,8 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
             data={data}
             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
             onClick={handleClick}
+
+
         >
             {/* <CartesianGrid strokeDasharray="3 3" horizontal={false} strokeOpacity={0.3}
             /> */}
@@ -60,11 +62,13 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                 ticks={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].generateTradingTicks(data)}
                 padding={{ right: 10, left: 10 }}
                 tick={{ fill: "#ffff" }}
+
             // interval="preserveStartEnd"
             />
             <Tooltip
                 labelFormatter={(value) => PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getToolTipFormatter(value)}
                 contentStyle={{ backgroundColor: '#ffffff', borderRadius: '4px' }}
+
             />
 
             <defs>
@@ -93,6 +97,7 @@ export const PriceChartContent = ({ data, mainGraphFilter, symbol, chartColor }:
                 domain={PRICE_CHART_FILTER_CONFIG[mainGraphFilter].getYAxisRange(data)}
                 padding={{ top: 10, bottom: 10 }}
                 tick={{ fill: "#ffff" }}
+
             />
 
             <Area

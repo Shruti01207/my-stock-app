@@ -161,10 +161,10 @@ export const PriceCharts = ({
             <div className="flex gap-2 items-center">
               <div className="avatar">
                 {symbolDetails.type === 'Common Stock' &&
-                  <MyAvatar isLoading={companyProfileQuery.isLoading} name={companyProfileQuery?.data?.name} logo={companyProfileQuery?.data?.logo} avatarSize="8" fontSize="base"></MyAvatar>
+                  <MyAvatar isLoading={companyProfileQuery.isLoading} name={companyProfileQuery?.data?.name} logo={companyProfileQuery?.data?.logo} avatarSize="10" fontSize="base"></MyAvatar>
                 }
                 {symbolDetails.type !== 'Common Stock' &&
-                  <MyAvatar isLoading={symbolsData.isLoading} name={symbolDetails.symbol} logo={undefined} avatarSize="8" fontSize="base"></MyAvatar>
+                  <MyAvatar isLoading={symbolsData.isLoading} name={symbolDetails.symbol} logo={undefined} avatarSize="10" fontSize="base"></MyAvatar>
                 }
               </div>
 

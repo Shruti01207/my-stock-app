@@ -18,9 +18,9 @@ const MyAvatar = ({ isLoading, name, logo, avatarSize, fontSize }: { isLoading: 
     return <>
         <div className="company-name flex flex-row gap-3 items-center">
             {isLoading ?
-                <Skeleton className={`w-${avatarSize} h-${avatarSize} rounded-full rounded-full`}></Skeleton> :
+                <Skeleton className={`w-${avatarSize} h-${avatarSize} rounded-full`}></Skeleton> :
                 logo && !logoError ? <img className={`w-${avatarSize} h-${avatarSize} rounded-full`} src={logo} alt={name} onError={() => setLogoError(true)} /> :
-                    <div className={`w-${avatarSize} h-${avatarSize} rounded-full rounded-full bg-zinc-400 flex items-center justify-center text-[#17181f] text-${fontSize} font-bold`}>{name?.[0] ?? 'U'}</div>
+                    <div className={`w-${avatarSize} h-${avatarSize} rounded-full bg-[#1d1e26] flex items-center justify-center text-[#ffff] text-${fontSize}`}>{name?.[0] ?? 'U'}</div>
             }
 
 

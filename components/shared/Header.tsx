@@ -49,7 +49,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
 
 
     return (
-        <header className='sticky top-0 z-50 w-full border-b border-gray-700 bg-gray-900/80 backdrop-blur-md'>
+        <header className='sticky top-0 z-50 w-full border-b border-gray-700 bg-[#101218] backdrop-blur-md'>
             <div className='container flex h-[64px] items-center justify-between px-4 sm:px-6'>
                 {/* Left Section: Menu & Logo */}
                 <div className='flex items-center sm:gap-0'>
@@ -61,7 +61,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                             className="text-gray-400 hover:text-white"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                         >
-                            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            {isMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
                         </Button>
                     </div>
 
@@ -70,8 +70,8 @@ const Header = ({ intialUser }: { intialUser: any }) => {
                         <Image
                             src="/assets/images/logo.svg"
                             alt="Logo"
-                            width={60}
-                            height={60}
+                            width={50}
+                            height={50}
                             className=' cursor-pointer brightness-110'
                         />
                     </Link>
@@ -117,7 +117,7 @@ const Header = ({ intialUser }: { intialUser: any }) => {
 
             {/* Mobile Navigation Menu */}
             {isMenuOpen && (
-                <div className='sm:hidden absolute top-[64px] left-0 w-full bg-gray-900 border-b border-gray-700 p-4 animate-in slide-in-from-top-2 duration-200'>
+                <div className='sm:hidden absolute top-[64px] left-0 w-full bg-[#101218] border-b border-gray-700 p-4 animate-in slide-in-from-top-2 duration-200'>
                     <nav onClick={() => setIsMenuOpen(false)}>
                         <NavItems />
                     </nav>
