@@ -164,6 +164,7 @@ declare global {
         category: string;
         related: string;
         image?: string;
+        timeAgo: string
     };
 
     type WatchlistNewsProps = {

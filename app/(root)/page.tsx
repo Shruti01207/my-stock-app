@@ -56,10 +56,10 @@ export default async function Home() {
         </HydrationBoundary>
       </div>
 
-      <div className="divider" />
+      {/* <div className="divider" /> */}
 
 
-      <div className="main-chart main-padding">
+      <div className="main-chart main-padding my-4">
         <PriceCharts
           symbol="QQQ"
           symbolDetails={symbolDetails}
@@ -68,16 +68,16 @@ export default async function Home() {
 
       </div>
 
-      <div className="divider" />
+      {/* <div className="divider" /> */}
 
-      <div className="md:hidden list-buttons main-padding">
+      {/* <div className="md:hidden list-buttons main-padding">
         <Link
           className="text-body bg-neutral-primary-soft border border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary-soft shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
           href="/watchlist"
         >
           Watchlist
         </Link>
-      </div>
+      </div> */}
       <div className="divider" />
       <div className="main-padding">
         <MarketNewsWidget></MarketNewsWidget>

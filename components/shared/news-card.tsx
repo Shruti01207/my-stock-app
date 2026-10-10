@@ -1,6 +1,7 @@
 import React from "react";
 import { SENTIMENTS_BADGE_CONFIG } from "@/lib/constants";
 import { normalizeText } from "@/lib/utils";
+import { Link } from "lucide-react";
 
 export interface NewsCardProps {
   title: string;
@@ -31,11 +32,11 @@ export const NewsCard: React.FC<NewsCardProps> = ({
     <article
       className={`
     group relative
-    flex h-[120px] flex-col
+    flex h-[100px] flex-col
     overflow-hidden
     rounded-md
     bg-[#17181f]
-    p-3
+    p-2.5
     shadow-sm
     transition-all duration-200 ease-in-out
     hover:border-gray-600
@@ -44,7 +45,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({
   `}
     >
       {/* Metadata Row - Fixed Height */}
-      <div className="flex h-5 shrink-0 items-center justify-between gap-3">
+      <div className="flex h-5 shrink-0 items-center justify-between gap-1">
         <div className="flex min-w-0 items-center gap-2 text-sm">
           <span className="truncate font-semibold text-gray-500">
             {source}
@@ -88,10 +89,12 @@ export const NewsCard: React.FC<NewsCardProps> = ({
         md:text-base
       "
         >
-          {title}
+          {title.length > 120 ? title.slice(0, 120).concat('...') : title}
+
         </a>
       </div>
     </article>
+
   );
 };
 
@@ -99,7 +102,7 @@ export const NewsCardSkeleton: React.FC = () => {
   return (
     <div
       className="
-        flex h-[120px] flex-col
+        flex h-[100px] flex-col
         justify-between
         rounded-xl
         border border-gray-700/30
