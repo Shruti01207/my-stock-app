@@ -61,7 +61,7 @@ export function WatchlistTable() {
                                     {cell.id === row.getVisibleCells()[0]?.id && (
                                         <button
                                             aria-label={`Remove ${row.original.symbol}`}
-                                            className="absolute right-5 top-1 opacity-0 group-hover:opacity-100 focus:opacity-100 rounded-md border border-red-500 p-0.5"
+                                            className="absolute right-5 top-1 opacity-0 group-hover:opacity-100 focus:opacity-100 rounded-md border border-red-500 bg- p-0.5"
                                             onClick={() => removeStock(row.original.symbol)}
                                         >
                                             <Trash2 color="red" size={20} fill="red" />

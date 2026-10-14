@@ -60,41 +60,26 @@ export default function StockSymbolOverview({ params }: PageProps) {
 
             </div>
 
-            <div className="company-name flex flex-row gap-3 items-center">
-                {/* {isLoading ?
-                    <Skeleton className="w-10 h-10 rounded-full"></Skeleton> :
-                    data?.logo && !logoError ? <img className="w-10 h-10 rounded-full" src={data?.logo} alt={data?.name} onError={() => setLogoError(true)} /> :
-                        <div className="w-10 h-10 rounded-full bg-zinc-400">{data?.name?.[0] ?? 'U'}</div>
-                }
-
-                {
-                    isLoading ?
-                        <Skeleton className="animate h-[25px] w-[150px] opacity-30 rounded-xl"></Skeleton> :
-                        data?.name ? <span className="font-bold text-lg">{data?.name}</span> : <span>-</span>
-
-                } */}
+            <div className="company-name flex flex-row gap-3 items-center main-padding">
                 <MyAvatar isLoading={isLoading} name={data?.name} logo={data?.logo} avatarSize="10" fontSize="lg"></MyAvatar>
-
                 {
                     isLoading ?
                         <Skeleton className="animate h-[25px] w-[150px] opacity-30 rounded-xl"></Skeleton> :
                         data?.name ? <span className="font-bold text-lg">{data?.name}</span> : <span>-</span>
 
                 }
-
-
             </div>
 
 
-            <div className="main-center-chart">
+            <div className="main-center-chart main-padding">
                 <PriceCharts symbol={finhubSymbol} symbolDetails={symbolData} showSymbolInfo={false} ></PriceCharts>
             </div>
 
-            <div className="stats-grid">
+            <div className="stats-grid main-padding">
                 <StatsGrid finhubSymbol={finhubSymbol}></StatsGrid>
             </div>
 
-            <div className="news-list">
+            <div className="news-list main-padding">
                 <NewsList symbol={finhubSymbol}></NewsList>
             </div>
 
