@@ -13,8 +13,6 @@ export const StockRow = ({ result }: { result: Stock }) => {
   const { isOpen, onClose, onOpen, mode } = useSearchStore();
 
 
-
-
   return (
     <CommandItem key={result.symbol} className="flex hover:bg-muted justify-between">
       <Link
