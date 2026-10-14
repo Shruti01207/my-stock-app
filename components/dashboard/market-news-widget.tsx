@@ -15,13 +15,11 @@ export const MarketNewsWidget = () => {
             try {
                 setLoading(true);
                 const res = await getLatestNew();
-                console.log("res", res);
                 setLoading(false);
-                let topStories = res.filter((res: any) => res.category == 'top news');
+                let topStories = res.filter((res: MarketNewsArticle) => res.category == 'top news');
                 topStories.sort((a: any, b: any) => (b.datetime - a.datetime));
-                //topStories = topStories.splice(0, 10);
-                const updatedStories = parseData(res);
-                setLatestNews(updatedStories);
+                const updatedStories = parseData(topStories);
+                setLatestNews([...updatedStories]);
             }
             catch {
 
@@ -30,13 +28,18 @@ export const MarketNewsWidget = () => {
         getLatestNews();
     }, []);
 
-    let visibleNews = latestNews.splice(0, 20)
-    if (!showAll) {
-        visibleNews = latestNews.splice(0, 8);
+
+    let visibleNews: MarketNewsArticle[] = []
+    if (showAll) {
+        visibleNews = latestNews.slice(0, Math.min(20, latestNews.length));
+    }
+    else {
+        visibleNews = latestNews.slice(0, Math.min(8, latestNews.length))
     }
 
-    const parseData = (stories: any) => {
-        const updatedStories = stories.map((story: any) => {
+
+    const parseData = (stories: MarketNewsArticle[]) => {
+        const updatedStories = stories.map((story: MarketNewsArticle) => {
             let currTime = Date.now();
             let diff = currTime - (story.datetime * 1000);
             let seconds = Math.ceil(diff / 1000);
@@ -62,9 +65,10 @@ export const MarketNewsWidget = () => {
                 timeAgo
             };
         });
-
         return updatedStories;
     };
+
+
 
     return (
         <>

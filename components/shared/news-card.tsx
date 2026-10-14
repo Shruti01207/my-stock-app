@@ -1,7 +1,7 @@
 import React from "react";
 import { SENTIMENTS_BADGE_CONFIG } from "@/lib/constants";
 import { normalizeText } from "@/lib/utils";
-import { Link } from "lucide-react";
+
 
 export interface NewsCardProps {
   title: string;
@@ -32,7 +32,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({
     <article
       className={`
     group relative
-    flex h-[100px] flex-col
+    flex h-[120px] flex-col
     overflow-hidden
     rounded-md
     bg-[#17181f]
