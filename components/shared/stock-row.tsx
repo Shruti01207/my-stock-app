@@ -7,9 +7,13 @@ import Link from "next/link";
 export const StockRow = ({ result }: { result: Stock }) => {
   const addToWatchlist = useWatchlistStore((state) => state.addStock);
   const isInWatchList = useWatchlistStore((state) => state.isInWatchList);
+  const watchlist = useWatchlistStore((state) => state.watchlist);
   const removeFromWatchlist = useWatchlistStore((state) => state.removeStock);
   const inWatchList = isInWatchList(result.symbol);
   const { isOpen, onClose, onOpen, mode } = useSearchStore();
+
+
+
 
   return (
     <CommandItem key={result.symbol} className="flex hover:bg-muted justify-between">
@@ -37,15 +41,6 @@ export const StockRow = ({ result }: { result: Stock }) => {
           )}
         </button>
       )}
-
-      {/* {!isInWatchList(result.symbol) && <button className="font-bold"
-                onClick={() => addToWatchlist(result.symbol)}>
-                <Plus strokeWidth={4}></Plus>
-            </button>}
-            {isInWatchList(result.symbol) && <button className="font-bold"
-                onClick={() => removeFromWatchlist(result.symbol)}>
-                <Trash strokeWidth={4}></Trash>
-            </button>} */}
 
     </CommandItem>
   );
