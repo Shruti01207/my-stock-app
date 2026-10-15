@@ -58,21 +58,23 @@ export const useNewsSentiments = (symbol: string) => {
 
 
             })
-            
-           const relevantFeed= updatedFeed.filter((feed)=>{
-               const symbolTicker= feed.ticker_sentiment.find((ts)=>ts.ticker==symbol);
-               return Number(symbolTicker.relevance_score)>0.5
+
+            const relevantFeed = updatedFeed.filter((feed) => {
+                const symbolTicker = feed.ticker_sentiment.find((ts) => ts.ticker == symbol);
+                return Number(symbolTicker.relevance_score) > 0.5
             })
-          
-           relevantFeed.sort((feed1, feed2)=>{
-            const symbolTicker1= feed1.ticker_sentiment.find((ts)=>ts.ticker==symbol);
-            const symbolTicker2= feed2.ticker_sentiment.find((ts)=>ts.ticker==symbol);
-            return Number(symbolTicker2.relevance_score) - Number(symbolTicker1.relevance_score) 
-           })
+
+            relevantFeed.sort((feed1, feed2) => {
+                const symbolTicker1 = feed1.ticker_sentiment.find((ts) => ts.ticker == symbol);
+                const symbolTicker2 = feed2.ticker_sentiment.find((ts) => ts.ticker == symbol);
+                return Number(symbolTicker2.relevance_score) - Number(symbolTicker1.relevance_score)
+            })
+
+
 
             return {
                 ...data,
-                feed: relevantFeed.slice(0,20)
+                feed: relevantFeed.slice(0, 20)
             }
 
         }

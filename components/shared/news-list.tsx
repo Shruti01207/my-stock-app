@@ -1,10 +1,23 @@
-import { useNewsSentiments } from "@/hooks/useNewsSentiments";
+
+import { useSymbolNews } from "@/hooks/useSymbolNews";
 import { NewsCard, NewsCardSkeleton } from "./news-card";
+import { useState } from "react";
 
 export const NewsList = ({ symbol }: { symbol: string }) => {
-  const { data, isLoading } = useNewsSentiments(symbol);
+  const { data, isLoading } = useSymbolNews(symbol);
+  const [showAll, setShowAll] = useState<boolean>(false);
 
-  const news = data?.feed;
+  const news = data
+
+  //let visibleNews: MarketNewsArticle[] = []
+
+  // if (data && showAll) {
+  //   visibleNews = data.slice(0, Math.min(20, data.length));
+  // }
+  // else if (data) {
+  //   visibleNews = data.slice(0, Math.min(8, data.length))
+  // }
+
 
   if (isLoading) {
     return (
@@ -33,16 +46,15 @@ export const NewsList = ({ symbol }: { symbol: string }) => {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
         {news && news.length > 0 ? (
-          news.map((story: NewsSentiment, index: number) => (
+          news.map((story: MarketNewsArticle, index: number) => (
             <NewsCard
               key={index}
-              title={story.title}
+              title={story.headline}
               url={story.url}
               source={story.source}
               timeAgo={story.timeAgo}
-              sentimentLabel={story.overall_sentiment_label}
             />
           ))
         ) : (
@@ -50,7 +62,10 @@ export const NewsList = ({ symbol }: { symbol: string }) => {
             No recent news headlines available for {symbol.toUpperCase()}
           </div>
         )}
+
+
       </div>
+
     </div>
   );
 };

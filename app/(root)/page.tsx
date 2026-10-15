@@ -84,7 +84,7 @@ export default async function Home() {
       </div>
       <div className="divider" />
 
-      <div className="main-padding">
+      <div className="main-padding mb-3">
         <MarketMovers></MarketMovers>
       </div>
 

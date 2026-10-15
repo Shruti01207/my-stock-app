@@ -55,7 +55,6 @@ export const getGraphData = async (symbol: String | null, interval: string | nul
     const apiKey = process.env.TWELVEDATA_API_KEY;
     const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&outputsize=${outputSize}&interval=${interval}&start_date=${startDate}&end_date=${endDate}&prepost=false&apikey=${apiKey}`;
     const response = await fetch(url)
-    console.log("response", response);
 
     if (!response.ok) {
         throw new Error("Failed to fetch stock data");
@@ -66,7 +65,6 @@ export const getGraphData = async (symbol: String | null, interval: string | nul
 
 
 export const getLatestNew = async (category: string) => {
-    console.log("get latest news called");
     const apiKey = process.env.FINNHUB_API_KEY;
     const url = `https://finnhub.io/api/v1/news?category=${category}&token=${apiKey}`;
 
@@ -114,8 +112,14 @@ export async function getStockMetric(symbol: string) {
 
 
 export async function getNewsSentiments(symbol: string) {
-    const apiKey = process.env.ALPHA_VANTAGE_KEY
-    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&sort=RELEVANCE&apikey=${apiKey}`;
+    const apiKey = process.env.FINNHUB_API_KEY
+    const url = `https://finnhub.io/api/v1/company-news?symbol=${symbol}&token=${apiKey}`;
+    const res = await fetch(url);
+    return res.json();
+}
+export async function getSymbolNews(symbol: string) {
+    const apiKey = process.env.FINNHUB_API_KEY
+    const url = `https://finnhub.io/api/v1/company-news?symbol=${symbol}&token=${apiKey}`;
     const res = await fetch(url);
     return res.json();
 }
@@ -129,7 +133,7 @@ export async function getSymbolsInfo(): Promise<SymbolInfo[]> {
 
 export async function getTopGainersLosers(): Promise<MarketMoversData> {
     const apiKey = process.env.ALPHA_VANTAGE_KEY
-    const url = `https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${apiKey}`
+    const url = `https://www.alphavange.co/query?function=TOP_GAINERS_LOSERS&apikey=${apiKey}`
     const res = await fetch(url);
     return res.json();
 }

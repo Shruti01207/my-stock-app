@@ -44,7 +44,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
 
 
         <div className="max-w-6xl mx-auto mx-3 flex flex-col gap-2">
-            <div className="flex items-center gap-2 py-1.5">
+            <div className="flex items-center gap-2 py-1.5 main-padding">
                 <Link href="/" className="flex items-center gap-2" >
                     <ArrowLeft size={15} strokeWidth={2.5} className="leading-none relative -top-[1px] text-sm" />
                     <span className="leading-none font-medium text-sm">Home</span>
@@ -79,7 +79,7 @@ export default function StockSymbolOverview({ params }: PageProps) {
                 <StatsGrid finhubSymbol={finhubSymbol}></StatsGrid>
             </div>
 
-            <div className="news-list main-padding">
+            <div className="news-list main-padding mb-3">
                 <NewsList symbol={finhubSymbol}></NewsList>
             </div>
 

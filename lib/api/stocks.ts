@@ -104,6 +104,12 @@ export async function getSymbolsInfo(): Promise<SymbolInfo[]> {
   return res.json();
 }
 
+export async function getSymbolNews(symbol: string): Promise<MarketNewsArticle[]> {
+  const url = `/api/market/symbol-news?symbol=${symbol}`;
+  const res = await fetch(url);
+  return res.json();
+}
+
 export async function createAlert(alertRequest: AlertRequest): Promise<ApiResponse<Alert>> {
   try {
     const url = `/api/alerts`;
