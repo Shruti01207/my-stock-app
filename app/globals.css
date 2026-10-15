@@ -642,6 +642,27 @@ svg *:focus-within,
   /* Chrome, Safari, Opera */
 }
 
+.custom-scrollbar {
+  scrollbar-width: thin;
+  /* Firefox ke liye */
+  scrollbar-color: #cbd5e1 #101218;
+  /* thumb aur track ka color */
+}
+
+/* Chrome, Edge, aur Safari ke liye */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 1px;
+  /* scrollbar ki width */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #101218;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #101218;
+  border-radius: 4px;
+}
 
 
 @keyframes pricePulse {

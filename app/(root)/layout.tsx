@@ -14,17 +14,18 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
     });
 
     return (
-        <main >
-            <div className="text-gray-400">
+        <main className="overflow-hidden">
+            <div className="text-gray-400 ">
 
                 <Header intialUser={session?.user} />
                 <div className="max-w-7xl mx-auto mx-3 flex flex-col md:flex-row">
-                    <div className="container h-[100vh] pt-4 overflow-y-scroll scrollbar-hide">
-                        {/* <Providers>{children}</Providers> */}
-                        {children}
-                    </div>
+
                     <div className="hidden md:block md:w-[30%] right border border-t-0 w-full">
                         <WatchList />
+                    </div>
+                    <div className="container h-[100vh] pt-4 overflow-y-scroll custom-scrollbar">
+                        {/* <Providers>{children}</Providers> */}
+                        {children}
                     </div>
                 </div>
 
